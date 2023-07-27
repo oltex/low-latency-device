@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Device">
+      <UniqueIdentifier>{2b6ff03e-59e1-46f5-a52b-2fd90d64895c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service">
+      <UniqueIdentifier>{f9605c67-aed6-41bc-89f9-56ce95e4ebb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vmulti">
+      <UniqueIdentifier>{fe07e985-5100-40b6-b452-37def986731a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tablet">
+      <UniqueIdentifier>{1a249265-7727-4d13-8300-ad8256f66077}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Setting">
+      <UniqueIdentifier>{bfe7bdb5-23d0-437f-b142-a54728991a73}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Service.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="Vmulti.cpp">
+      <Filter>Vmulti</Filter>
+    </ClCompile>
+    <ClCompile Include="Tablet.cpp">
+      <Filter>Tablet</Filter>
+    </ClCompile>
+    <ClCompile Include="Device.cpp">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Vmulti.h">
+      <Filter>Vmulti</Filter>
+    </ClInclude>
+    <ClInclude Include="Device.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Tablet.h">
+      <Filter>Tablet</Filter>
+    </ClInclude>
+    <ClInclude Include="Service.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Setting.h">
+      <Filter>Setting</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
