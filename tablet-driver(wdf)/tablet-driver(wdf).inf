@@ -1,0 +1,77 @@
+;
+; tablet-driver(wdf).inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System ; TODO: specify appropriate Class
+ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318} ; TODO: specify appropriate ClassGuid
+Provider=%ManufacturerName%
+CatalogFile=tablet-driver(wdf).cat
+DriverVer= ; TODO: set DriverVer in stampinf property pages
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+tablet-driver(wdf)_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+tablet-driver(wdf).sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%tablet-driver(wdf).DeviceDesc%=tablet-driver(wdf)_Device, Root\tablet-driver(wdf) ; TODO: edit hw-id
+
+[tablet-driver(wdf)_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+tablet-driver(wdf).sys
+
+;-------------- Service installation
+[tablet-driver(wdf)_Device.NT.Services]
+AddService = tablet-driver(wdf),%SPSVCINST_ASSOCSERVICE%, tablet-driver(wdf)_Service_Inst
+
+; -------------- tablet-driver(wdf) driver install sections
+[tablet-driver(wdf)_Service_Inst]
+DisplayName    = %tablet-driver(wdf).SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\tablet-driver(wdf).sys
+
+;
+;--- tablet-driver(wdf)_Device Coinstaller installation ------
+;
+
+[tablet-driver(wdf)_Device.NT.CoInstallers]
+AddReg=tablet-driver(wdf)_Device_CoInstaller_AddReg
+CopyFiles=tablet-driver(wdf)_Device_CoInstaller_CopyFiles
+
+[tablet-driver(wdf)_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[tablet-driver(wdf)_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[tablet-driver(wdf)_Device.NT.Wdf]
+KmdfService =  tablet-driver(wdf), tablet-driver(wdf)_wdfsect
+[tablet-driver(wdf)_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+DiskName = "tablet-driver(wdf) Installation Disk"
+tablet-driver(wdf).DeviceDesc = "tablet-driver(wdf) Device"
+tablet-driver(wdf).SVCDESC = "tablet-driver(wdf) Service"
