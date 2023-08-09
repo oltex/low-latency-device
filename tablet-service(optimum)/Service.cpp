@@ -1,7 +1,7 @@
 #include "Service.h"
 
 Service::Service(void)
-	: _tablet({ 0x056A, 0x030E, 0xFF0D, 0x0001, GENERIC_READ }, { 0x02, 10, 0x40 }),
+	: _tablet({ 0x056A, 0x030E, 0xFF0D, 0x0001, FILE_READ_DATA }, { 0x02, 10, 0x40 }),
 	_setting({ { 7600, 4750, 7200, 4050 } }) {
 }
 
