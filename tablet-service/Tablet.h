@@ -7,20 +7,18 @@ public:
 		const BYTE reportId, reportLen, detectMask;
 	};
 	struct Report {
-		BYTE id;
 		UCHAR button;
 		USHORT x, y;
-		USHORT pressure;
 	};
 public:
-	explicit Tablet(const Device::Config& deviceCfg, const Config& tabletCfg);
+	explicit Tablet(const Device::Config& devCfg, const Config config);
 	~Tablet(void);
 public:
-	int Read(void) noexcept;
+	const int Read(void) noexcept;
 public:
-	const Config _config;
 	Report _report;
 private:
-	Device* _device = nullptr;
-	UCHAR _buf[10];
+	const Device _device;
+	const Config _config;
+	BYTE _buf[10];
 };

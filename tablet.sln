@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tablet-service(thread)", "tablet-service\tablet-service.vcxproj", "{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tablet-service", "tablet-service(optimum)\tablet-service(optimum).vcxproj", "{609644D8-BDE5-4909-AD49-3B3EE7547173}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tablet-driver(wdf)", "tablet-driver(wdf)\tablet-driver(wdf).vcxproj", "{2A647947-85D6-4917-BCB1-CD522754F404}"
 EndProject
 Global
@@ -19,30 +15,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Debug|ARM64.ActiveCfg = Debug|x64
-		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Debug|ARM64.Build.0 = Debug|x64
-		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Debug|x64.ActiveCfg = Debug|x64
-		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Debug|x64.Build.0 = Debug|x64
-		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Debug|x86.ActiveCfg = Debug|Win32
-		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Debug|x86.Build.0 = Debug|Win32
-		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Release|ARM64.ActiveCfg = Release|x64
-		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Release|ARM64.Build.0 = Release|x64
-		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Release|x64.ActiveCfg = Release|x64
-		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Release|x64.Build.0 = Release|x64
-		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Release|x86.ActiveCfg = Release|Win32
-		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Release|x86.Build.0 = Release|Win32
-		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Debug|ARM64.ActiveCfg = Debug|x64
-		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Debug|ARM64.Build.0 = Debug|x64
-		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Debug|x64.ActiveCfg = Debug|x64
-		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Debug|x64.Build.0 = Debug|x64
-		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Debug|x86.ActiveCfg = Debug|Win32
-		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Debug|x86.Build.0 = Debug|Win32
-		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Release|ARM64.ActiveCfg = Release|x64
-		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Release|ARM64.Build.0 = Release|x64
-		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Release|x64.ActiveCfg = Release|x64
-		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Release|x64.Build.0 = Release|x64
-		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Release|x86.ActiveCfg = Release|Win32
-		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Release|x86.Build.0 = Release|Win32
 		{2A647947-85D6-4917-BCB1-CD522754F404}.Debug|ARM64.ActiveCfg = Debug|ARM64
 		{2A647947-85D6-4917-BCB1-CD522754F404}.Debug|ARM64.Build.0 = Debug|ARM64
 		{2A647947-85D6-4917-BCB1-CD522754F404}.Debug|ARM64.Deploy.0 = Debug|ARM64

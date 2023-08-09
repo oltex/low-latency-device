@@ -1,15 +1,14 @@
 #include "Vmulti.h"
 
-Vmulti::Vmulti(void) {
-	_device = new Device({ 0x00FF, 0xBACC, 0xFF00, 0x0001 });
+Vmulti::Vmulti(void)
+	: _device({ 0x00FF, 0xBACC, 0xFF00, 0x0001, FILE_WRITE_DATA }) {
 	memset(_buf, 0, 65);
 }
 
 Vmulti::~Vmulti(void) {
-	delete _device;
 }
 
-int Vmulti::Write(void) noexcept {
+void Vmulti::Write(void) noexcept {
 	memcpy(_buf, &_report, sizeof(Report));
-	return _device->Write(_buf, 65);
+	_device.Write(_buf, 65);
 }

@@ -5,18 +5,17 @@ class Vmulti final {
 public:
 	struct Report {
 		const BYTE vmultiId = 0x40, reportLen = 7, reportId = 3;
-		UCHAR button;
-		USHORT x, y;
-		BYTE wheel;
+		UCHAR button = 0;
+		USHORT x = 0, y = 0;
 	};
 public:
 	explicit Vmulti(void);
 	~Vmulti(void);
 public:
-	int Write(void) noexcept;
+	void Write(void) noexcept;
 public:
 	Report _report;
 private:
-	Device* _device = nullptr;
+	const Device _device;
 	BYTE _buf[65];
 };

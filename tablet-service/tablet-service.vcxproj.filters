@@ -1,88 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="1">
-      <UniqueIdentifier>{661ddbf9-bb1a-425f-bbe1-9dc5b060eeaf}</UniqueIdentifier>
+    <Filter Include="Device">
+      <UniqueIdentifier>{2b6ff03e-59e1-46f5-a52b-2fd90d64895c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="1\Vmulti">
-      <UniqueIdentifier>{608788e7-2ca7-48f4-b3d8-c8df88c79cbb}</UniqueIdentifier>
+    <Filter Include="Service">
+      <UniqueIdentifier>{f9605c67-aed6-41bc-89f9-56ce95e4ebb4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="1\Tablet">
-      <UniqueIdentifier>{7a28348e-ec90-4b07-acdb-a94f7087d98c}</UniqueIdentifier>
+    <Filter Include="Vmulti">
+      <UniqueIdentifier>{fe07e985-5100-40b6-b452-37def986731a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="1\Device">
-      <UniqueIdentifier>{4489cfda-56aa-4638-a4c3-dcec79301e5b}</UniqueIdentifier>
+    <Filter Include="Tablet">
+      <UniqueIdentifier>{1a249265-7727-4d13-8300-ad8256f66077}</UniqueIdentifier>
     </Filter>
-    <Filter Include="2">
-      <UniqueIdentifier>{65400259-b62e-43b2-98ba-d2bdd71a0ac9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="1\Mapper">
-      <UniqueIdentifier>{3581cae7-5b70-43e6-ba1f-7e148c0e0d26}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="2\Command">
-      <UniqueIdentifier>{bb332c1d-6f71-436b-943a-984b5f603802}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="2\Parse">
-      <UniqueIdentifier>{892e7fc9-f5c8-4327-b767-6365f1c3eb3b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="2\FIle">
-      <UniqueIdentifier>{3647958e-153d-4087-b6a4-cd235988d369}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="1\Service">
-      <UniqueIdentifier>{bad3c359-794f-4551-b496-e5692000e292}</UniqueIdentifier>
+    <Filter Include="Setting">
+      <UniqueIdentifier>{bfe7bdb5-23d0-437f-b142-a54728991a73}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Device.h">
-      <Filter>1\Device</Filter>
-    </ClInclude>
-    <ClInclude Include="Tablet.h">
-      <Filter>1\Tablet</Filter>
-    </ClInclude>
-    <ClInclude Include="Service.h">
-      <Filter>1\Service</Filter>
-    </ClInclude>
-    <ClInclude Include="Vmulti.h">
-      <Filter>1\Vmulti</Filter>
-    </ClInclude>
-    <ClInclude Include="Mapper.h">
-      <Filter>1\Mapper</Filter>
-    </ClInclude>
-    <ClInclude Include="Command.h">
-      <Filter>2\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="Parse.h">
-      <Filter>2\Parse</Filter>
-    </ClInclude>
-    <ClInclude Include="File.h">
-      <Filter>2\FIle</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Device.cpp">
-      <Filter>1\Device</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Tablet.cpp">
-      <Filter>1\Tablet</Filter>
-    </ClCompile>
     <ClCompile Include="Service.cpp">
-      <Filter>1\Service</Filter>
+      <Filter>Service</Filter>
     </ClCompile>
     <ClCompile Include="Vmulti.cpp">
-      <Filter>1\Vmulti</Filter>
+      <Filter>Vmulti</Filter>
     </ClCompile>
-    <ClCompile Include="Mapper.cpp">
-      <Filter>1\Mapper</Filter>
+    <ClCompile Include="Tablet.cpp">
+      <Filter>Tablet</Filter>
     </ClCompile>
-    <ClCompile Include="Parse.cpp">
-      <Filter>2\Parse</Filter>
+    <ClCompile Include="Device.cpp">
+      <Filter>Device</Filter>
     </ClCompile>
-    <ClCompile Include="File.cpp">
-      <Filter>2\FIle</Filter>
-    </ClCompile>
-    <ClCompile Include="Command.cpp">
-      <Filter>2\Command</Filter>
-    </ClCompile>
+    <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Vmulti.h">
+      <Filter>Vmulti</Filter>
+    </ClInclude>
+    <ClInclude Include="Device.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Tablet.h">
+      <Filter>Tablet</Filter>
+    </ClInclude>
+    <ClInclude Include="Service.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Setting.h">
+      <Filter>Setting</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

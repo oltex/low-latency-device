@@ -50,8 +50,8 @@ VOID EvtWdfIoQueueIoInternalDeviceControl(_In_ WDFQUEUE queue, _In_ WDFREQUEST r
 	WDFDEVICE device = WdfIoQueueGetDevice(queue);
 	PDEVICE_CONTEXT context = VMultiGetDeviceContext(device);
 
-	switch (IoControlCode)
-	{
+	switch (IoControlCode) {
+
 	}
 }
 

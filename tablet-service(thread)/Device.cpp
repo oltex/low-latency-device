@@ -2,24 +2,23 @@
 
 Device::Device(const Config& config) {
 	GUID hidGuid;
-	HidD_GetHidGuid(&hidGuid);
-
 	HDEVINFO devInfo;
-	devInfo = SetupDiGetClassDevs(&hidGuid, NULL, 0, DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);
 
 	SP_DEVICE_INTERFACE_DATA devItfData;
 	devItfData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
-	DWORD idx = 0;
-
 	PSP_DEVICE_INTERFACE_DETAIL_DATA devItfDetailData = nullptr;
-	DWORD size;
 
 	HIDD_ATTRIBUTES attributes;
 	PHIDP_PREPARSED_DATA preparsedData = nullptr;
 	HIDP_CAPS hidCapabilities;
 
+	DWORD memberIdx = 0, size;
+
+	HidD_GetHidGuid(&hidGuid);
+	devInfo = SetupDiGetClassDevs(&hidGuid, NULL, 0, DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);
+
 	while (_handle == nullptr || _handle == INVALID_HANDLE_VALUE) {
-		SetupDiEnumInterfaceDevice(devInfo, NULL, &hidGuid, idx++, &devItfData);
+		SetupDiEnumDeviceInterfaces(devInfo, NULL, &hidGuid, memberIdx++, &devItfData);
 		if (ERROR_NO_MORE_ITEMS == GetLastError())
 			break;
 
@@ -28,8 +27,7 @@ Device::Device(const Config& config) {
 		devItfDetailData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
 		SetupDiGetDeviceInterfaceDetail(devInfo, &devItfData, devItfDetailData, size, &size, NULL);
 
-		_handle = CreateFile(devItfDetailData->DevicePath, config.desiredAccess, 0, NULL, OPEN_EXISTING, 0, NULL);
-
+		_handle = CreateFile(devItfDetailData->DevicePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
 		if (INVALID_HANDLE_VALUE != _handle) {
 			HidD_GetAttributes(_handle, &attributes);
 			HidD_GetPreparsedData(_handle, &preparsedData);
@@ -63,10 +61,16 @@ Device::~Device(void) {
 	_handle = nullptr;
 }
 
-void Device::Read(void* const buf, const int len) const noexcept {
-	ReadFile(_handle, buf, len, NULL, NULL);
+int Device::Read(void* const buf, const BYTE& len) noexcept {
+	register DWORD byte;
+	if (ReadFile(_handle, buf, len, &byte, NULL))
+		return byte;
+	return 0;
 }
 
-void Device::Write(const void* const buf, const int len) const noexcept {
-	WriteFile(_handle, buf, len, NULL, NULL);
+int Device::Write(const void* const buf, const BYTE& len) noexcept {
+	register DWORD byte;
+	if (WriteFile(_handle, buf, len, &byte, NULL))
+		return byte;
+	return 0;
 }

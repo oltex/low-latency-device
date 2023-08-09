@@ -6,14 +6,16 @@
 class Device final {
 public:
 	struct Config {
-		const USHORT vendorId, productId, usagePage, usage;
+		const USHORT vendorId, productId;
+		const USAGE usagePage, usage;
+		const DWORD desiredAccess;
 	};
 public:
 	explicit Device(const Config& config);
 	~Device(void);
 public:
-	int Read(void* const buf, const BYTE& len) noexcept;
-	int	Write(const void* const buf, const BYTE& len) noexcept;
+	void Read(void* const buf, const int len) const noexcept;
+	void Write(const void* const buf, const int len) const noexcept;
 private:
 	HANDLE _handle = nullptr;
 };
