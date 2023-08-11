@@ -58,6 +58,37 @@ Device::Device(const Config& config) {
 	SetupDiDestroyDeviceInfoList(devInfo);
 }
 
+#include <iostream>
+
+Device::Device(void) {
+
+	_handle = CreateFile(L"\\\\.\\tablet-symbolic", FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_WRITE_DATA, 0, NULL, OPEN_EXISTING, 0, NULL);
+	if (INVALID_HANDLE_VALUE == _handle) {
+		return;
+	}
+
+	//HIDD_ATTRIBUTES attributes;
+	//PHIDP_PREPARSED_DATA preparsedData = nullptr;
+	//HIDP_CAPS hidCapabilities;
+	//HidD_GetAttributes(_handle, &attributes);
+	//HidD_GetPreparsedData(_handle, &preparsedData);
+	//HidP_GetCaps(preparsedData, &hidCapabilities);
+
+	//std::cout << "VenderID: " << attributes.VendorID << std::endl;
+	//std::cout << "ProductID: " << attributes.ProductID << std::endl;
+	//std::cout << "UsagePage: " << hidCapabilities.UsagePage << std::endl;
+	//std::cout << "Usage: " << hidCapabilities.Usage << std::endl;
+	//	
+	//HidD_FreePreparsedData(preparsedData);
+
+	//COMMTIMEOUTS commTimeOuts;
+	//GetCommTimeouts(_handle, &commTimeOuts);
+	//commTimeOuts.ReadIntervalTimeout = 1;
+	//commTimeOuts.ReadTotalTimeoutConstant = 1;
+	//commTimeOuts.ReadTotalTimeoutMultiplier = 1;
+	//SetCommTimeouts(_handle, &commTimeOuts);
+}
+
 Device::~Device(void) {
 	CloseHandle(_handle);
 	_handle = nullptr;
@@ -67,6 +98,21 @@ void Device::Read(void* const buf, const int len) const noexcept {
 	ReadFile(_handle, buf, len, NULL, NULL);
 }
 
-void Device::Write(const void* const buf, const int len) const noexcept {
-	WriteFile(_handle, buf, len, NULL, NULL);
+#include<hidclass.h>
+
+void Device::Write(void* const buf, const int len) const noexcept {
+	if (!WriteFile(_handle, buf, len, NULL, NULL)) {
+		DWORD error = GetLastError();
+		std::cout << "WriteFile error: " << error << std::endl;
+	}
+	
+	//if (!HidD_SetOutputReport(_handle, buf, len)) {
+	//	DWORD error = GetLastError();
+	//	std::cout << "HidD_SetOutputReport error: " << error << std::endl;
+	//}
+
+	//if (!DeviceIoControl(_handle, IOCTL_HID_SET_OUTPUT_REPORT, buf, len, NULL, 0, NULL, NULL)) {
+	//	DWORD error = GetLastError();
+	//	std::cout << "DeviceIoControl error: " << error << std::endl;
+	//}
 }

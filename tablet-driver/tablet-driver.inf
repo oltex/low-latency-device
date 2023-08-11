@@ -1,0 +1,60 @@
+[Version]
+Signature="$WINDOWS NT$"
+Class=HIDClass
+ClassGuid={745a17a0-74d3-11d0-b6fe-00a0c90f57da}
+Provider="oltex"
+CatalogFile=tablet-driver.cat
+DriverVer=
+PnpLockdown=1
+[DestinationDirs]
+DefaultDestDir = 12
+tablet-driver_CoInstaller_CopyFiles = 11
+[SourceDisksNames]
+1 = "tablet-driver Installation Disk",,,""
+[SourceDisksFiles]
+tablet-driver.sys  = 1
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1
+
+
+[Manufacturer]
+"oltex"=Standard,NT$ARCH$
+[Standard.NT$ARCH$]
+"tablet-driver"=tablet-driver, Root\tablet-driver
+
+[tablet-driver.NT]
+CopyFiles=@tablet-driver.sys
+[tablet-driver.NT.Services]
+AddService = tablet-service,0x00000002,tablet-service_inst
+
+[tablet-service_inst]
+DisplayName = "tablet-service"
+ServiceType = 1
+StartType = 3
+ErrorControl = 1
+ServiceBinary = %12%\tablet-driver.sys
+
+;
+;--- tablet-driver_Device Coinstaller installation ------
+;
+
+[tablet-driver.NT.CoInstallers]
+AddReg=tablet-driver_CoInstaller_AddReg
+CopyFiles=tablet-driver_CoInstaller_CopyFiles
+
+[tablet-driver_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[tablet-driver_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[tablet-driver.NT.Wdf]
+KmdfService =  tablet-service, tablet-driver_wdfsect
+[tablet-driver_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+;[Strings]
+;SPSVCINST_ASSOCSERVICE= 0x00000002
+;ManufacturerName="<Your manufacturer name>"
+;DiskName = "tablet-driver Installation Disk"
+;tablet-driver.DeviceDesc = "tablet-driver Device"
+;tablet-driver.SVCDESC = "tablet-driver Service"

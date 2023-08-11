@@ -12,10 +12,11 @@ public:
 	};
 public:
 	explicit Device(const Config& config);
+	explicit Device(void);
 	~Device(void);
 public:
 	void Read(void* const buf, const int len) const noexcept;
-	void Write(const void* const buf, const int len) const noexcept;
+	void Write( void* const buf, const int len) const noexcept;
 private:
 	HANDLE _handle = nullptr;
 };
