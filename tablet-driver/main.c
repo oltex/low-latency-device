@@ -102,25 +102,27 @@ VOID EvtIoWrite(_In_ WDFQUEUE queue, _In_ WDFREQUEST request, _In_ size_t length
 	NTSTATUS status = STATUS_SUCCESS;
 	DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "EvtIoWrite\n");
 
+	DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "Length: %lld\n", length);
+
 	//1
 	//WDFMEMORY memory;
 	//status = WdfRequestRetrieveInputMemory(request, &memory);
 	//WdfMemoryCopyToBuffer(memory, 0, length, dwReturnSize);
 
 	//2
-	WDF_REQUEST_PARAMETERS params;
-	WDF_REQUEST_PARAMETERS_INIT(&params);
-	WdfRequestGetParameters(request, &params);
+	//WDF_REQUEST_PARAMETERS params;
+	//WDF_REQUEST_PARAMETERS_INIT(&params);
+	//WdfRequestGetParameters(request, &params);
 
 
-	PREPROT report = (PREPROT)WdfRequestWdmGetIrp(request)->UserBuffer;
+	//PREPROT report = (PREPROT)WdfRequestWdmGetIrp(request)->UserBuffer;
 
-	DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "VmultiID: %d\n", report->vmultiId);
-	DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "ReportLen: %d\n", report->reportLen);
-	DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "ReportID: %d\n", report->reportId);
-	DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "Button: %d\n", report->button);
-	DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "X: %hd\n", report->x);
-	DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "Y: %hd\n", report->y);
+	//DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "VmultiID: %d\n", report->vmultiId);
+	//DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "ReportLen: %d\n", report->reportLen);
+	//DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "ReportID: %d\n", report->reportId);
+	//DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "Button: %d\n", report->button);
+	//DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "X: %hd\n", report->x);
+	//DbgPrintEx(DPFLTR_IHVDRIVER_ID, 0, "Y: %hd\n", report->y);
 
 	//WDF_REQUEST_PARAMETERS_INIT(&params);
 	//WdfRequestGetParameters(request, &params);
