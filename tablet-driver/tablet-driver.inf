@@ -10,7 +10,7 @@ PnpLockdown=1
 DefaultDestDir = 12
 tablet-driver_CoInstaller_CopyFiles = 11
 [SourceDisksNames]
-1 = "tablet-driver Installation Disk",,,""
+1 = "tablet-driver Install Disk",,,""
 [SourceDisksFiles]
 tablet-driver.sys  = 1
 WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1

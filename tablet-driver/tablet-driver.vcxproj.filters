@@ -4,9 +4,45 @@
     <Inf Include="tablet-driver.inf" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c" />
+    <ClCompile Include="driver.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="device.c">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="queue.c">
+      <Filter>Queue</Filter>
+    </ClCompile>
+    <ClCompile Include="queue_manual.c">
+      <Filter>Queue_Manual</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h" />
+    <ClInclude Include="driver.h">
+      <Filter>Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="device.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="queue.h">
+      <Filter>Queue</Filter>
+    </ClInclude>
+    <ClInclude Include="queue_manual.h">
+      <Filter>Queue_Manual</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Driver">
+      <UniqueIdentifier>{c7381932-4b39-4737-a286-9a268f73c280}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device">
+      <UniqueIdentifier>{c6d9819f-4cf0-4e34-bf73-7caf47e31905}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Queue">
+      <UniqueIdentifier>{a361d6a0-cd2a-45cc-8ff8-91176c5fa68f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Queue_Manual">
+      <UniqueIdentifier>{6e6e4c8a-726f-4719-9806-cdb7836ed330}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
