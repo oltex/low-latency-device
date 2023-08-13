@@ -110,16 +110,10 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="device.c" />
     <ClCompile Include="driver.c" />
-    <ClCompile Include="queue.c" />
-    <ClCompile Include="queue_manual.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="device.h" />
     <ClInclude Include="driver.h" />
-    <ClInclude Include="queue.h" />
-    <ClInclude Include="queue_manual.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
