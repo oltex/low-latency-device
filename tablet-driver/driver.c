@@ -43,7 +43,6 @@ NTSTATUS EvtDriverDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT Devic
 
 	////////////////////////////////////////QUEUE2
 	WDF_IO_QUEUE_CONFIG_INIT(&config, WdfIoQueueDispatchManual);
-	config.PowerManaged = WdfFalse;
 
 	PCONTEXT context = DeviceGetContext(device);
 	status = WdfIoQueueCreate(device, &config, WDF_NO_OBJECT_ATTRIBUTES, &context->_queue);
@@ -149,8 +148,6 @@ NTSTATUS iotcl_hid_read_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request, OUT
 	return status;
 }
 
-#define REPORTID_CONTROL 0x40
-
 NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 	NTSTATUS status = STATUS_SUCCESS;
 
@@ -163,12 +160,13 @@ NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 		return status;
 	}
 
-	PHID_XFER_PACKET packet = NULL;
+	PHID_XFER_PACKET packet;
+	//RtlCopyMemory(&packet, WdfRequestWdmGetIrp(request)->UserBuffer, sizeof(HID_XFER_PACKET));
 	packet = (PHID_XFER_PACKET)WdfRequestWdmGetIrp(request)->UserBuffer;
 
 	switch (packet->reportId) {
-	case REPORTID_CONTROL:
-		packet->reportBuffer[0] = 1;
+	case REPORT_ID_MOUSE_OUTPUT:
+		packet->reportBuffer[0] = REPORT_ID_MOUSE_INPUT;
 		break;
 	default:
 		status = STATUS_INVALID_PARAMETER;

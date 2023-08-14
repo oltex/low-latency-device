@@ -13,7 +13,7 @@ tablet-driver_CoInstaller_CopyFiles = 11
 1 = "tablet-driver Install Disk",,,""
 [SourceDisksFiles]
 tablet-driver.sys  = 1
-WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1
+WdfCoInstaller01009.dll=1
 
 
 [Manufacturer]
@@ -46,19 +46,12 @@ AddReg=tablet-driver_CoInstaller_AddReg
 CopyFiles=tablet-driver_CoInstaller_CopyFiles
 
 [tablet-driver_CoInstaller_AddReg]
-HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller01009.dll,WdfCoInstaller"
 
 [tablet-driver_CoInstaller_CopyFiles]
-WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+WdfCoInstaller01009.dll
 
 [tablet-driver.NT.Wdf]
 KmdfService =  tablet-service, tablet-driver_wdfsect
 [tablet-driver_wdfsect]
-KmdfLibraryVersion = $KMDFVERSION$
-
-;[Strings]
-;SPSVCINST_ASSOCSERVICE= 0x00000002
-;ManufacturerName="<Your manufacturer name>"
-;DiskName = "tablet-driver Installation Disk"
-;tablet-driver.DeviceDesc = "tablet-driver Device"
-;tablet-driver.SVCDESC = "tablet-driver Service"
+KmdfLibraryVersion = 1.9
