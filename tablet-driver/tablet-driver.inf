@@ -8,12 +8,12 @@ DriverVer=
 PnpLockdown=1
 [DestinationDirs]
 DefaultDestDir = 12
-tablet-driver_CoInstaller_CopyFiles = 11
+;tablet-driver_CoInstaller_CopyFiles = 11
 [SourceDisksNames]
 1 = "tablet-driver Install Disk",,,""
 [SourceDisksFiles]
 tablet-driver.sys  = 1
-WdfCoInstaller01009.dll=1
+;WdfCoInstaller01009.dll=1
 
 
 [Manufacturer]
@@ -41,17 +41,17 @@ ServiceBinary = %12%\tablet-driver.sys
 ;--- tablet-driver_Device Coinstaller installation ------
 ;
 
-[tablet-driver.NT.CoInstallers]
-AddReg=tablet-driver_CoInstaller_AddReg
-CopyFiles=tablet-driver_CoInstaller_CopyFiles
+;[tablet-driver.NT.CoInstallers]
+;AddReg=tablet-driver_CoInstaller_AddReg
+;CopyFiles=tablet-driver_CoInstaller_CopyFiles
 
-[tablet-driver_CoInstaller_AddReg]
-HKR,,CoInstallers32,0x00010000, "WdfCoInstaller01009.dll,WdfCoInstaller"
+;[tablet-driver_CoInstaller_AddReg]
+;HKR,,CoInstallers32,0x00010000, "WdfCoInstaller01009.dll,WdfCoInstaller"
 
-[tablet-driver_CoInstaller_CopyFiles]
-WdfCoInstaller01009.dll
+;[tablet-driver_CoInstaller_CopyFiles]
+;WdfCoInstaller01009.dll
 
-[tablet-driver.NT.Wdf]
-KmdfService =  tablet-service, tablet-driver_wdfsect
-[tablet-driver_wdfsect]
-KmdfLibraryVersion = 1.9
+;[tablet-driver.NT.Wdf]
+;KmdfService =  tablet-service, tablet-driver_wdfsect
+;[tablet-driver_wdfsect]
+;KmdfLibraryVersion = 1.9

@@ -27,10 +27,6 @@ NTSTATUS EvtDriverDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT Devic
 	if (!NT_SUCCESS(status))
 		return status;
 
-	////////////////////////////////////////SYMBOLIC
-	DECLARE_CONST_UNICODE_STRING(symName, L"\\DosDevices\\tablet-symbolic");
-	WdfDeviceCreateSymbolicLink(device, &symName);
-
 	////////////////////////////////////////QUEUE
 	WDF_IO_QUEUE_CONFIG config;
 	WDF_IO_QUEUE_CONFIG_INIT_DEFAULT_QUEUE(&config, WdfIoQueueDispatchParallel);
@@ -96,7 +92,7 @@ NTSTATUS ioctl_hid_get_device_attributes(_In_ WDFREQUEST request) {
 		return status;
 
 	attribute->Size = sizeof(HID_DEVICE_ATTRIBUTES);
-	attribute->VendorID = 0x00FF;
+	attribute->VendorID = 0x00EE;
 	attribute->ProductID = 0xBACC;
 	attribute->VersionNumber = 0x0001;
 

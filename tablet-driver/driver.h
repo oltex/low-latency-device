@@ -88,13 +88,13 @@ HID_DESCRIPTOR g_descriptor = {
 	}
 };
 
-typedef struct _REPORT {
-	BYTE reportId;
-	UCHAR button;
-	USHORT x, y;
-}REPORT;
-
-typedef struct _HEADER {
-	BYTE ReportID;
-	BYTE ReportLength;
-} HEADER;
+//typedef struct _REPORT {
+//	BYTE reportId;
+//	UCHAR button;
+//	USHORT x, y;
+//}REPORT;
+//
+//typedef struct _HEADER {
+//	BYTE ReportID;
+//	BYTE ReportLength;
+//} HEADER;
