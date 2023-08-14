@@ -75,7 +75,7 @@ VOID EvtIoInternalDeviceControl(_In_ WDFQUEUE queue, _In_ WDFREQUEST request,
 		break;
 	case IOCTL_HID_WRITE_REPORT:
 	case IOCTL_HID_SET_OUTPUT_REPORT:
-		status = ioctl_hid_write_report(queue, request);
+		//status = ioctl_hid_write_report(queue, request);
 		break;
 	default:
 		status = STATUS_NOT_SUPPORTED;
@@ -143,7 +143,7 @@ NTSTATUS iotcl_hid_read_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request, OUT
 
 	status = WdfRequestForwardToIoQueue(request, context->_queue);
 	if (NT_SUCCESS(status))
-		complete = FALSE;
+		*complete = FALSE;
 
 	return status;
 }
