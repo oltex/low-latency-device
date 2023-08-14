@@ -57,27 +57,20 @@ HID_REPORT_DESCRIPTOR g_reportDescriptor[] = {
 		0x81, 0x02,                         //     INPUT (Data,Var,Abs)
 		0x09, 0x31,                         //     USAGE (Y)
 		0x81, 0x02,                         //     INPUT (Data,Var,Abs)
-		0x05, 0x01,                         //     Usage Page (Generic Desktop)
-		0x09, 0x38,                         //     Usage (Wheel)
-		0x15, 0x81,                         //     Logical Minimum (-127)
-		0x25, 0x7F,                         //     Logical Maximum (127)
-		0x75, 0x08,                         //     Report Size (8)
-		0x95, 0x01,                         //     Report Count (1)
-		0x81, 0x06,                         //     Input (Data, Variable, Relative)
 		0xc0,                               //   END_COLLECTION              
 		0xc0,                               // END_COLLECTION    
 
 		0x06, 0x00, 0xff,                    // USAGE_PAGE (Vendor Defined Page 1)
 		0x09, 0x01,                          // USAGE (Vendor Usage 1)
 		0xa1, 0x01,                          // COLLECTION (Application)
-		0x85, REPORT_ID_MOUSE_OUTPUT,              //   REPORT_ID (1)  
+		0x85, REPORT_ID_MOUSE_OUTPUT,        //   REPORT_ID (1)  
 		0x15, 0x00,                          //   LOGICAL_MINIMUM (0)
 		0x26, 0xff, 0x00,                    //   LOGICAL_MAXIMUM (255)
 		0x75, 0x08,                          //   REPORT_SIZE  (8)   - bits
-		0x95, 0x40,                          //   REPORT_COUNT (64)  - Bytes
+		0x95, 0x06,                          //   REPORT_COUNT (6)  - Bytes
 		0x09, 0x02,                          //   USAGE (Vendor Usage 1)
 		0x81, 0x02,                          //   INPUT (Data,Var,Abs)
-		0x95, 0x40,                          //   REPORT_COUNT (64)  - Bytes
+		0x95, 0x06,                          //   REPORT_COUNT (6)  - Bytes
 		0x09, 0x02,                          //   USAGE (Vendor Usage 1)
 		0x91, 0x02,                          //   OUTPUT (Data,Var,Abs)
 		0xc0,                                // END_COLLECTION

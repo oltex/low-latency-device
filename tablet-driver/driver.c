@@ -166,7 +166,7 @@ NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 
 	switch (packet->reportId) {
 	case REPORT_ID_MOUSE_OUTPUT:
-		//packet->reportBuffer[0] = REPORT_ID_MOUSE_INPUT;
+		packet->reportBuffer[0] = REPORT_ID_MOUSE_INPUT;
 		break;
 	default:
 		status = STATUS_INVALID_PARAMETER;
@@ -175,8 +175,8 @@ NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 
 	/////////////////////////////////////////////////////////////////
 
-	HEADER* header = NULL;
-	header = (HEADER*)packet->reportBuffer;
+	//HEADER* header = NULL;
+	//header = (HEADER*)packet->reportBuffer;
 
 	/////////////////////////////////////////////////////////////////
 
@@ -188,14 +188,14 @@ NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 		return status;
 
 	PVOID buffer = NULL;
-	status = WdfRequestRetrieveOutputBuffer(_request, header->ReportLength, &buffer, NULL);
+	status = WdfRequestRetrieveOutputBuffer(_request, packet->reportBufferLen, &buffer, NULL);
 	if (!NT_SUCCESS(status))
 		return status;
 
-	RtlCopyMemory(buffer, packet->reportBuffer + sizeof(HEADER), header->ReportLength);
+	RtlCopyMemory(buffer, packet->reportBuffer, packet->reportBufferLen);
 
-	WdfRequestCompleteWithInformation(_request, status, header->ReportLength);
-	WdfRequestSetInformation(request, header->ReportLength);
+	WdfRequestCompleteWithInformation(_request, status, packet->reportBufferLen);
+	WdfRequestSetInformation(request, packet->reportBufferLen);
 
 	return status;
 }
