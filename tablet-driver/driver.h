@@ -6,7 +6,7 @@
 #include <hidport.h>
 
 NTSTATUS EvtDriverDeviceAdd(_In_ WDFDRIVER, _Inout_ PWDFDEVICE_INIT);
-VOID EvtWdfIoQueueIoInternalDeviceControl(_In_ WDFQUEUE, _In_ WDFREQUEST, _In_ size_t, _In_ size_t, _In_ ULONG);
+VOID EvtIoInternalDeviceControl(_In_ WDFQUEUE, _In_ WDFREQUEST, _In_ size_t, _In_ size_t, _In_ ULONG);
 NTSTATUS ioctl_hid_get_device_attributes(_In_ WDFREQUEST request);
 NTSTATUS ioctl_hid_get_device_descriptor(_In_ WDFREQUEST request);
 NTSTATUS ioctl_hid_get_report_descriptor(_In_ WDFREQUEST request);
