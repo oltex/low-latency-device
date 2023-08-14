@@ -43,6 +43,7 @@ NTSTATUS EvtDriverDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT Devic
 
 	////////////////////////////////////////QUEUE2
 	WDF_IO_QUEUE_CONFIG_INIT(&config, WdfIoQueueDispatchManual);
+	config.PowerManaged = WdfFalse;
 
 	PCONTEXT context = DeviceGetContext(device);
 	status = WdfIoQueueCreate(device, &config, WDF_NO_OBJECT_ATTRIBUTES, &context->_queue);
@@ -75,7 +76,7 @@ VOID EvtIoInternalDeviceControl(_In_ WDFQUEUE queue, _In_ WDFREQUEST request,
 		break;
 	case IOCTL_HID_WRITE_REPORT:
 	case IOCTL_HID_SET_OUTPUT_REPORT:
-		//status = ioctl_hid_write_report(queue, request);
+		status = ioctl_hid_write_report(queue, request);
 		break;
 	default:
 		status = STATUS_NOT_SUPPORTED;
@@ -161,17 +162,21 @@ NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 	}
 
 	PHID_XFER_PACKET packet;
-	//RtlCopyMemory(&packet, WdfRequestWdmGetIrp(request)->UserBuffer, sizeof(HID_XFER_PACKET));
 	packet = (PHID_XFER_PACKET)WdfRequestWdmGetIrp(request)->UserBuffer;
 
 	switch (packet->reportId) {
 	case REPORT_ID_MOUSE_OUTPUT:
-		packet->reportBuffer[0] = REPORT_ID_MOUSE_INPUT;
+		//packet->reportBuffer[0] = REPORT_ID_MOUSE_INPUT;
 		break;
 	default:
 		status = STATUS_INVALID_PARAMETER;
 		return status;
 	}
+
+	/////////////////////////////////////////////////////////////////
+
+	HEADER* header = NULL;
+	header = (HEADER*)packet->reportBuffer;
 
 	/////////////////////////////////////////////////////////////////
 
@@ -183,14 +188,14 @@ NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 		return status;
 
 	PVOID buffer = NULL;
-	status = WdfRequestRetrieveOutputBuffer(_request, sizeof(REPORT), &buffer, NULL);
+	status = WdfRequestRetrieveOutputBuffer(_request, header->ReportLength, &buffer, NULL);
 	if (!NT_SUCCESS(status))
 		return status;
 
-	RtlCopyMemory(buffer, packet->reportBuffer, sizeof(REPORT));
+	RtlCopyMemory(buffer, packet->reportBuffer + sizeof(HEADER), header->ReportLength);
 
-	WdfRequestCompleteWithInformation(_request, status, sizeof(REPORT));
-	WdfRequestSetInformation(request, sizeof(REPORT));
+	WdfRequestCompleteWithInformation(_request, status, header->ReportLength);
+	WdfRequestSetInformation(request, header->ReportLength);
 
 	return status;
 }
