@@ -23,6 +23,10 @@ WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1
 
 [tablet-driver.NT]
 CopyFiles=@tablet-driver.sys
+[tablet-driver.NT.HW]
+AddReg = AddReg 
+[AddReg]
+HKR,,"UpperFilters",0x00010000,"mshidkmdf"
 [tablet-driver.NT.Services]
 AddService = tablet-service,0x00000002,tablet-service_inst
 

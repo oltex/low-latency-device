@@ -7,9 +7,14 @@
 
 NTSTATUS EvtDriverDeviceAdd(_In_ WDFDRIVER, _Inout_ PWDFDEVICE_INIT);
 VOID EvtWdfIoQueueIoInternalDeviceControl(_In_ WDFQUEUE, _In_ WDFREQUEST, _In_ size_t, _In_ size_t, _In_ ULONG);
+NTSTATUS ioctl_hid_get_device_attributes(_In_ WDFREQUEST request);
+NTSTATUS ioctl_hid_get_device_descriptor(_In_ WDFREQUEST request);
+NTSTATUS ioctl_hid_get_report_descriptor(_In_ WDFREQUEST request);
+NTSTATUS iotcl_hid_read_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request, OUT BOOLEAN* complete);
+NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request);
 
 typedef struct _CONTEXT {
-    WDFQUEUE _queue;
+	WDFQUEUE _queue;
 } CONTEXT, * PCONTEXT;
 WDF_DECLARE_CONTEXT_TYPE_WITH_NAME(CONTEXT, DeviceGetContext)
 
@@ -20,106 +25,78 @@ WDF_DECLARE_CONTEXT_TYPE_WITH_NAME(CONTEXT, DeviceGetContext)
 
 #define REPORT_ID_MOUSE_INPUT       0x01
 #define REPORT_ID_MOUSE_OUTPUT      0x02
-#define REPORT_ID_KEYBOARD_INPUT    0x03
-#define REPORT_ID_KEYBOARD_OUTPUT   0x04
 
 typedef UCHAR HID_REPORT_DESCRIPTOR, * PHID_REPORT_DESCRIPTOR;
 
 HID_REPORT_DESCRIPTOR g_reportDescriptor[] = {
-    0x05, 0x01,        // USAGE_PAGE (Generic Desktop)
-    0x09, 0x02,        // USAGE (Mouse)
-    0xA1, 0x01,        // COLLECTION (Application)
-    0x85,                  REPORT_ID_MOUSE_INPUT,
-    0x09, 0x01,            // USAGE_PAGE (Pointer)
-    0xA1, 0x00,            // COLLECTION (Physical)
-    0x05, 0x09,                // USAGE_PAGE (Buttons)
-    0x19, 0x01,                // USAGE_MINIMUM (1)
-    0x29, 0x03,                // USAGE_MAXIMUM (3)
-    0x15, 0x00,                // LOGICAL_MINIMUM (0)
-    0x25, 0x01,                // LOGICAL_MAXIMUM (1)
-    0x95, 0x03,                // REPORT_COUNT (3)
-    0x75, 0x01,                // REPORT_SIZE (1)
-    0x81, 0x02,                // INPUT (Data, Variable, Absolute)
-    0x95, 0x01,                // REPORT_COUNT (1)
-    0x75, 0x05,                // REPORT_SIZE (5)
-    0x81, 0x01,                // INPUT (Constant)
-    0x05, 0x01,                // USAGE_PAGE (Generic Desktop)
-    0x09, 0x30,                // USAGE (X)
-    0x09, 0x31,                // USAGE (Y)
-    0x15, 0x81,                // LOGICAL_MINIMUM (-127)
-    0x25, 0x7F,                // LOGICAL_MAXIMUM (127)
-    0x75, 0x08,                // REPORT_SIZE (8)
-    0x95, 0x02,                // REPORT_COUNT (2)
-    0x81, 0x06,                // Input (Data, Variable, Relative)
-    0xC0,                  // END_COLLECTION
-    0xC0,              // END_COLLECTION
+		0x05, 0x01,                         // USAGE_PAGE (Generic Desktop) 
+		0x09, 0x02,                         // USAGE (Mouse)               
+		0xa1, 0x01,                         // COLLECTION (Application)   
+		0x85, REPORT_ID_MOUSE_INPUT,               //   REPORT_ID (Mouse)       
+		0x09, 0x01,                         //   USAGE (Pointer)        
+		0xa1, 0x00,                         //   COLLECTION (Physical) 
+		0x05, 0x09,                         //     USAGE_PAGE (Button)
+		0x19, 0x01,                         //     USAGE_MINIMUM (Button 1) 
+		0x29, 0x05,                         //     USAGE_MAXIMUM (Button 5)
+		0x15, 0x00,                         //     LOGICAL_MINIMUM (0)    
+		0x25, 0x01,                         //     LOGICAL_MAXIMUM (1)   
+		0x75, 0x01,                         //     REPORT_SIZE (1)      
+		0x95, 0x05,                         //     REPORT_COUNT (5)    
+		0x81, 0x02,                         //     INPUT (Data,Var,Abs)
+		0x95, 0x03,                         //     REPORT_COUNT (3)   
+		0x81, 0x03,                         //     INPUT (Cnst,Var,Abs)    
+		0x05, 0x01,                         //     USAGE_PAGE (Generic Desktop)
+		0x26, 0xff, 0x7f,                   //     LOGICAL_MAXIMUM (32767)    
+		0x75, 0x10,                         //     REPORT_SIZE (16)
+		0x95, 0x01,                         //     REPORT_COUNT (1)
+		0x55, 0x0F,                         //     UNIT_EXPONENT (-1)
+		0x65, 0x11,                         //     UNIT (cm,SI Linear)
+		0x35, 0x00,                         //     PHYSICAL_MINIMUM (0)
+		0x45, 0x00,                         //     PHYSICAL_MAXIMUM (0)
+		0x09, 0x30,                         //     USAGE (X)
+		0x81, 0x02,                         //     INPUT (Data,Var,Abs)
+		0x09, 0x31,                         //     USAGE (Y)
+		0x81, 0x02,                         //     INPUT (Data,Var,Abs)
+		0x05, 0x01,                         //     Usage Page (Generic Desktop)
+		0x09, 0x38,                         //     Usage (Wheel)
+		0x15, 0x81,                         //     Logical Minimum (-127)
+		0x25, 0x7F,                         //     Logical Maximum (127)
+		0x75, 0x08,                         //     Report Size (8)
+		0x95, 0x01,                         //     Report Count (1)
+		0x81, 0x06,                         //     Input (Data, Variable, Relative)
+		0xc0,                               //   END_COLLECTION              
+		0xc0,                               // END_COLLECTION    
 
-    0x05, 0x01,        // USAGE_PAGE (Generic Desktop)
-    0x09, 0x00,        // USAGE (Undefined)
-    0xa1, 0x01,        // COLLECTION (Application)
-    0x85,                  REPORT_ID_MOUSE_OUTPUT,
-    0x09, 0x00,            // USAGE (Undefined)
-    0x15, 0x00,            // LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x00,      // LOGICAL_MAXIMUM (255)
-    0x95, 0x03,            // REPORT_COUNT (3)
-    0x75, 0x08,            // REPORT_SIZE (8)
-    0x91, 0x02,            // OUTPUT (Data, Variable, Absolute)
-    0xc0,              // END_COLLECTION
-
-    0x05, 0x01,        // USAGE_PAGE (Generic Desktop)
-    0x09, 0x06,        // USAGE (Keyboard)
-    0xA1, 0x01,        // COLLECTION (Application)
-    0x85,                  REPORT_ID_KEYBOARD_INPUT,
-    0x05, 0x07,            // USAGE_PAGE (Keyboard Key Codes)
-    0x19, 0xE0,            // USAGE_MINIMUM (224)
-    0x29, 0xE7,            // USAGE_MAXIMUM (231)
-    0x15, 0x00,            // LOGICAL_MINIMUM (0)
-    0x25, 0x01,            // LOGICAL_MAXIMUM (1)
-    0x75, 0x01,            // REPORT_SIZE (1)
-    0x95, 0x08,            // REPORT_COUNT (8)
-    0x81, 0x02,            // INPUT (Data, Variable, Absolute)
-    0x95, 0x01,            // REPORT_COUNT (1)
-    0x75, 0x08,            // REPORT_SIZE (8)
-    0x81, 0x01,            // INPUT (Constant)
-    0x19, 0x00,            // USAGE_MINIMUM (0)
-    0x29, 0x65,            // USAGE_MAXIMUM (101)
-    0x15, 0x00,            // LOGICAL_MINIMUM (0)
-    0x25, 0x65,            // LOGICAL_MAXIMUM (101)
-    0x95, 0x06,            // REPORT_COUNT (6)
-    0x75, 0x08,            // REPORT_SIZE (8)
-    0x81, 0x00,            // INPUT (Data, Array, Absolute)
-    0x05, 0x08,            // USAGE_PAGE (LEDs)
-    0x19, 0x01,            // USAGE_MINIMUM (Num Lock)
-    0x29, 0x05,            // USAGE_MAXIMUM (Kana)
-    0x95, 0x05,            // REPORT_COUNT (5)
-    0x75, 0x01,            // REPORT_SIZE (1)
-    0x91, 0x02,            // OUTPUT (Data, Variable, Absolute)
-    0x95, 0x01,            // REPORT_COUNT (1)
-    0x75, 0x03,            // REPORT_SIZE (3)
-    0x91, 0x01,            // OUTPUT (Constant)
-    0xC0,              // END_COLLECTION
-
-    0x05, 0x01,        // USAGE_PAGE (Generic Desktop)
-    0x09, 0x00,        // USAGE (Undefined)
-    0xa1, 0x01,        // COLLECTION (Application)
-    0x85,                  REPORT_ID_KEYBOARD_OUTPUT,
-    0x09, 0x00,            // USAGE (Undefined)
-    0x15, 0x00,            // LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x00,      // LOGICAL_MAXIMUM (255)
-    0x95, 0x08,            // REPORT_COUNT (8)
-    0x75, 0x08,            // REPORT_SIZE (8)
-    0x91, 0x02,            // OUTPUT (Data, Variable, Absolute)
-    0xc0               // END_COLLECTION
+		0x06, 0x00, 0xff,                    // USAGE_PAGE (Vendor Defined Page 1)
+		0x09, 0x01,                          // USAGE (Vendor Usage 1)
+		0xa1, 0x01,                          // COLLECTION (Application)
+		0x85, REPORT_ID_MOUSE_OUTPUT,              //   REPORT_ID (1)  
+		0x15, 0x00,                          //   LOGICAL_MINIMUM (0)
+		0x26, 0xff, 0x00,                    //   LOGICAL_MAXIMUM (255)
+		0x75, 0x08,                          //   REPORT_SIZE  (8)   - bits
+		0x95, 0x40,                          //   REPORT_COUNT (64)  - Bytes
+		0x09, 0x02,                          //   USAGE (Vendor Usage 1)
+		0x81, 0x02,                          //   INPUT (Data,Var,Abs)
+		0x95, 0x40,                          //   REPORT_COUNT (64)  - Bytes
+		0x09, 0x02,                          //   USAGE (Vendor Usage 1)
+		0x91, 0x02,                          //   OUTPUT (Data,Var,Abs)
+		0xc0,                                // END_COLLECTION
 };
 
 HID_DESCRIPTOR g_descriptor = {
-    0x09,        // length of HID descriptor
-    0x21,        // descriptor type == HID 0x21
-    0x0100,      // hid spec release
-    0x00,        // country code == Not Specified
-    0x01,        // number of HID class descriptors
-    {            // DescriptorList[0]
-        0x22,                             // report descriptor type 0x22
-        sizeof(g_reportDescriptor)        // total length of report descriptor
-    }
+	0x09,        // length of HID descriptor
+	0x21,        // descriptor type == HID 0x21
+	0x0100,      // hid spec release
+	0x00,        // country code == Not Specified
+	0x01,        // number of HID class descriptors
+	{            // DescriptorList[0]
+		0x22,                             // report descriptor type 0x22
+		sizeof(g_reportDescriptor)        // total length of report descriptor
+	}
 };
+
+typedef struct _REPORT {
+	BYTE reportId;
+	UCHAR button;
+	USHORT x, y;
+}REPORT;

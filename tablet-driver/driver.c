@@ -76,6 +76,7 @@ VOID EvtWdfIoQueueIoInternalDeviceControl(_In_ WDFQUEUE queue, _In_ WDFREQUEST r
 		break;
 	case IOCTL_HID_WRITE_REPORT:
 	case IOCTL_HID_SET_OUTPUT_REPORT:
+		status = ioctl_hid_write_report(queue, request);
 		break;
 	default:
 		status = STATUS_NOT_SUPPORTED;
@@ -167,6 +168,7 @@ NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 
 	switch (packet->reportId) {
 	case REPORTID_CONTROL:
+		packet->reportBuffer[0] = 1;
 		break;
 	default:
 		status = STATUS_INVALID_PARAMETER;
@@ -177,22 +179,20 @@ NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 
 	WDFDEVICE device = WdfIoQueueGetDevice(queue);
 	PCONTEXT context = DeviceGetContext(device);
-	WDFREQUEST _request;
+	WDFREQUEST _request = NULL;
 	status = WdfIoQueueRetrieveNextRequest(context->_queue, &_request);
 	if (!NT_SUCCESS(status))
 		return status;
 
 	PVOID buffer = NULL;
-	size_t length = 0;
-
-	status = WdfRequestRetrieveOutputBuffer(_request, sizeof(HID_MOUSE_INPUT_REPORT), &buffer, &length);
+	status = WdfRequestRetrieveOutputBuffer(_request, sizeof(REPORT), &buffer, NULL);
 	if (!NT_SUCCESS(status))
 		return status;
 
-	if (length > sizeof(HID_MOUSE_INPUT_REPORT))
-		length = sizeof(HID_MOUSE_INPUT_REPORT);
+	RtlCopyMemory(buffer, packet->reportBuffer, sizeof(REPORT));
 
-	RtlCopyMemory(buffer, packet->reportBuffer, length);
+	WdfRequestCompleteWithInformation(_request, status, sizeof(REPORT));
+	WdfRequestSetInformation(request, sizeof(REPORT));
 
-	WdfRequestCompleteWithInformation(_request, status, length);
+	return status;
 }
