@@ -4,9 +4,6 @@
     <Filter Include="Device">
       <UniqueIdentifier>{2b6ff03e-59e1-46f5-a52b-2fd90d64895c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Service">
-      <UniqueIdentifier>{f9605c67-aed6-41bc-89f9-56ce95e4ebb4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Vmulti">
       <UniqueIdentifier>{fe07e985-5100-40b6-b452-37def986731a}</UniqueIdentifier>
     </Filter>
@@ -16,10 +13,13 @@
     <Filter Include="Setting">
       <UniqueIdentifier>{bfe7bdb5-23d0-437f-b142-a54728991a73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Client">
+      <UniqueIdentifier>{f9605c67-aed6-41bc-89f9-56ce95e4ebb4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Service.cpp">
-      <Filter>Service</Filter>
+    <ClCompile Include="Client.cpp">
+      <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="Vmulti.cpp">
       <Filter>Vmulti</Filter>
@@ -42,8 +42,8 @@
     <ClInclude Include="Tablet.h">
       <Filter>Tablet</Filter>
     </ClInclude>
-    <ClInclude Include="Service.h">
-      <Filter>Service</Filter>
+    <ClInclude Include="Client.h">
+      <Filter>Client</Filter>
     </ClInclude>
     <ClInclude Include="Setting.h">
       <Filter>Setting</Filter>

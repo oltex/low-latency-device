@@ -139,7 +139,7 @@
   <ItemGroup>
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Service.cpp" />
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="Tablet.cpp">
       <FileType>CppCode</FileType>
     </ClCompile>
@@ -147,7 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h" />
-    <ClInclude Include="Service.h" />
+    <ClInclude Include="Client.h" />
     <ClInclude Include="Setting.h" />
     <ClInclude Include="Tablet.h" />
     <ClInclude Include="Vmulti.h" />

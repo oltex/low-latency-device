@@ -2,7 +2,7 @@
 #pragma comment(lib, "setupapi.lib")
 #pragma comment(lib, "avrt.lib")
 
-#include "Service.h"
+#include "Client.h"
 
 #include <avrt.h>
 
@@ -16,8 +16,8 @@ int main(int argc, char** argv) {
 		return 0;
 	Init();
 
-	Service service;
-	service.Run();
+	Client client;
+	client.Run();
 }
 
 void Init(void) {

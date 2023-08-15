@@ -3,10 +3,10 @@
 #include "Vmulti.h"
 #include "Setting.h"
 
-class Service final {
+class Client final {
 public:
-	explicit Service(void);
-	~Service(void);
+	explicit Client(void);
+	~Client(void);
 public:
 	void Run(void) noexcept;
 private:

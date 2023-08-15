@@ -1,14 +1,14 @@
-#include "Service.h"
+#include "Client.h"
 
-Service::Service(void)
+Client::Client(void)
 	: _tablet({ 0x056A, 0x030E, 0xFF0D, 0x0001, FILE_READ_DATA }, { 0x02, 10, 0x40 }),
 	_setting({ { 7600, 4750, 7200, 4050 } }) {
 }
 
-Service::~Service(void) {
+Client::~Client(void) {
 }
 
-void Service::Run(void) noexcept {
+void Client::Run(void) noexcept {
 	register int x, y;
 	register const int left = _setting._area._left, right = _setting._area._right, top = _setting._area._top, bottom = _setting._area._bottom;
 	register const float width = _setting._area._width, height = _setting._area._height;
