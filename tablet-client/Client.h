@@ -5,7 +5,7 @@
 
 class Client final {
 public:
-	explicit Client(const Setting& setting);
+	explicit Client(void);
 	~Client(void);
 public:
 	void Run(void) noexcept;
