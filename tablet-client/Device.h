@@ -12,7 +12,6 @@ public:
 	};
 public:
 	explicit Device(const Config& config);
-	explicit Device(void);
 	~Device(void);
 public:
 	void Read(void* const buf, const int len) const noexcept;
