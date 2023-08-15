@@ -66,11 +66,7 @@ Device::~Device(void) {
 void Device::Read(void* const buf, const int len) const noexcept {
 	ReadFile(_handle, buf, len, NULL, NULL);
 }
-#include <iostream>
 
-void Device::Write(void* const buf, const int len) const noexcept {
-	if (!WriteFile(_handle, buf, len, NULL, NULL)) {
-		DWORD error = GetLastError();
-		std::cout << "Error: " << error << std::endl;
-	}
+void Device::Write(const void* const buf, const int len) const noexcept {
+	WriteFile(_handle, buf, len, NULL, NULL);
 }

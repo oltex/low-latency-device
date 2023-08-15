@@ -9,13 +9,7 @@
 void Init(void);
 
 int main(int argc, char** argv) {
-	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
-	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
-	DWORD taskIdx = 0;
-	if (0 == AvSetMmThreadCharacteristics(L"Games", &taskIdx))
-		return 0;
 	Init();
-
 	Client client;
 	client.Run();
 }
@@ -38,4 +32,9 @@ void Init(void) {
 	mode = (mode & ~ENABLE_WRAP_AT_EOL_OUTPUT);
 	mode = (mode & ~ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 	SetConsoleMode(handle, mode);
+
+	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+	DWORD taskIdx = 0;
+	AvSetMmThreadCharacteristics(L"Games", &taskIdx);
 }
