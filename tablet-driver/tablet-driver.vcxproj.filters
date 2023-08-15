@@ -4,18 +4,9 @@
     <Inf Include="tablet-driver.inf" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="driver.c">
-      <Filter>Driver</Filter>
-    </ClCompile>
+    <ClCompile Include="Driver.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="driver.h">
-      <Filter>Driver</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Driver">
-      <UniqueIdentifier>{c7381932-4b39-4737-a286-9a268f73c280}</UniqueIdentifier>
-    </Filter>
+    <ClInclude Include="Driver.h" />
   </ItemGroup>
 </Project>

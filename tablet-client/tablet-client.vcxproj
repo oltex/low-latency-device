@@ -21,10 +21,10 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e6b6b6cc-b7eb-4039-bd0a-f246bce920f3}</ProjectGuid>
-    <RootNamespace>tabletservicethread</RootNamespace>
+    <ProjectGuid>{609644d8-bde5-4909-ad49-3b3ee7547173}</ProjectGuid>
+    <RootNamespace>tabletcilent</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>tablet-service(thread)</ProjectName>
+    <ProjectName>tablet-client</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -137,25 +137,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Command.h" />
-    <ClInclude Include="Device.h" />
-    <ClInclude Include="File.h" />
-    <ClInclude Include="Parse.h" />
-    <ClInclude Include="Mapper.h" />
-    <ClInclude Include="Service.h" />
-    <ClInclude Include="Tablet.h" />
-    <ClInclude Include="Vmulti.h" />
+    <ClCompile Include="Device.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Service.cpp" />
+    <ClCompile Include="Tablet.cpp">
+      <FileType>CppCode</FileType>
+    </ClCompile>
+    <ClCompile Include="Vmulti.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Command.cpp" />
-    <ClCompile Include="Device.cpp" />
-    <ClCompile Include="File.cpp" />
-    <ClCompile Include="Parse.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Mapper.cpp" />
-    <ClCompile Include="Service.cpp" />
-    <ClCompile Include="Tablet.cpp" />
-    <ClCompile Include="Vmulti.cpp" />
+    <ClInclude Include="Device.h" />
+    <ClInclude Include="Service.h" />
+    <ClInclude Include="Setting.h" />
+    <ClInclude Include="Tablet.h" />
+    <ClInclude Include="Vmulti.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
