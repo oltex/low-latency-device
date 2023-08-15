@@ -4,7 +4,7 @@
 class Vmulti final {
 public:
 	struct Report {
-		const BYTE vmultiId = 0x40, reportLen = 7, reportId = 3;
+		const BYTE vmultiId = 0x40, reportLen = 7, reportId = 0x03; //hawku (len = 7 report = 3), (otd len = 9 report = 9)
 		UCHAR button = 0;
 		USHORT x = 0, y = 0;
 	};
