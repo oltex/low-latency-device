@@ -58,16 +58,6 @@ Device::Device(const Config& config) {
 	SetupDiDestroyDeviceInfoList(devInfo);
 }
 
-#include <iostream>
-
-Device::Device(void) {
-
-	_handle = CreateFile(L"\\\\.\\tablet-symbolic", FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_WRITE_DATA, 0, NULL, OPEN_EXISTING, 0, NULL);
-	if (INVALID_HANDLE_VALUE == _handle) {
-		return;
-	}
-}
-
 Device::~Device(void) {
 	CloseHandle(_handle);
 	_handle = nullptr;
@@ -77,17 +67,6 @@ void Device::Read(void* const buf, const int len) const noexcept {
 	ReadFile(_handle, buf, len, NULL, NULL);
 }
 
-#include<hidclass.h>
-
 void Device::Write(void* const buf, const int len) const noexcept {
-	if (!WriteFile(_handle, buf, len, NULL, NULL)) {
-		DWORD error = GetLastError();
-		std::cout << "WriteFile error: " << error << std::endl;
-	}
-	//if (!HidD_SetOutputReport(_handle, buf, len)) {
-	//	DWORD error = GetLastError();
-	//	std::cout << "HidD_SetOutputReport error: " << error << std::endl;
-	//}
-
-
+	WriteFile(_handle, buf, len, NULL, NULL);
 }

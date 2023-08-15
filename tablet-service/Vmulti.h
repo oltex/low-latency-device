@@ -4,7 +4,7 @@
 class Vmulti final {
 public:
 	struct Report {
-		const BYTE vmultiId = 0x02;
+		const BYTE vmultiId = 0x40, reportLen = 7, reportId = 3;
 		UCHAR button = 0;
 		USHORT x = 0, y = 0;
 	};
