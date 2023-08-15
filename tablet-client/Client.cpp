@@ -1,8 +1,8 @@
 #include "Client.h"
 
-Client::Client(void)
+Client::Client(const Setting& setting)
 	: _tablet({ 0x056A, 0x030E, 0xFF0D, 0x0001, FILE_READ_DATA }, { 0x02, 10, 0x40 }),
-	_setting({ { 7600, 4750, 7200, 4050 } }) {
+	_setting(setting) {
 }
 
 Client::~Client(void) {

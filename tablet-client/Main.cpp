@@ -5,6 +5,7 @@
 #include "Client.h"
 
 #include <avrt.h>
+#include <stdlib.h>
 
 void Init(void);
 
@@ -16,7 +17,7 @@ int main(int argc, char** argv) {
 		return 0;
 	Init();
 
-	Client client;
+	Client client({ { atoi(argv[1]),atoi(argv[2]), atoi(argv[3]), atoi(argv[4])} });
 	client.Run();
 }
 

@@ -17,5 +17,5 @@ public:
 	Report _report;
 private:
 	const Device _device;
-	BYTE _buf[7];
+	BYTE _buf[65];
 };
