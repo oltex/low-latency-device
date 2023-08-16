@@ -39,7 +39,7 @@ NTSTATUS EvtDriverDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT Devic
 
 	////////////////////////////////////////QUEUE2
 	WDF_IO_QUEUE_CONFIG_INIT(&config, WdfIoQueueDispatchManual);
-	config.PowerManaged = WdfFalse;
+	config.PowerManaged = WdfFalse; //i dont know
 
 	PCONTEXT context = DeviceGetContext(device);
 	status = WdfIoQueueCreate(device, &config, WDF_NO_OBJECT_ATTRIBUTES, &context->_queue);
@@ -168,11 +168,6 @@ NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 		status = STATUS_INVALID_PARAMETER;
 		return status;
 	}
-
-	/////////////////////////////////////////////////////////////////
-
-	//HEADER* header = NULL;
-	//header = (HEADER*)packet->reportBuffer;
 
 	/////////////////////////////////////////////////////////////////
 
