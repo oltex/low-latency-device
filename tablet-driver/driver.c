@@ -61,18 +61,18 @@ VOID EvtIoInternalDeviceControl(_In_ WDFQUEUE queue, _In_ WDFREQUEST request,
 		status = ioctl_hid_get_device_attributes(request);
 		break;
 	case IOCTL_HID_GET_DEVICE_DESCRIPTOR:
-		status = ioctl_hid_get_device_descriptor(request);
+		status = MemoryCopyFromBuffer(request, &g_descriptor, g_descriptor.bLength);
 		break;
 	case IOCTL_HID_GET_REPORT_DESCRIPTOR:
-		status = ioctl_hid_get_report_descriptor(request);
+		status = MemoryCopyFromBuffer(request, &g_reportDescriptor, g_descriptor.DescriptorList[0].wReportLength);
 		break;
 	case IOCTL_HID_READ_REPORT:
 	case IOCTL_HID_GET_INPUT_REPORT:
-		status = iotcl_hid_read_report(queue, request, &complete);
+		status = RequestForwardToIoQueue(queue, request, &complete);
 		break;
 	case IOCTL_HID_WRITE_REPORT:
 	case IOCTL_HID_SET_OUTPUT_REPORT:
-		status = ioctl_hid_write_report(queue, request);
+		status = RequestGetIrp(queue, request);
 		break;
 	default:
 		status = STATUS_NOT_SUPPORTED;
@@ -100,39 +100,30 @@ NTSTATUS ioctl_hid_get_device_attributes(_In_ WDFREQUEST request) {
 	return status;
 }
 
-NTSTATUS ioctl_hid_get_device_descriptor(_In_ WDFREQUEST request) {
+NTSTATUS MemoryCopyFromBuffer(_In_ WDFREQUEST request, _In_ PVOID buffer, _In_ size_t length) {
+	//if (length <= 0)
+	//	return STATUS_INVALID_BUFFER_SIZE;
 	NTSTATUS status = STATUS_SUCCESS;
-	WDFMEMORY memory = NULL;
 
+	WDFMEMORY memory = NULL;
 	status = WdfRequestRetrieveOutputMemory(request, &memory);
 	if (!NT_SUCCESS(status))
 		return status;
 
-	status = WdfMemoryCopyFromBuffer(memory, 0, (PVOID)&g_descriptor, g_descriptor.bLength);
+	//size_t size = 0;
+	//WdfMemoryGetBuffer(memory, &size);
+	//if (size < length)
+	//	return STATUS_INVALID_BUFFER_SIZE;
+
+	status = WdfMemoryCopyFromBuffer(memory, 0, &buffer, length);
 	if (!NT_SUCCESS(status))
 		return status;
 
-	WdfRequestSetInformation(request, g_descriptor.bLength);
+	WdfRequestSetInformation(request, length);
 	return status;
 }
 
-NTSTATUS ioctl_hid_get_report_descriptor(_In_ WDFREQUEST request) {
-	NTSTATUS status = STATUS_SUCCESS;
-	WDFMEMORY memory = NULL;
-
-	status = WdfRequestRetrieveOutputMemory(request, &memory);
-	if (!NT_SUCCESS(status))
-		return status;
-
-	status = WdfMemoryCopyFromBuffer(memory, 0, (PVOID)&g_reportDescriptor, g_descriptor.DescriptorList[0].wReportLength);
-	if (!NT_SUCCESS(status))
-		return status;
-
-	WdfRequestSetInformation(request, g_descriptor.DescriptorList[0].wReportLength);
-	return status;
-}
-
-NTSTATUS iotcl_hid_read_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request, OUT BOOLEAN* complete) {
+NTSTATUS RequestForwardToIoQueue(_In_ WDFQUEUE queue, _In_ WDFREQUEST request, OUT BOOLEAN* complete) {
 	NTSTATUS status = STATUS_SUCCESS;
 
 	WDFDEVICE device = WdfIoQueueGetDevice(queue);
@@ -145,17 +136,15 @@ NTSTATUS iotcl_hid_read_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request, OUT
 	return status;
 }
 
-NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
+NTSTATUS RequestGetIrp(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 	NTSTATUS status = STATUS_SUCCESS;
 
 	WDF_REQUEST_PARAMETERS param;
 	WDF_REQUEST_PARAMETERS_INIT(&param);
 	WdfRequestGetParameters(request, &param);
 
-	if (param.Parameters.DeviceIoControl.InputBufferLength < sizeof(HID_XFER_PACKET)) {
-		status = STATUS_BUFFER_TOO_SMALL;
-		return status;
-	}
+	if (param.Parameters.DeviceIoControl.InputBufferLength < sizeof(HID_XFER_PACKET))
+		return STATUS_BUFFER_TOO_SMALL;
 
 	PHID_XFER_PACKET packet;
 	packet = (PHID_XFER_PACKET)WdfRequestWdmGetIrp(request)->UserBuffer;
@@ -165,8 +154,7 @@ NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 		packet->reportBuffer[0] = REPORT_ID_MOUSE_INPUT;
 		break;
 	default:
-		status = STATUS_INVALID_PARAMETER;
-		return status;
+		return STATUS_INVALID_PARAMETER;
 	}
 
 	/////////////////////////////////////////////////////////////////
@@ -178,15 +166,50 @@ NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request) {
 	if (!NT_SUCCESS(status))
 		return status;
 
-	PVOID buffer = NULL;
-	status = WdfRequestRetrieveOutputBuffer(_request, packet->reportBufferLen, &buffer, NULL);
-	if (!NT_SUCCESS(status))
-		return status;
+	//1
+	status = MemoryCopyFromBuffer(_request, packet->reportBuffer, packet->reportBufferLen);
+	WdfRequestComplete(_request, status);
 
-	RtlCopyMemory(buffer, packet->reportBuffer, packet->reportBufferLen);
+	//2
+	//PVOID buffer = NULL;
+	//status = WdfRequestRetrieveOutputBuffer(_request, packet->reportBufferLen, &buffer, NULL);
+	//if (!NT_SUCCESS(status))
+	//	return status;
+	//RtlCopyMemory(buffer, packet->reportBuffer, packet->reportBufferLen);
+	//WdfRequestCompleteWithInformation(_request, status, packet->reportBufferLen);
 
-	WdfRequestCompleteWithInformation(_request, status, packet->reportBufferLen);
 	WdfRequestSetInformation(request, packet->reportBufferLen);
-
 	return status;
 }
+
+//NTSTATUS ioctl_hid_get_device_descriptor(_In_ WDFREQUEST request) {
+//	NTSTATUS status = STATUS_SUCCESS;
+//	WDFMEMORY memory = NULL;
+//
+//	status = WdfRequestRetrieveOutputMemory(request, &memory);
+//	if (!NT_SUCCESS(status))
+//		return status;
+//
+//	status = WdfMemoryCopyFromBuffer(memory, 0, (PVOID)&g_descriptor, g_descriptor.bLength);
+//	if (!NT_SUCCESS(status))
+//		return status;
+//
+//	WdfRequestSetInformation(request, g_descriptor.bLength);
+//	return status;
+//}
+//
+//NTSTATUS ioctl_hid_get_report_descriptor(_In_ WDFREQUEST request) {
+//	NTSTATUS status = STATUS_SUCCESS;
+//	WDFMEMORY memory = NULL;
+//
+//	status = WdfRequestRetrieveOutputMemory(request, &memory);
+//	if (!NT_SUCCESS(status))
+//		return status;
+//
+//	status = WdfMemoryCopyFromBuffer(memory, 0, (PVOID)&g_reportDescriptor, g_descriptor.DescriptorList[0].wReportLength);
+//	if (!NT_SUCCESS(status))
+//		return status;
+//
+//	WdfRequestSetInformation(request, g_descriptor.DescriptorList[0].wReportLength);
+//	return status;
+//}

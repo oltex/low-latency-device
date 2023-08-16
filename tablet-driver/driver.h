@@ -8,10 +8,9 @@
 NTSTATUS EvtDriverDeviceAdd(_In_ WDFDRIVER, _Inout_ PWDFDEVICE_INIT);
 VOID EvtIoInternalDeviceControl(_In_ WDFQUEUE, _In_ WDFREQUEST, _In_ size_t, _In_ size_t, _In_ ULONG);
 NTSTATUS ioctl_hid_get_device_attributes(_In_ WDFREQUEST request);
-NTSTATUS ioctl_hid_get_device_descriptor(_In_ WDFREQUEST request);
-NTSTATUS ioctl_hid_get_report_descriptor(_In_ WDFREQUEST request);
-NTSTATUS iotcl_hid_read_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request, OUT BOOLEAN* complete);
-NTSTATUS ioctl_hid_write_report(_In_ WDFQUEUE queue, _In_ WDFREQUEST request);
+NTSTATUS MemoryCopyFromBuffer(_In_ WDFREQUEST request, _In_ PVOID buffer, _In_ size_t length);
+NTSTATUS RequestForwardToIoQueue(_In_ WDFQUEUE queue, _In_ WDFREQUEST request, OUT BOOLEAN* complete);
+NTSTATUS RequestGetIrp(_In_ WDFQUEUE queue, _In_ WDFREQUEST request);
 
 typedef struct _CONTEXT {
 	WDFQUEUE _queue;
@@ -87,14 +86,3 @@ HID_DESCRIPTOR g_descriptor = {
 		sizeof(g_reportDescriptor)        // total length of report descriptor
 	}
 };
-
-//typedef struct _REPORT {
-//	BYTE reportId;
-//	UCHAR button;
-//	USHORT x, y;
-//}REPORT;
-//
-//typedef struct _HEADER {
-//	BYTE ReportID;
-//	BYTE ReportLength;
-//} HEADER;
