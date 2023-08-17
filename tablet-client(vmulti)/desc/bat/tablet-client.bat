@@ -1,0 +1,1 @@
+start tablet-client(vmulti).exe 7600 4750 7200 4050
