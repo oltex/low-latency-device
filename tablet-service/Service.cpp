@@ -27,12 +27,11 @@ void Service::Run(void)  noexcept {
 
 //#include <iostream>
 //
-//clock_t start, finish;
 //double avg = 0;
 //long long idx = 0;
-//start = clock();
+//clock_t start = clock();
 //
-//finish = clock();
+//clock_t finish = clock();
 //avg += finish - start;
 //idx++;
 //std::cout << avg / idx << std::endl;

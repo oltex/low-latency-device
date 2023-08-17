@@ -14,8 +14,8 @@ public:
 	explicit Device(const Config& config);
 	~Device(void);
 public:
-	void Read(void* const buf, const int len) const noexcept;
-	void Write(const void* const buf, const int len) const noexcept;
+	void Read(void* const __restrict buf, const int len) const noexcept;
+	void Write(const void* const __restrict buf, const int len) const noexcept;
 private:
-	HANDLE _handle = nullptr;
+	HANDLE __restrict _handle = nullptr;
 };

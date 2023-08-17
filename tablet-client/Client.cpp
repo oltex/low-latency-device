@@ -7,12 +7,18 @@ Client::Client(void)
 
 Client::~Client(void) {
 }
+#include <iostream>
 
 void Client::Run(void) noexcept {
+	double avg = 0;
+	long long idx = 0;
+
 	register int x, y;
 	register const int left = _setting._area._left, right = _setting._area._right, top = _setting._area._top, bottom = _setting._area._bottom;
 	register const float width = _setting._area._width, height = _setting._area._height;
 	while (true) {
+		clock_t start = clock();
+
 		if (!_tablet.Read())
 			continue;
 
@@ -23,5 +29,17 @@ void Client::Run(void) noexcept {
 		_vmulti._report.button = _tablet._report.button & 0x0F;
 
 		_vmulti.Write();
+
+		clock_t finish = clock();
+		avg += finish - start;
+		idx++;
+		std::cout << avg / idx << std::endl;
+		if (_vmulti._report.button & 1) {
+			avg = 0;
+			idx = 0;
+		}
 	}
 }
+
+
+
