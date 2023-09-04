@@ -7,8 +7,3 @@ Vmulti::Vmulti(void)
 
 Vmulti::~Vmulti(void) {
 }
-
-void Vmulti::Write(void) noexcept {
-	memcpy(_buf, &_report, sizeof(Report));
-	_device.Write(_buf, 7);
-}

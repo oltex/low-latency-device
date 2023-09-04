@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 }
 
 void Init(void) {
-	HANDLE handle;
+	HANDLE handle = nullptr;
 	DWORD mode = 0;
 	handle = GetStdHandle(STD_INPUT_HANDLE);
 	GetConsoleMode(handle, &mode);
@@ -36,5 +36,6 @@ void Init(void) {
 	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 	DWORD taskIdx = 0;
-	AvSetMmThreadCharacteristics(L"Games", &taskIdx);
+	HANDLE avrthandle = AvSetMmThreadCharacteristics(L"Games", &taskIdx);
+	AvSetMmThreadPriority(avrthandle, AVRT_PRIORITY_CRITICAL);
 }
