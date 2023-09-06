@@ -11,14 +11,13 @@ void Init(void);
 
 int main(int argc, char** argv) {
 	Init();
-	Client client;
+	Client client{ Setting{ Setting::Area{atoi(argv[1]), atoi(argv[2]), atoi(argv[3]), atoi(argv[4])} } };
 	client.Run();
 }
 
 void Init(void) {
-	HANDLE handle = nullptr;
+	HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
 	DWORD mode = 0;
-	handle = GetStdHandle(STD_INPUT_HANDLE);
 	GetConsoleMode(handle, &mode);
 	mode = (mode & ~ENABLE_WINDOW_INPUT);
 	mode = (mode & ~ENABLE_MOUSE_INPUT);

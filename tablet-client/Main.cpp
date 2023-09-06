@@ -15,9 +15,8 @@ int main(int argc, char** argv) {
 }
 
 void Init(void) {
-	HANDLE handle = nullptr;
+	HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
 	DWORD mode = 0;
-	handle = GetStdHandle(STD_INPUT_HANDLE);
 	GetConsoleMode(handle, &mode);
 	mode = (mode & ~ENABLE_WINDOW_INPUT);
 	mode = (mode & ~ENABLE_MOUSE_INPUT);
