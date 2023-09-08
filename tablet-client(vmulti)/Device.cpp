@@ -62,3 +62,11 @@ Device::~Device(void) {
 	CloseHandle(_handle);
 	_handle = nullptr;
 }
+
+void Device::Read(void* const buf, const int len) const noexcept {
+	ReadFile(_handle, buf, len, NULL, NULL);
+}
+
+void Device::Write(const void* const buf, const int len) const noexcept {
+	WriteFile(_handle, buf, len, NULL, NULL);
+}

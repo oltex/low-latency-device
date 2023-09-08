@@ -12,15 +12,10 @@ public:
 	explicit Vmulti(void);
 	~Vmulti(void);
 public:
-	inline void Write(void) noexcept;
+	void Write(void) noexcept;
 public:
 	Report _report;
 private:
 	const Device _device;
 	BYTE _buf[65];
 };
-
-inline void Vmulti::Write(void) noexcept {
-	memcpy(_buf, &_report, sizeof(Report));
-	_device.Write(_buf, 65);
-}
