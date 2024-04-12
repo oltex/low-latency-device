@@ -17,5 +17,5 @@ public:
 	void Read(void* const buf, const int len) const noexcept;
 	void Write(const void* const buf, const int len) const noexcept;
 private:
-	HANDLE _handle = nullptr;
+	HANDLE  _handle = nullptr;
 };
