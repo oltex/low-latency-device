@@ -3,8 +3,8 @@
 
 class Vmulti final {
 public:
-	struct Report {
-		const BYTE reportId = 0x02;
+	struct Report final {
+		BYTE const reportId = 0x02; //, reportLen = 7, reportId = 3; //hawku (len = 7 report = 3), otd (len = 9 report = 9)
 		UCHAR button = 0;
 		USHORT x = 0, y = 0;
 	};
@@ -16,11 +16,11 @@ public:
 public:
 	Report _report;
 private:
-	const Device _device;
-	BYTE _buf[7];
+	BYTE _buf[7]; //65
+	Device const _device;
 };
 
 inline void Vmulti::Write(void) noexcept {
 	memcpy(_buf, &_report, sizeof(Report));
-	_device.Write(_buf, 7);
+	_device.Write(_buf, sizeof(_buf));
 }

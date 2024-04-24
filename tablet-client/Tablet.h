@@ -3,8 +3,8 @@
 
 class Tablet final {
 public:
-	struct Config {
-		const BYTE reportId, reportLen, detectMask;
+	 struct Config {
+		BYTE const reportId, reportLen, detectMask;
 	};
 	struct Report {
 		UCHAR button;
@@ -14,17 +14,18 @@ public:
 	explicit Tablet(const Device::Config& devCfg, const Config config);
 	~Tablet(void);
 public:
-	inline const int Read(void) noexcept;
+	inline int const Read(void) noexcept;
+private:
+	Device const _device;
 public:
 	Report _report;
 private:
-	const Device _device;
-	const Config _config;
+	Config const _config;
 	BYTE _buf[10];
 };
 
-inline const int Tablet::Read(void) noexcept {
-	memset(_buf, 0, 10);
+inline int const Tablet::Read(void) noexcept {
+	memset(_buf, 0, sizeof(_buf));
 	_device.Read(_buf, _config.reportLen);
 
 	if (_buf[0] != _config.reportId)

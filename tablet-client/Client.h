@@ -5,12 +5,12 @@
 
 class Client final {
 public:
-	explicit Client(void);
+	explicit Client(Setting&& setting);
 	~Client(void);
 public:
 	void Run(void) noexcept;
 private:
 	Tablet _tablet;
 	Vmulti _vmulti;
-	const Setting _setting;
+	Setting const _setting;
 };

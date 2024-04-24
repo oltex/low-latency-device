@@ -2,16 +2,17 @@
 #include <Windows.h>
 #include <SetupAPI.h>
 #include <hidsdi.h>
+#include <utility>
 
 class Device final {
 public:
-	struct Config {
-		const USHORT vendorId, productId;
-		const USAGE usagePage, usage;
-		const DWORD desiredAccess;
+	struct Config final {
+		USHORT const vendorId, productId;
+		USAGE const usagePage, usage;
+		DWORD const desiredAccess;
 	};
 public:
-	explicit Device(const Config& config);
+	explicit Device(Config const& config);
 	~Device(void);
 public:
 	inline void Read(void* const __restrict buf, const int len) const noexcept;
