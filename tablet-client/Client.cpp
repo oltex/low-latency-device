@@ -1,8 +1,8 @@
 #include "Client.h"
 
-Client::Client(Setting&& setting)
-	: _tablet({ 0x056A, 0x030E, 0xFF0D, 0x0001, FILE_READ_DATA }, { 0x02, 10, 0x40 }),
-	_setting(std::move(setting)) {
+Client::Client(Setting const& setting)
+	: _tablet(Device::Config{ 0x056A, 0x030E, 0xFF0D, 0x0001, FILE_READ_DATA }, Tablet::Config{ 0x02, 10, 0x40 }),
+	_setting(setting) {
 }
 
 Client::~Client(void) {
@@ -13,9 +13,9 @@ void Client::Run(void) noexcept {
 	register const int left = _setting._area._left, right = _setting._area._right, top = _setting._area._top, bottom = _setting._area._bottom;
 	register const float width = _setting._area._width, height = _setting._area._height;
 
-	//__int64 avg = 0, cnt = 0;
+	__int64 avg = 0, cnt = 0;
 	for (;;) {
-		//__int64 tsc = __rdtsc();
+		__int64 tsc = __rdtsc();
 		if (!_tablet.Read())
 			continue;
 
@@ -27,8 +27,8 @@ void Client::Run(void) noexcept {
 
 		_vmulti.Write();
 
-		//avg += (__rdtsc() - tsc);
-		//cnt++;
-		//std::cout << avg / cnt << std::endl;
+		avg += (__rdtsc() - tsc);
+		cnt++;
+		std::cout << avg / cnt << std::endl;
 	}
 }

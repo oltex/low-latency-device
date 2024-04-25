@@ -3,7 +3,7 @@
 
 class Tablet final {
 public:
-	 struct Config {
+	struct Config {
 		BYTE const reportId, reportLen, detectMask;
 	};
 	struct Report {
@@ -11,7 +11,7 @@ public:
 		USHORT x, y;
 	};
 public:
-	explicit Tablet(const Device::Config& devCfg, const Config config);
+	explicit Tablet(Device::Config const& devCfg, Config const config);
 	~Tablet(void);
 public:
 	inline int const Read(void) noexcept;

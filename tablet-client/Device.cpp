@@ -1,6 +1,6 @@
 #include "Device.h"
 
-Device::Device(const Config& config) {
+Device::Device(Config const& config) {
 	GUID hidGuid;
 	HidD_GetHidGuid(&hidGuid);
 
@@ -9,21 +9,16 @@ Device::Device(const Config& config) {
 
 	SP_DEVICE_INTERFACE_DATA devItfData;
 	devItfData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
+
 	DWORD idx = 0;
-
-	PSP_DEVICE_INTERFACE_DETAIL_DATA devItfDetailData = nullptr;
-	DWORD size;
-
-	HIDD_ATTRIBUTES attributes;
-	PHIDP_PREPARSED_DATA preparsedData = nullptr;
-	HIDP_CAPS hidCapabilities;
-
-	while (_handle == nullptr || _handle == INVALID_HANDLE_VALUE) {
+	while (INVALID_HANDLE_VALUE == _handle) {
 		SetupDiEnumInterfaceDevice(devInfo, NULL, &hidGuid, idx++, &devItfData);
 		if (ERROR_NO_MORE_ITEMS == GetLastError())
 			break;
 
+		DWORD size;
 		SetupDiGetDeviceInterfaceDetail(devInfo, &devItfData, NULL, 0, &size, NULL);
+		PSP_DEVICE_INTERFACE_DETAIL_DATA devItfDetailData;
 		devItfDetailData = (PSP_DEVICE_INTERFACE_DETAIL_DATA)malloc(size);
 		devItfDetailData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
 		SetupDiGetDeviceInterfaceDetail(devInfo, &devItfData, devItfDetailData, size, &size, NULL);
@@ -31,14 +26,17 @@ Device::Device(const Config& config) {
 		_handle = CreateFile(devItfDetailData->DevicePath, config.desiredAccess, 0, NULL, OPEN_EXISTING, 0, NULL);
 
 		if (INVALID_HANDLE_VALUE != _handle) {
+			HIDD_ATTRIBUTES attributes;
+			PHIDP_PREPARSED_DATA preparsedData;
+			HIDP_CAPS capabilities;
 			HidD_GetAttributes(_handle, &attributes);
 			HidD_GetPreparsedData(_handle, &preparsedData);
-			HidP_GetCaps(preparsedData, &hidCapabilities);
+			HidP_GetCaps(preparsedData, &capabilities);
 
 			if (attributes.VendorID == config.vendorId &&
 				attributes.ProductID == config.productId &&
-				hidCapabilities.UsagePage == config.usagePage &&
-				hidCapabilities.Usage == config.usage) {
+				capabilities.UsagePage == config.usagePage &&
+				capabilities.Usage == config.usage) {
 
 				COMMTIMEOUTS commTimeOuts;
 				GetCommTimeouts(_handle, &commTimeOuts);
@@ -49,7 +47,7 @@ Device::Device(const Config& config) {
 			}
 			else {
 				CloseHandle(_handle);
-				_handle = nullptr;
+				_handle = INVALID_HANDLE_VALUE;
 			}
 			HidD_FreePreparsedData(preparsedData);
 		}
