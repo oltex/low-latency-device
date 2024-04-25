@@ -8,14 +8,11 @@ Client::Client(Setting const& setting)
 Client::~Client(void) {
 }
 
-#include <iostream>
 void Client::Run(void) noexcept {
 	register const int left = _setting._area._left, right = _setting._area._right, top = _setting._area._top, bottom = _setting._area._bottom;
 	register const float width = _setting._area._width, height = _setting._area._height;
 
-	__int64 avg = 0, cnt = 0;
 	for (;;) {
-		__int64 tsc = __rdtsc();
 		if (!_tablet.Read())
 			continue;
 
@@ -26,9 +23,5 @@ void Client::Run(void) noexcept {
 		_vmulti._report.button = _tablet._report.button & 0x7;
 
 		_vmulti.Write();
-
-		avg += (__rdtsc() - tsc);
-		cnt++;
-		std::cout << avg / cnt << std::endl;
 	}
 }

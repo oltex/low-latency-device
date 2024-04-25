@@ -138,6 +138,7 @@
       <ExceptionHandling>false</ExceptionHandling>
       <SDLCheck>false</SDLCheck>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ErrorReporting>None</ErrorReporting>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
