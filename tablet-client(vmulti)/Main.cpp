@@ -11,7 +11,8 @@ void Init(void);
 
 int main(int argc, char** argv) {
 	Init();
-	Client client{ Setting{ Setting::Area{atoi(argv[1]), atoi(argv[2]), atoi(argv[3]), atoi(argv[4])} } };
+	//Client client{ Setting{ Setting::Area{atoi(argv[1]), atoi(argv[2]), atoi(argv[3]), atoi(argv[4])} } };
+	Client client{ Setting{ Setting::Area{7600, 4750, 7200, 4050} } };
 	client.Run();
 }
 

@@ -28,7 +28,7 @@ void Init(void) {
 		ENABLE_QUICK_EDIT_MODE | ENABLE_EXTENDED_FLAGS |
 		ENABLE_AUTO_POSITION | ENABLE_VIRTUAL_TERMINAL_INPUT);
 	SetConsoleMode(handle, mode);
-	CloseHandle(handle);
+	//CloseHandle(handle);
 
 	handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	GetConsoleMode(handle, &mode);
@@ -50,8 +50,8 @@ void Init(void) {
 	//}
 	//SMALL_RECT rect = { 0, 0, 19, 1 };
 	//WriteConsoleOutput(handle, buf, COORD{ 19, 1 }, COORD{ 0,0 }, &rect);
-	CloseHandle(handle);
-	FreeConsole();
+	//CloseHandle(handle);
+	//FreeConsole();
 
 	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);

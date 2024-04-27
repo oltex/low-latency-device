@@ -13,10 +13,10 @@ const int Tablet::Read(void) noexcept {
 	memset(_buf, 0, 10);
 	_device.Read(_buf, _config.reportLen);
 
-	if (_buf[0] != _config.reportId)
+	if (_buf[0] != _config.reportId ||
+		(_buf[1] & _config.detectMask) != _config.detectMask)
 		return 0;
-	if ((_buf[1] & _config.detectMask) != _config.detectMask)
-		return 0;
+
 
 	_report.button = _buf[1];
 	_report.x = _buf[2] | (_buf[3] << 8);
