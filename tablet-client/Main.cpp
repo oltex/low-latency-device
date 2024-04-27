@@ -12,8 +12,8 @@ void Init(void);
 int main(int argc, char** argv) {
 	fputs("oltex-tablet-client", stdout);
 	Init();
-	//Client client{ Setting{ Setting::Area{atoi(argv[1]), atoi(argv[2]), atoi(argv[3]), atoi(argv[4])} } };
-	Client client{ Setting{ Setting::Area{7600, 4750, 7200, 4050} } };
+	Client client{ Setting{ Setting::Area{atoi(argv[1]), atoi(argv[2]), atoi(argv[3]), atoi(argv[4])} } };
+	//Client client{ Setting{ Setting::Area{7600, 4750, 7200, 4050} } };
 	client.Run();
 	return 0;
 }
@@ -40,17 +40,8 @@ void Init(void) {
 	info.dwSize = 1;
 	info.bVisible = FALSE;
 	SetConsoleCursorInfo(handle, &info);
-
-	//const char* text = "oltex-tablet-client";
-	//CHAR_INFO buf[19];
-	//memset(buf, 0, sizeof(CHAR_INFO) * 19);
-	//for (int i = 0; i < 19; i++) {
-	//	buf[i].Char.UnicodeChar = text[i];
-	//	buf[i].Attributes = 0x7;
-	//}
-	//SMALL_RECT rect = { 0, 0, 19, 1 };
-	//WriteConsoleOutput(handle, buf, COORD{ 19, 1 }, COORD{ 0,0 }, &rect);
 	//CloseHandle(handle);
+	
 	//FreeConsole();
 
 	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);

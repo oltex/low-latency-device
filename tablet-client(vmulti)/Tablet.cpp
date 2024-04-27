@@ -17,7 +17,6 @@ const int Tablet::Read(void) noexcept {
 		(_buf[1] & _config.detectMask) != _config.detectMask)
 		return 0;
 
-
 	_report.button = _buf[1];
 	_report.x = _buf[2] | (_buf[3] << 8);
 	_report.y = _buf[4] | (_buf[5] << 8);
