@@ -7,7 +7,7 @@ public:
 		BYTE const reportId, reportLen, detectMask;
 	};
 public:
-	explicit Tablet(Device::Config const& devCfg, Config const config);
+	explicit Tablet(Device::Config const& devCfg, Config const& config);
 	~Tablet(void);
 public:
 	int const Read(void) noexcept;

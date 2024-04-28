@@ -8,9 +8,9 @@ public:
 		BYTE const vmultiId = 0x40, reportLen = 7, reportId = 3; //hawku
 		//BYTE const vmultiId = 0x40, reportLen = 9, reportId = 9; //otd
 	};
-	struct Report {
-		USHORT x = 0, y = 0;
-	};
+	//struct Report {
+	//	USHORT x = 0, y = 0;
+	//};
 public:
 	explicit Vmulti(void);
 	~Vmulti(void);
@@ -19,6 +19,6 @@ public:
 private:
 	Device const _device;
 public:
-	Report _report;
+	//Report _report;
 	BYTE _buf[65]; //7, 65
 };

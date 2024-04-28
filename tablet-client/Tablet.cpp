@@ -1,6 +1,6 @@
 #include "Tablet.h"
 
-Tablet::Tablet(Device::Config const& devCfg, Config const config)
+Tablet::Tablet(Device::Config const& devCfg, Config const& config)
 	: _device(devCfg), _config(config) {
 	memset(_buf, 0, sizeof(_buf));
 }

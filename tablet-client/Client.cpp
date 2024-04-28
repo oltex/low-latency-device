@@ -9,15 +9,15 @@ Client::~Client(void) {
 }
 
 void Client::Run(void) noexcept {
-	register int const left = _setting._area._left, right = _setting._area._right - left, top = _setting._area._top, bottom = _setting._area._bottom - top;
-	register float const width = _setting._area._width, height = _setting._area._height;
+	/*register*/ int const left = _setting._area._left, right = _setting._area._right, top = _setting._area._top, bottom = _setting._area._bottom;
+	/*register*/ float const width = _setting._area._width, height = _setting._area._height;
 	for (;;) {
 		if (!_tablet.Read())
 			continue;
 
 		_vmulti._buf[3] = _tablet._buf[1] & 0x7;
-		register int x = (_tablet._buf[2] | (_tablet._buf[3] << 8)) - left;
-		register int y = (_tablet._buf[4] | (_tablet._buf[5] << 8)) - top;
+		/*register*/ int x = (_tablet._buf[2] | (_tablet._buf[3] << 8)) - left;
+		/*register*/ int y = (_tablet._buf[4] | (_tablet._buf[5] << 8)) - top;
 
 		if (0 > x)
 			x = 0;
