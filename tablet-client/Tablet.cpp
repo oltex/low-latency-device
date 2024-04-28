@@ -9,7 +9,7 @@ Tablet::~Tablet(void) {
 }
 
 int const Tablet::Read(void) noexcept {
-	memset(_buf, 0, 1);
+	_buf[0] = 0;
 	_device.Read(_buf, _config.reportLen);
 
 	if (_buf[0] != _config.reportId ||

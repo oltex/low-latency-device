@@ -9,9 +9,6 @@ public:
 		//BYTE const vmultiId = 0x40, reportLen = 9, reportId = 9; //otd
 	};
 	struct Report {
-		//const BYTE vmultiId = 0x40, reportLen = 7, reportId = 3; //hawku
-		////BYTE const vmultiId = 0x40, reportLen = 9, reportId = 9; //otd
-		//UCHAR button = 0;
 		USHORT x = 0, y = 0;
 	};
 public:
