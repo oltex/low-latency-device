@@ -1,10 +1,7 @@
-#pragma comment(lib, "hid.lib")
-#pragma comment(lib, "setupapi.lib")
-#pragma comment(lib, "avrt.lib")
-
 #include "Client.h"
 
 //#include <stdio.h>
+#pragma comment(lib, "avrt.lib")
 #include <avrt.h>
 
 void Init(void);

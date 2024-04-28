@@ -9,7 +9,7 @@ public:
 		//BYTE const vmultiId = 0x40, reportLen = 9, reportId = 9; //otd
 	};
 	//struct Report {
-	//	USHORT x = 0, y = 0;
+	//	USHORT x, y;
 	//};
 public:
 	explicit Vmulti(void);

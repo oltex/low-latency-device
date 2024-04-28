@@ -1,5 +1,10 @@
 #include "Device.h"
 
+#pragma comment(lib, "hid.lib")
+#include <hidsdi.h>
+#pragma comment(lib, "setupapi.lib")
+#include <SetupAPI.h>
+
 Device::Device(Config const& config) {
 	GUID hidGuid;
 	HidD_GetHidGuid(&hidGuid);
@@ -61,10 +66,10 @@ Device::~Device(void) {
 	_handle = nullptr;
 }
 
-void Device::Read(void* const /*__restrict*/ buf, int const len) const noexcept {
+void Device::Read(void* const __restrict buf, int const len) const noexcept {
 	ReadFile(_handle, buf, len, NULL, NULL);
 }
 
-void Device::Write(void const* const /*__restrict*/ buf, int const len) const noexcept {
+void Device::Write(void const* const __restrict buf, int const len) const noexcept {
 	WriteFile(_handle, buf, len, NULL, NULL);
 }

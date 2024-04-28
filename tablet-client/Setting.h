@@ -3,11 +3,9 @@
 struct Setting final {
 	struct Area final {
 		Area(int const x, int const y, int const width, int const height)
-			: _width(static_cast<float>(width)), _height(static_cast<float>(height)),
-			_left(x - width / 2), _right(width),
+			: _left(x - width / 2), _right(width),
 			_top(y - height / 2), _bottom(height) {
 		}
-		float _width, _height;
 		int _left, _right, _top, _bottom;
 	};
 	Area const _area;
