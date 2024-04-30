@@ -9,11 +9,10 @@ Tablet::~Tablet(void) {
 }
 
 int const Tablet::Read(void) noexcept {
-	_buf[0] = 0;
 	_device.Read(_buf, _config.reportLen);
-
 	if (_buf[0] != _config.reportId ||
 		(_buf[1] & _config.detectMask) != _config.detectMask)
 		return 0;
+	_buf[0] = 0;
 	return 1;
 }

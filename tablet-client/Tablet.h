@@ -4,7 +4,7 @@
 class Tablet final {
 public:
 	struct Config {
-		BYTE const reportId, reportLen, detectMask;
+		int const reportId, reportLen, detectMask;
 	};
 public:
 	explicit Tablet(Device::Config const& devCfg, Config const& config);
