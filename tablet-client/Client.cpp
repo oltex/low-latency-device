@@ -9,7 +9,7 @@ Client::~Client(void) {
 }
 
 void Client::Run(void) noexcept {
-	register int const left = _setting._area._left, width = _setting._area._right, top = _setting._area._top, height = _setting._area._bottom;
+	register unsigned short const left = _setting._area._left, width = _setting._area._width, top = _setting._area._top, height = _setting._area._height;
 	for (;;) {
 		if (!_tablet.Read())
 			continue;
@@ -22,13 +22,14 @@ void Client::Run(void) noexcept {
 			x = 0;
 		else if (width < x)
 			x = width;
-		*reinterpret_cast<int*>(_vmulti._buf + 4) = ((x << 15) - 1) / width;
 
 		if (0 > y)
 			y = 0;
 		else if (height < y)
 			y = height;
-		*reinterpret_cast<int*>(_vmulti._buf + 6) = ((y << 15) - 1) / height;
+
+		*reinterpret_cast<int*>(_vmulti._buf + 4) = x * 32767 / width;
+		*reinterpret_cast<int*>(_vmulti._buf + 6) = y * 32767 / height;
 
 		_vmulti.Write();
 	}

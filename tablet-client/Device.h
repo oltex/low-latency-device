@@ -4,8 +4,8 @@
 class Device final {
 public:
 	struct Config final {
-		DWORD const desiredAccess;
-		USHORT const vendorId, productId;
+		unsigned long const desiredAccess;
+		unsigned short const vendorId, productId;
 		unsigned short const usagePage, usage;
 	};
 public:
