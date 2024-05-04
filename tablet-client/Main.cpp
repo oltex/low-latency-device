@@ -7,13 +7,14 @@
 void Init(void);
 
 void main(int argc, char** argv) {
-	//fputs("oltex-tablet-client", stdout);
 	Init();
 	Client client{ Setting{ Setting::Area{atoi(argv[1]), atoi(argv[2]), atoi(argv[3]), atoi(argv[4])} } };
 	client.Run();
 }
 
 void Init(void) {
+	//fputs("oltex-tablet-client", stdout);
+
 	//HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
 	//DWORD mode;
 	//GetConsoleMode(handle, &mode);
@@ -37,28 +38,28 @@ void Init(void) {
 	//SetConsoleCursorInfo(handle, &info);
 	////CloseHandle(handle);
 	
-	FreeConsole();
+	//FreeConsole();
 
-	//HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
-	//DWORD mode = 0;
-	//GetConsoleMode(handle, &mode);
-	//mode = (mode & ~ENABLE_WINDOW_INPUT);
-	//mode = (mode & ~ENABLE_MOUSE_INPUT);
-	//mode = (mode & ~ENABLE_QUICK_EDIT_MODE);
-	//mode = (mode & ~ENABLE_EXTENDED_FLAGS);
-	//mode = (mode & ~ENABLE_AUTO_POSITION);
-	//mode = (mode & ~ENABLE_VIRTUAL_TERMINAL_INPUT);
-	//SetConsoleMode(handle, mode);
+	HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
+	DWORD mode = 0;
+	GetConsoleMode(handle, &mode);
+	mode = (mode & ~ENABLE_WINDOW_INPUT);
+	mode = (mode & ~ENABLE_MOUSE_INPUT);
+	mode = (mode & ~ENABLE_QUICK_EDIT_MODE);
+	mode = (mode & ~ENABLE_EXTENDED_FLAGS);
+	mode = (mode & ~ENABLE_AUTO_POSITION);
+	mode = (mode & ~ENABLE_VIRTUAL_TERMINAL_INPUT);
+	SetConsoleMode(handle, mode);
 
-	//handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	//GetConsoleMode(handle, &mode);
-	//mode = (mode & ~ENABLE_WRAP_AT_EOL_OUTPUT);
-	//mode = (mode & ~ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-	//SetConsoleMode(handle, mode);
+	handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	GetConsoleMode(handle, &mode);
+	mode = (mode & ~ENABLE_WRAP_AT_EOL_OUTPUT);
+	mode = (mode & ~ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+	SetConsoleMode(handle, mode);
 
 	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 	DWORD taskIdx = 0;
-	HANDLE avrthandle = AvSetMmThreadCharacteristics(L"Games", &taskIdx);
+	HANDLE avrthandle = AvSetMmThreadCharacteristics("Games", &taskIdx);
 	AvSetMmThreadPriority(avrthandle, AVRT_PRIORITY_CRITICAL);
 }

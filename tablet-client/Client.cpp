@@ -10,24 +10,19 @@ Client::~Client(void) {
 
 void Client::Run(void) noexcept {
 	register unsigned short const left = _setting._area._left, right = _setting._area._right, top = _setting._area._top, bottom = _setting._area._bottom;
-	register unsigned short const width = right - left;
-	register unsigned short const height = bottom - top;
+	register unsigned short const width = _setting._area._right - _setting._area._left;
+	register unsigned short const height = _setting._area._bottom - _setting._area._top;
 	for (;;) {
 		if (!_tablet.Read())
 			continue;
 
 		_vmulti._buf[3] = _tablet._buf[1] & 0x7;
-		register unsigned short x = (_tablet._buf[2] | (_tablet._buf[3] << 8)) ;
-		register unsigned short y = (_tablet._buf[4] | (_tablet._buf[5] << 8));
+		register unsigned short x = _tablet._buf[2] | (_tablet._buf[3] << 8);
+		register unsigned short y = _tablet._buf[4] | (_tablet._buf[5] << 8);
 
-		if (left > x)
-			x = left;
-		else if (right < x)
+		if (right < x)
 			x = right;
-
-		if (top > y)
-			y = top;
-		else if (bottom < y)
+		if (bottom < y)
 			y = bottom;
 
 		*reinterpret_cast<unsigned short*>(_vmulti._buf + 4) = (x - left) * 32767 / width;

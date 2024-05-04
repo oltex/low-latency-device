@@ -15,5 +15,5 @@ private:
 	Device const _device;
 	Config const _config;
 public:
-	BYTE _buf[10];
+	unsigned char _buf[10];
 };

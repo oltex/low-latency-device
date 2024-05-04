@@ -4,13 +4,10 @@
 class Vmulti final {
 public:
 	struct Config {
-		//BYTE const reportId = 0x02;
-		BYTE const vmultiId = 0x40, reportLen = 7, reportId = 3; //hawku
-		//BYTE const vmultiId = 0x40, reportLen = 9, reportId = 9; //otd
+		//unsigned char const reportId = 0x02;
+		unsigned char const vmultiId = 0x40, reportLen = 7, reportId = 3; //hawku
+		//unsigned char const vmultiId = 0x40, reportLen = 9, reportId = 9; //otd
 	};
-	//struct Report {
-	//	USHORT x, y;
-	//};
 public:
 	explicit Vmulti(void);
 	~Vmulti(void);
@@ -19,6 +16,5 @@ public:
 private:
 	Device const _device;
 public:
-	//Report _report;
-	BYTE _buf[65]; //7, 65
+	unsigned char _buf[65]; //7, 65
 };

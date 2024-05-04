@@ -62,13 +62,12 @@ Device::Device(Config const& config) {
 
 Device::~Device(void) {
 	CloseHandle(_handle);
-	_handle = nullptr;
 }
 
-void Device::Read(void* const __restrict buf, unsigned char const len) const noexcept {
+void Device::Read(void* const /*__restrict*/ buf, unsigned char const len) const noexcept {
 	ReadFile(_handle, buf, len, NULL, NULL);
 }
 
-void Device::Write(void const* const __restrict buf, unsigned char const len) const noexcept {
+void Device::Write(void const* const /*__restrict*/ buf, unsigned char const len) const noexcept {
 	WriteFile(_handle, buf, len, NULL, NULL);
 }
