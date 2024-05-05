@@ -1,11 +1,11 @@
 #include "Client.h"
 
-Client::Client(Setting const& setting)
+Client::Client(Setting const& setting) noexcept
 	: _tablet(Device::Config{ FILE_READ_DATA, 0x056A, 0x030E, 0xFF0D, 0x0001 }, Tablet::Config{ 0x02, 10, 0x40 }),
 	_setting(setting) {
 }
 
-Client::~Client(void) {
+Client::~Client(void) noexcept {
 }
 
 void Client::Run(void) noexcept {

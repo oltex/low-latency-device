@@ -5,7 +5,7 @@
 #pragma comment(lib, "setupapi.lib")
 #include <SetupAPI.h>
 
-Device::Device(Config const& config) {
+Device::Device(Config const& config) noexcept {
 	GUID hidGuid;
 	HidD_GetHidGuid(&hidGuid);
 
@@ -64,10 +64,3 @@ Device::~Device(void) {
 	CloseHandle(_handle);
 }
 
-void Device::Read(void* const /*__restrict*/ buf, unsigned char const len) const noexcept {
-	ReadFile(_handle, buf, len, NULL, NULL);
-}
-
-void Device::Write(void const* const /*__restrict*/ buf, unsigned char const len) const noexcept {
-	WriteFile(_handle, buf, len, NULL, NULL);
-}
