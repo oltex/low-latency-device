@@ -22,10 +22,9 @@ void Client::Run(void) noexcept {
 
 		if (right < x)
 			x = right;
+		*reinterpret_cast<unsigned short*>(_vmulti._buf + 4) = (x - left) * 32767 / width;
 		if (bottom < y)
 			y = bottom;
-
-		*reinterpret_cast<unsigned short*>(_vmulti._buf + 4) = (x - left) * 32767 / width;
 		*reinterpret_cast<unsigned short*>(_vmulti._buf + 6) = (y - top) * 32767 / height;
 
 		_vmulti.Write();

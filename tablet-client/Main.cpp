@@ -4,7 +4,7 @@
 #pragma comment(lib, "avrt.lib")
 #include <avrt.h>
 
-void Init(void);
+void Init(void) noexcept;
 
 void main(int const argc, char const* const* const argv) noexcept {
 	Init();
@@ -12,7 +12,7 @@ void main(int const argc, char const* const* const argv) noexcept {
 	client.Run();
 }
 
-void Init(void) {
+void Init(void) noexcept {
 	//fputs("oltex-tablet-client", stdout);
 
 	//HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
@@ -38,7 +38,7 @@ void Init(void) {
 	//SetConsoleCursorInfo(handle, &info);
 	////CloseHandle(handle);
 
-	//FreeConsole();
+	FreeConsole();
 
 	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);

@@ -63,4 +63,3 @@ Device::Device(Config const& config) noexcept {
 Device::~Device(void) {
 	CloseHandle(_handle);
 }
-
