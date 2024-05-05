@@ -6,7 +6,7 @@ struct Setting final {
 			: _left(x - width / 2), _right(x + width / 2),
 			_top(y - height / 2), _bottom(y + height / 2) {
 		}
-		unsigned short _left, _right, _top, _bottom;
+		unsigned short const _left, _right, _top, _bottom;
 	};
 	Area const _area;
 };

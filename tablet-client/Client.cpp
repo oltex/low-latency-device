@@ -9,16 +9,16 @@ Client::~Client(void) noexcept {
 }
 
 void Client::Run(void) noexcept {
+	register unsigned short x, y;
 	register unsigned short const left = _setting._area._left, right = _setting._area._right, top = _setting._area._top, bottom = _setting._area._bottom;
-	register unsigned short const width = _setting._area._right - _setting._area._left;
-	register unsigned short const height = _setting._area._bottom - _setting._area._top;
+	register unsigned short const width = _setting._area._right - _setting._area._left, height = _setting._area._bottom - _setting._area._top;
 	for (;;) {
 		if (!_tablet.Read())
 			continue;
 
 		_vmulti._buf[3] = _tablet._buf[1] & 0x7;
-		register unsigned short x = _tablet._buf[2] | (_tablet._buf[3] << 8);
-		register unsigned short y = _tablet._buf[4] | (_tablet._buf[5] << 8);
+		x = _tablet._buf[2] | (_tablet._buf[3] << 8);
+		y = _tablet._buf[4] | (_tablet._buf[5] << 8);
 
 		if (right < x)
 			x = right;

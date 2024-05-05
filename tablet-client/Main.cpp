@@ -38,7 +38,7 @@ void Init(void) {
 	//SetConsoleCursorInfo(handle, &info);
 	////CloseHandle(handle);
 
-	FreeConsole();
+	//FreeConsole();
 
 	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
