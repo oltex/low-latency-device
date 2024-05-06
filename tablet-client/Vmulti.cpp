@@ -1,7 +1,7 @@
 #include "Vmulti.h"
 
 Vmulti::Vmulti(void) noexcept
-	//: _device(Device::Config{ FILE_WRITE_DATA, 0x00EE, 0xBACC, 0xFF00, 0x0001 }) {
+//: _device(Device::Config{ FILE_WRITE_DATA, 0x00EE, 0xBACC, 0xFF00, 0x0001 }) {
 	: _device(Device::Config{ FILE_WRITE_DATA, 0x00FF, 0xBACC, 0xFF00, 0x0001 }) { //hawku
 	memset(_buf, 0, sizeof(_buf));
 	Config config;
@@ -9,4 +9,9 @@ Vmulti::Vmulti(void) noexcept
 }
 
 Vmulti::~Vmulti(void) noexcept {
+}
+
+void Vmulti::Write(void) const noexcept {
+	//memcpy(_buf + 4, &_report, sizeof(Report));
+	_device.Write(_buf, sizeof(_buf));
 }
