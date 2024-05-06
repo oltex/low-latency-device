@@ -1,6 +1,5 @@
 #pragma once
 #include <Windows.h>
-#include <iostream>
 
 class Device final {
 public:
@@ -17,4 +16,5 @@ public:
 	void Write(void const* const /*__restrict*/ buf, unsigned char const len) const noexcept;
 private:
 	HANDLE /*__restrict*/ _handle = INVALID_HANDLE_VALUE;
+	HANDLE _mapping = INVALID_HANDLE_VALUE;
 };

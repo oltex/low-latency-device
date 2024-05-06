@@ -8,11 +8,7 @@ Client::Client(const Setting& setting)
 Client::~Client(void) {
 }
 
-#include<iostream>
 void Client::Run(void) noexcept {
-	register const int left = _setting._area._left, right = _setting._area._right, top = _setting._area._top, bottom = _setting._area._bottom;
-	register const float width = _setting._area._width, height = _setting._area._height;
-
 	while (true) {
 		if (!_tablet.Read())
 			continue;

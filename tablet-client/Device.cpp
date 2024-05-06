@@ -27,7 +27,7 @@ Device::Device(Config const& config) noexcept {
 		devItfDetailData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
 		SetupDiGetDeviceInterfaceDetail(devInfo, &devItfData, devItfDetailData, size, &size, NULL);
 
-		_handle = CreateFile(devItfDetailData->DevicePath, config.desiredAccess, 0, NULL, OPEN_EXISTING, 0, NULL);
+		_handle = CreateFile(devItfDetailData->DevicePath, config.desiredAccess, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, NULL);
 
 		if (INVALID_HANDLE_VALUE != _handle) {
 			HIDD_ATTRIBUTES attributes;

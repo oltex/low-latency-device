@@ -12,6 +12,5 @@ Vmulti::~Vmulti(void) noexcept {
 }
 
 void Vmulti::Write(void) const noexcept {
-	//memcpy(_buf + 4, &_report, sizeof(Report));
 	_device.Write(_buf, sizeof(_buf));
 }

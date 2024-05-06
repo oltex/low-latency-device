@@ -4,11 +4,8 @@
 class Tablet final {
 public:
 	struct Config final {
-		int const reportId, reportLen, detectMask;
+		unsigned char const reportId, reportLen, detectMask;
 	};
-	//struct Report {
-	//	unsigned short x, y;
-	//};
 public:
 	explicit Tablet(Device::Config const& devCfg, Config const& config) noexcept;
 	~Tablet(void) noexcept;

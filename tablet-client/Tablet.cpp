@@ -13,12 +13,6 @@ bool const Tablet::Read(void) noexcept {
 	if (_buf[0] != _config.reportId ||
 		(_buf[1] & _config.detectMask) != _config.detectMask)
 		return false;
-	//unsigned short x = _buf[2] | (_buf[3] << 8);
-	//unsigned short y = _buf[4] | (_buf[5] << 8);
-	//if (_report.x == x &&  _report.y == y)
-	//	return false;
-	//_report.x = x;
-	//_report.y = y;
 	_buf[0] = 0;
 	return true;
 }
