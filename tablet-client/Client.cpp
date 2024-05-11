@@ -8,16 +8,10 @@ Client::Client(Setting const& setting) noexcept
 Client::~Client(void) noexcept {
 }
 
-#include <iostream>
 void Client::Run(void) noexcept {
-	//__int64 avg = 0, div = 0;
 	for (;;) {
-		//__int64 tsc = __rdtsc();
 		if (!_tablet.Read())
 			continue;
-		//avg += __rdtsc() - tsc;
-		//div++;
-		//std::cout << avg / div << std::endl;
 
 		register unsigned short x = _tablet._buf[2] | (_tablet._buf[3] << 8);
 		register unsigned short y = _tablet._buf[4] | (_tablet._buf[5] << 8);
