@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tablet-driver", "tablet-dri
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tablet-client", "tablet-client\tablet-client.vcxproj", "{609644D8-BDE5-4909-AD49-3B3EE7547173}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tablet-client(vmulti)", "tablet-client(vmulti)\tablet-client(vmulti).vcxproj", "{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tablet-service", "tablet-service\tablet-service.vcxproj", "{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}"
 EndProject
 Global
@@ -51,18 +49,6 @@ Global
 		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Release|x64.Build.0 = Release|x64
 		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Release|x86.ActiveCfg = Release|Win32
 		{609644D8-BDE5-4909-AD49-3B3EE7547173}.Release|x86.Build.0 = Release|Win32
-		{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}.Debug|ARM64.ActiveCfg = Debug|x64
-		{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}.Debug|ARM64.Build.0 = Debug|x64
-		{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}.Debug|x64.ActiveCfg = Debug|x64
-		{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}.Debug|x64.Build.0 = Debug|x64
-		{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}.Debug|x86.ActiveCfg = Debug|Win32
-		{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}.Debug|x86.Build.0 = Debug|Win32
-		{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}.Release|ARM64.ActiveCfg = Release|x64
-		{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}.Release|ARM64.Build.0 = Release|x64
-		{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}.Release|x64.ActiveCfg = Release|x64
-		{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}.Release|x64.Build.0 = Release|x64
-		{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}.Release|x86.ActiveCfg = Release|Win32
-		{F3B1FA39-8D62-4733-8A36-55EAEFB0B969}.Release|x86.Build.0 = Release|Win32
 		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Debug|ARM64.ActiveCfg = Debug|x64
 		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Debug|ARM64.Build.0 = Debug|x64
 		{E6B6B6CC-B7EB-4039-BD0A-F246BCE920F3}.Debug|x64.ActiveCfg = Debug|x64
