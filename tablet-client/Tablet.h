@@ -4,13 +4,13 @@
 class Tablet final {
 public:
 	struct Config final {
-		unsigned char const reportId, reportLen, detectMask;
+		unsigned int const reportId, reportLen, detectMask;
 	};
 public:
 	explicit Tablet(Device::Config const& devCfg, Config const& config) noexcept;
 	~Tablet(void) noexcept;
 public:
-	bool const Read(void) noexcept;
+	int const Read(void) noexcept;
 private:
 	Device const _device;
 	Config const _config;
