@@ -3,7 +3,7 @@
 //#include <stdio.h>
 #pragma comment(lib, "avrt.lib")
 #include <avrt.h>
-#include <iostream>
+//#include <iostream>
 
 void Init(void) noexcept;
 
@@ -14,7 +14,7 @@ void main(int const argc, char const* const* const argv) noexcept {
 }
 
 void Init(void) noexcept {
-	fputs("oltex-tablet-client", stdout);
+	//fputs("oltex-tablet-client", stdout);
 
 	HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
 	DWORD mode;

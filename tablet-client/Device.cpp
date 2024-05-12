@@ -9,13 +9,12 @@ Device::Device(Config const& config) noexcept {
 	GUID hidGuid;
 	HidD_GetHidGuid(&hidGuid);
 
-	HDEVINFO devInfo = SetupDiGetClassDevs(&hidGuid, NULL, 0, DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);
-
-	SP_DEVICE_INTERFACE_DATA devItfData;
-	devItfData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
+	HDEVINFO devInfo = SetupDiGetClassDevs(&hidGuid, NULL, NULL, DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);
 
 	DWORD idx = 0;
 	while (INVALID_HANDLE_VALUE == _handle) {
+		SP_DEVICE_INTERFACE_DATA devItfData;
+		devItfData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
 		SetupDiEnumInterfaceDevice(devInfo, NULL, &hidGuid, idx++, &devItfData);
 		if (ERROR_NO_MORE_ITEMS == GetLastError())
 			break;
@@ -64,10 +63,10 @@ Device::~Device(void) {
 	CloseHandle(_handle);
 }
 
-void Device::Read(void* const /*__restrict*/ buf, unsigned int const len) const noexcept {
+void Device::Read(void* const /*__restrict*/ buf, unsigned char const len) const noexcept {
 	ReadFile(_handle, buf, len, NULL, NULL);
 }
 
-void Device::Write(void const* const /*__restrict*/ buf, unsigned int const len) const noexcept {
+void Device::Write(void const* const /*__restrict*/ buf, unsigned char const len) const noexcept {
 	WriteFile(_handle, buf, len, NULL, NULL);
 }
