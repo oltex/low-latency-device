@@ -11,6 +11,6 @@ public:
 	void Run(void) noexcept;
 private:
 	Tablet _tablet;
-	Vmulti _vmulti;
 	Setting const _setting;
+	Vmulti _vmulti;
 };

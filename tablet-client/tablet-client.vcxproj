@@ -139,6 +139,7 @@
       <SDLCheck>false</SDLCheck>
       <ErrorReporting>None</ErrorReporting>
       <WarningLevel>Level3</WarningLevel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
