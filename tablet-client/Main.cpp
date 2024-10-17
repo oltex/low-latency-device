@@ -45,6 +45,6 @@ void Init(void) noexcept {
 	SetProcessPriorityBoost(GetCurrentProcess(), false);
 	SetThreadPriorityBoost(GetCurrentThread(), false);
 	DWORD taskIdx = 0;
-	HANDLE avrthandle = AvSetMmThreadCharacteristics("Games", &taskIdx);
+	HANDLE avrthandle = AvSetMmThreadCharacteristics(L"Games", &taskIdx);
 	AvSetMmThreadPriority(avrthandle, AVRT_PRIORITY_CRITICAL);
 }
