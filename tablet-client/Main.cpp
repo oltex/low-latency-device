@@ -7,10 +7,11 @@
 
 void Init(void) noexcept;
 
-void main(int const argc, char const* const* const argv) noexcept {
+int main(int const argc, char const* const* const argv) noexcept {
 	Init();
 	Client client{ Setting{ Setting::Area{atoi(argv[1]), atoi(argv[2]), atoi(argv[3]), atoi(argv[4])} } };
 	client.Run();
+	return 0;
 }
 
 void Init(void) noexcept {
@@ -25,7 +26,6 @@ void Init(void) noexcept {
 		ENABLE_QUICK_EDIT_MODE | ENABLE_EXTENDED_FLAGS |
 		ENABLE_AUTO_POSITION | ENABLE_VIRTUAL_TERMINAL_INPUT);
 	SetConsoleMode(handle, mode);
-	//CloseHandle(handle);
 
 	handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	GetConsoleMode(handle, &mode);
@@ -37,12 +37,13 @@ void Init(void) noexcept {
 	info.dwSize = 1;
 	info.bVisible = FALSE;
 	SetConsoleCursorInfo(handle, &info);
-	//CloseHandle(handle);
 
 	//FreeConsole();
 
 	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+	SetProcessPriorityBoost(GetCurrentProcess(), false);
+	SetThreadPriorityBoost(GetCurrentThread(), false);
 	DWORD taskIdx = 0;
 	HANDLE avrthandle = AvSetMmThreadCharacteristics("Games", &taskIdx);
 	AvSetMmThreadPriority(avrthandle, AVRT_PRIORITY_CRITICAL);

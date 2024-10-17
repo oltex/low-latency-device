@@ -9,12 +9,19 @@ public:
 		//unsigned char const vmultiId = 0x40, reportLen = 9, reportId = 9; //otd
 	};
 public:
-	explicit Vmulti(void) noexcept;
-	~Vmulti(void) noexcept;
+	inline explicit Vmulti(void) noexcept
+		//: _device(Device::Config{ FILE_WRITE_DATA, 0x00EE, 0xBACC, 0xFF00, 0x0001 }) {
+		: _device(Device::Config{ FILE_WRITE_DATA, 0x00FF, 0xBACC, 0xFF00, 0x0001 }) { //hawku
+		Config config;
+		memcpy(_buf, &config, sizeof(Config));
+	}
+	inline ~Vmulti(void) noexcept = default;
 public:
-	void Write(void) const noexcept;
+	inline void Write(void) const noexcept {
+		_device.Write(_buf, sizeof(_buf));
+	}
 private:
 	Device const _device;
 public:
-	unsigned char _buf[65]; //7, 65
+	unsigned char _buf[65]{}; //7, 65
 };

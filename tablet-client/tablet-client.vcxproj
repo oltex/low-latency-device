@@ -24,6 +24,7 @@
     <ProjectGuid>{609644d8-bde5-4909-ad49-3b3ee7547173}</ProjectGuid>
     <RootNamespace>tabletcilent</RootNamespace>
     <ProjectName>tablet-client</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -77,12 +78,21 @@
     <OutDir>bin\</OutDir>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>bin\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>bin\</OutDir>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -94,16 +104,33 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <CallingConvention>VectorCall</CallingConvention>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ErrorReporting>None</ErrorReporting>
+      <CallingConvention>FastCall</CallingConvention>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies />
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>false</DataExecutionPrevention>
+      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
+      <StackReserveSize>4096</StackReserveSize>
+      <HeapCommitSize>4096</HeapCommitSize>
+      <HeapReserveSize>4096</HeapReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -112,6 +139,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,21 +163,23 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <CallingConvention>FastCall</CallingConvention>
       <ExceptionHandling>false</ExceptionHandling>
       <SDLCheck>false</SDLCheck>
       <ErrorReporting>None</ErrorReporting>
       <WarningLevel>Level3</WarningLevel>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <CallingConvention>FastCall</CallingConvention>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <StackReserveSize>1</StackReserveSize>
-      <StackCommitSize>1</StackCommitSize>
-      <HeapReserveSize>1</HeapReserveSize>
-      <HeapCommitSize>1</HeapCommitSize>
+      <StackReserveSize>4096</StackReserveSize>
+      <StackCommitSize>
+      </StackCommitSize>
+      <HeapReserveSize>4096</HeapReserveSize>
+      <HeapCommitSize>4096</HeapCommitSize>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>false</DataExecutionPrevention>
@@ -157,13 +188,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Device.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Client.cpp" />
-    <ClCompile Include="Tablet.cpp">
-      <FileType>CppCode</FileType>
-    </ClCompile>
-    <ClCompile Include="Vmulti.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h" />
