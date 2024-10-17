@@ -6,15 +6,15 @@
 #pragma comment(lib, "setupapi.lib")
 #include <SetupAPI.h>
 
-class Device final {
+class device final {
 public:
-	struct Config final {
+	struct config final {
 		unsigned long const desiredAccess;
 		unsigned short const vendorId, productId;
 		unsigned short const usagePage, usage;
 	};
 public:
-	inline explicit Device(Config const& config) noexcept {
+	inline explicit device(config const& config) noexcept {
 		GUID hidGuid;
 		HidD_GetHidGuid(&hidGuid);
 
@@ -67,14 +67,14 @@ public:
 		}
 		SetupDiDestroyDeviceInfoList(devInfo);
 	};
-	inline ~Device(void) noexcept {
+	inline ~device(void) noexcept {
 		CloseHandle(_handle);
 	};
 public:
-	inline void Read(void* const /*__restrict*/ buf, unsigned char const len) const noexcept {
+	inline void read(void* const /*__restrict*/ buf, unsigned char const len) const noexcept {
 		ReadFile(_handle, buf, len, NULL, NULL);
 	}
-	inline void Write(void const* const /*__restrict*/ buf, unsigned char const len) const noexcept {
+	inline void write(void const* const /*__restrict*/ buf, unsigned char const len) const noexcept {
 		WriteFile(_handle, buf, len, NULL, NULL);
 	}
 private:

@@ -5,16 +5,7 @@
 #include <avrt.h>
 //#include <iostream>
 
-void Init(void) noexcept;
-
-int main(int const argc, char const* const* const argv) noexcept {
-	Init();
-	Client client{ Setting{ Setting::Area{atoi(argv[1]), atoi(argv[2]), atoi(argv[3]), atoi(argv[4])} } };
-	client.Run();
-	return 0;
-}
-
-void Init(void) noexcept {
+void init(void) noexcept {
 	//fputs("oltex-tablet-client", stdout);
 
 	HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
@@ -48,3 +39,11 @@ void Init(void) noexcept {
 	HANDLE avrthandle = AvSetMmThreadCharacteristics(L"Games", &taskIdx);
 	AvSetMmThreadPriority(avrthandle, AVRT_PRIORITY_CRITICAL);
 }
+
+int main(int const argc, char const* const* const argv) noexcept {
+	init();
+	client client{ setting{ setting::area{atoi(argv[1]), atoi(argv[2]), atoi(argv[3]), atoi(argv[4])} } };
+	client.run();
+	return 0;
+}
+

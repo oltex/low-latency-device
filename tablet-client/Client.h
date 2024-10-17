@@ -1,19 +1,19 @@
 #pragma once
-#include "Tablet.h"
-#include "Vmulti.h"
-#include "Setting.h"
+#include "tablet.h"
+#include "vmulti.h"
+#include "setting.h"
 
-class Client final {
+class client final {
 public:
-	inline explicit Client(Setting const& setting) noexcept
-		: _tablet(Device::Config{ FILE_READ_DATA, 0x056A, 0x030E, 0xFF0D, 0x0001 }, Tablet::Config{ 0x02, 10, 0x20 }),
+	inline explicit client(setting const& setting) noexcept
+		: _tablet(device::config{ FILE_READ_DATA, 0x056A, 0x030E, 0xFF0D, 0x0001 }, tablet::config{ 0x02, 10, 0x20 }),
 		_setting(setting) {
 	};
-	inline ~Client(void) noexcept = default;
+	inline ~client(void) noexcept = default;
 public:
-	inline void Run(void) noexcept {
+	inline void run(void) noexcept {
 		for (;;) {
-			if (!_tablet.Read())
+			if (!_tablet.read())
 				continue;
 
 			register unsigned short x = *reinterpret_cast<unsigned short*>(_tablet._buf + 2);
@@ -22,11 +22,11 @@ public:
 			*reinterpret_cast<unsigned short*>(_vmulti._buf + 4) = (min(x, _setting._area._right) - _setting._area._left) * 32767 / _setting._area._width;
 			*reinterpret_cast<unsigned short*>(_vmulti._buf + 6) = (min(y, _setting._area._bottom) - _setting._area._top) * 32767 / _setting._area._height;
 
-			_vmulti.Write();
+			_vmulti.write();
 		}
 	};
 private:
-	Tablet _tablet;
-	Setting const _setting;
-	Vmulti _vmulti;
+	tablet _tablet;
+	setting const _setting;
+	vmulti _vmulti;
 };

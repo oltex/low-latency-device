@@ -188,14 +188,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Device.h" />
-    <ClInclude Include="Client.h" />
-    <ClInclude Include="Setting.h" />
-    <ClInclude Include="Tablet.h" />
-    <ClInclude Include="Vmulti.h" />
+    <ClInclude Include="device.h" />
+    <ClInclude Include="client.h" />
+    <ClInclude Include="setting.h" />
+    <ClInclude Include="tablet.h" />
+    <ClInclude Include="vmulti.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
