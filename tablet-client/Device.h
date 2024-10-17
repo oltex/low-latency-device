@@ -35,7 +35,7 @@ public:
 			devItfDetailData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
 			SetupDiGetDeviceInterfaceDetail(devInfo, &devItfData, devItfDetailData, size, &size, NULL);
 
-			_handle = CreateFile(devItfDetailData->DevicePath, config.desired_access, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, NULL);
+			_handle = CreateFile(devItfDetailData->DevicePath, config.desired_access, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_OVERLAPPED, NULL);
 
 			if (INVALID_HANDLE_VALUE != _handle) {
 				HIDD_ATTRIBUTES attributes;
@@ -72,10 +72,18 @@ public:
 	};
 public:
 	inline void read(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
-		ReadFile(_handle, buffer, length, nullptr, nullptr);
+		OVERLAPPED overlapped{};
+		ReadFile(_handle, buffer, length, nullptr, &overlapped);
+		DWORD result;
+		while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
+		}
 	}
 	inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
-		WriteFile(_handle, buffer, length, nullptr, nullptr);
+		OVERLAPPED overlapped{};
+		WriteFile(_handle, buffer, length, nullptr, &overlapped);
+		DWORD result;
+		while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
+		}
 	}
 private:
 	HANDLE /*__restrict*/ _handle = INVALID_HANDLE_VALUE;
