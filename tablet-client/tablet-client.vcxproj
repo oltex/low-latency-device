@@ -131,6 +131,7 @@
       <StackReserveSize>4096</StackReserveSize>
       <HeapCommitSize>4096</HeapCommitSize>
       <HeapReserveSize>4096</HeapReserveSize>
+      <StackCommitSize>4096</StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -176,8 +177,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <StackReserveSize>4096</StackReserveSize>
-      <StackCommitSize>
-      </StackCommitSize>
+      <StackCommitSize>4096</StackCommitSize>
       <HeapReserveSize>4096</HeapReserveSize>
       <HeapCommitSize>4096</HeapCommitSize>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
