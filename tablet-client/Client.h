@@ -16,11 +16,11 @@ public:
 			if (!_tablet.read())
 				continue;
 
-			register unsigned short x = *reinterpret_cast<unsigned short*>(_tablet._buf + 2);
-			register unsigned short y = *reinterpret_cast<unsigned short*>(_tablet._buf + 4);
-			_vmulti._buf[3] = _tablet._buf[1] & 0x7;
-			*reinterpret_cast<unsigned short*>(_vmulti._buf + 4) = (min(x, _setting._area._right) - _setting._area._left) * 32767 / _setting._area._width;
-			*reinterpret_cast<unsigned short*>(_vmulti._buf + 6) = (min(y, _setting._area._bottom) - _setting._area._top) * 32767 / _setting._area._height;
+			register unsigned short x = *reinterpret_cast<unsigned short*>(_tablet._buffer + 2);
+			register unsigned short y = *reinterpret_cast<unsigned short*>(_tablet._buffer + 4);
+			_vmulti._buffer[3] = _tablet._buffer[1] & 0x7;
+			*reinterpret_cast<unsigned short*>(_vmulti._buffer + 4) = (min(x, _setting._area._right) - _setting._area._left) * 32767 / _setting._area._width;
+			*reinterpret_cast<unsigned short*>(_vmulti._buffer + 6) = (min(y, _setting._area._bottom) - _setting._area._top) * 32767 / _setting._area._height;
 
 			_vmulti.write();
 		}
