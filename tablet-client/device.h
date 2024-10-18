@@ -15,57 +15,57 @@ public:
 	};
 public:
 	inline explicit device(config const& config) noexcept {
-		GUID hidGuid;
-		HidD_GetHidGuid(&hidGuid);
+		GUID guid;
+		HidD_GetHidGuid(&guid);
 
-		HDEVINFO devInfo = SetupDiGetClassDevs(&hidGuid, NULL, NULL, DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);
+		HDEVINFO dev_info = SetupDiGetClassDevs(&guid, NULL, NULL, DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);
 
-		DWORD idx = 0;
+		DWORD index = 0;
 		while (INVALID_HANDLE_VALUE == _handle) {
-			SP_DEVICE_INTERFACE_DATA devItfData;
-			devItfData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
-			SetupDiEnumInterfaceDevice(devInfo, NULL, &hidGuid, idx++, &devItfData);
+			SP_DEVICE_INTERFACE_DATA devItf_data;
+			devItf_data.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
+			SetupDiEnumInterfaceDevice(dev_info, NULL, &guid, index++, &devItf_data);
 			if (ERROR_NO_MORE_ITEMS == GetLastError())
 				break;
 
 			DWORD size;
-			SetupDiGetDeviceInterfaceDetail(devInfo, &devItfData, NULL, 0, &size, NULL);
-			PSP_DEVICE_INTERFACE_DETAIL_DATA devItfDetailData;
-			devItfDetailData = (PSP_DEVICE_INTERFACE_DETAIL_DATA)malloc(size);
-			devItfDetailData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
-			SetupDiGetDeviceInterfaceDetail(devInfo, &devItfData, devItfDetailData, size, &size, NULL);
+			SetupDiGetDeviceInterfaceDetail(dev_info, &devItf_data, NULL, 0, &size, NULL);
+			PSP_DEVICE_INTERFACE_DETAIL_DATA devItf_detail_data;
+			devItf_detail_data = (PSP_DEVICE_INTERFACE_DETAIL_DATA)malloc(size);
+			devItf_detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
+			SetupDiGetDeviceInterfaceDetail(dev_info, &devItf_data, devItf_detail_data, size, &size, NULL);
 
-			_handle = CreateFile(devItfDetailData->DevicePath, config.desired_access, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_OVERLAPPED, NULL);
+			_handle = CreateFile(devItf_detail_data->DevicePath, config.desired_access, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_OVERLAPPED, NULL);
 
 			if (INVALID_HANDLE_VALUE != _handle) {
 				HIDD_ATTRIBUTES attributes;
-				PHIDP_PREPARSED_DATA preparsedData;
+				PHIDP_PREPARSED_DATA preparsed_data;
 				HIDP_CAPS capabilities;
 				HidD_GetAttributes(_handle, &attributes);
-				HidD_GetPreparsedData(_handle, &preparsedData);
-				HidP_GetCaps(preparsedData, &capabilities);
+				HidD_GetPreparsedData(_handle, &preparsed_data);
+				HidP_GetCaps(preparsed_data, &capabilities);
 
 				if (attributes.VendorID == config.vendor_id &&
 					attributes.ProductID == config.product_id &&
 					capabilities.UsagePage == config.usage_page &&
 					capabilities.Usage == config.usage) {
 
-					COMMTIMEOUTS commTimeOuts;
-					GetCommTimeouts(_handle, &commTimeOuts);
-					commTimeOuts.ReadIntervalTimeout = 1;
-					commTimeOuts.ReadTotalTimeoutConstant = 1;
-					commTimeOuts.ReadTotalTimeoutMultiplier = 1;
-					SetCommTimeouts(_handle, &commTimeOuts);
+					COMMTIMEOUTS comm_time_outs;
+					GetCommTimeouts(_handle, &comm_time_outs);
+					comm_time_outs.ReadIntervalTimeout = 1;
+					comm_time_outs.ReadTotalTimeoutConstant = 1;
+					comm_time_outs.ReadTotalTimeoutMultiplier = 1;
+					SetCommTimeouts(_handle, &comm_time_outs);
 				}
 				else {
 					CloseHandle(_handle);
 					_handle = INVALID_HANDLE_VALUE;
 				}
-				HidD_FreePreparsedData(preparsedData);
+				HidD_FreePreparsedData(preparsed_data);
 			}
-			free(devItfDetailData);
+			free(devItf_detail_data);
 		}
-		SetupDiDestroyDeviceInfoList(devInfo);
+		SetupDiDestroyDeviceInfoList(dev_info);
 	};
 	inline ~device(void) noexcept {
 		CloseHandle(_handle);
