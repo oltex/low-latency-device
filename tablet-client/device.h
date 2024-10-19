@@ -6,6 +6,7 @@
 #pragma comment(lib, "setupapi.lib")
 #include <SetupAPI.h>
 
+#include <iostream>
 class device final {
 public:
 	struct config final {
@@ -72,16 +73,20 @@ public:
 	};
 public:
 	inline void read(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
-		OVERLAPPED overlapped{};
-		ReadFile(_handle, buffer, length, nullptr, &overlapped);
+		volatile OVERLAPPED overlapped{};
+		ReadFile(_handle, buffer, length, nullptr, (OVERLAPPED*)(&overlapped));
 		DWORD result;
+		//while (!HasOverlappedIoCompleted(&overlapped)) {
+		//}
 		while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
 		}
 	}
 	inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
-		OVERLAPPED overlapped{};
-		WriteFile(_handle, buffer, length, nullptr, &overlapped);
+		volatile OVERLAPPED overlapped{};
+		WriteFile(_handle, buffer, length, nullptr, (OVERLAPPED*)(&overlapped));
 		DWORD result;
+		//while (!HasOverlappedIoCompleted(&overlapped)) {
+		//}
 		while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
 		}
 	}

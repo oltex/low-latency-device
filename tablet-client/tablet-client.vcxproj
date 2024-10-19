@@ -118,6 +118,7 @@
       <ErrorReporting>None</ErrorReporting>
       <CallingConvention>FastCall</CallingConvention>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -171,6 +172,7 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <CallingConvention>FastCall</CallingConvention>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
