@@ -73,7 +73,7 @@ public:
 	};
 public:
 	inline void read(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
-		volatile OVERLAPPED overlapped{};
+		OVERLAPPED overlapped{};
 		ReadFile(_handle, buffer, length, nullptr, (OVERLAPPED*)(&overlapped));
 		DWORD result;
 		//while (!HasOverlappedIoCompleted(&overlapped)) {
@@ -82,7 +82,7 @@ public:
 		}
 	}
 	inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
-		volatile OVERLAPPED overlapped{};
+		OVERLAPPED overlapped{};
 		WriteFile(_handle, buffer, length, nullptr, (OVERLAPPED*)(&overlapped));
 		DWORD result;
 		//while (!HasOverlappedIoCompleted(&overlapped)) {
