@@ -75,19 +75,21 @@ public:
 	inline void read(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		OVERLAPPED overlapped{};
 		ReadFile(_handle, buffer, length, nullptr, (OVERLAPPED*)(&overlapped));
-		DWORD result;
-		//while (!HasOverlappedIoCompleted(&overlapped)) {
+		//DWORD result;
+		//while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
 		//}
-		while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
+		while (!HasOverlappedIoCompleted(static_cast<volatile OVERLAPPED*>(&overlapped))) {
+			//YieldProcessor();
 		}
 	}
 	inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		OVERLAPPED overlapped{};
 		WriteFile(_handle, buffer, length, nullptr, (OVERLAPPED*)(&overlapped));
-		DWORD result;
-		//while (!HasOverlappedIoCompleted(&overlapped)) {
+		//DWORD result;
+		//while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
 		//}
-		while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
+		while (!HasOverlappedIoCompleted(static_cast<volatile OVERLAPPED*>(&overlapped))) {
+			//YieldProcessor();
 		}
 	}
 private:

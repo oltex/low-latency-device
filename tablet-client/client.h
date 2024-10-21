@@ -13,8 +13,8 @@ public:
 public:
 	inline void run(void) noexcept {
 		for (;;) {
-			//if (!_tablet.read())
-			//	continue;
+			if (!_tablet.read())
+				continue;
 
 			register unsigned short x = *reinterpret_cast<unsigned short*>(_tablet._buffer + 2);
 			register unsigned short y = *reinterpret_cast<unsigned short*>(_tablet._buffer + 4);
