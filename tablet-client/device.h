@@ -74,7 +74,7 @@ public:
 public:
 	inline void read(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		OVERLAPPED overlapped{};
-		ReadFile(_handle, buffer, length, nullptr, (OVERLAPPED*)(&overlapped));
+		ReadFile(_handle, buffer, length, nullptr, &overlapped);
 		DWORD result;
 		while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
 		}
@@ -85,7 +85,7 @@ public:
 	}
 	inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		OVERLAPPED overlapped{};
-		WriteFile(_handle, buffer, length, nullptr, (OVERLAPPED*)(&overlapped));
+		WriteFile(_handle, buffer, length, nullptr, &overlapped);
 		DWORD result;
 		while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
 		}
