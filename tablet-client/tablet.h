@@ -9,7 +9,6 @@ public:
 public:
 	inline explicit tablet(device::config const& devCfg, config const& config) noexcept
 		: _device(devCfg), _config(config) {
-		memset(_buffer, 0, sizeof(_buffer));
 	}
 	inline ~tablet(void) noexcept = default;
 public:
@@ -24,5 +23,5 @@ private:
 	device const _device;
 	config const _config;
 public:
-	unsigned char _buffer[10];
+	unsigned char _buffer[10]{};
 };

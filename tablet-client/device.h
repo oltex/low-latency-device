@@ -37,6 +37,7 @@ public:
 			SetupDiGetDeviceInterfaceDetail(dev_info, &devItf_data, devItf_detail_data, size, &size, NULL);
 
 			_handle = CreateFile(devItf_detail_data->DevicePath, config.desired_access, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_OVERLAPPED, NULL);
+			free(devItf_detail_data);
 
 			if (INVALID_HANDLE_VALUE != _handle) {
 				HIDD_ATTRIBUTES attributes;
@@ -45,6 +46,7 @@ public:
 				HidD_GetAttributes(_handle, &attributes);
 				HidD_GetPreparsedData(_handle, &preparsed_data);
 				HidP_GetCaps(preparsed_data, &capabilities);
+				HidD_FreePreparsedData(preparsed_data);
 
 				if (attributes.VendorID == config.vendor_id &&
 					attributes.ProductID == config.product_id &&
@@ -57,14 +59,14 @@ public:
 					comm_time_outs.ReadTotalTimeoutConstant = 1;
 					comm_time_outs.ReadTotalTimeoutMultiplier = 1;
 					SetCommTimeouts(_handle, &comm_time_outs);
+
+					SetFileCompletionNotificationModes(_handle, FILE_SKIP_COMPLETION_PORT_ON_SUCCESS | FILE_SKIP_SET_EVENT_ON_HANDLE);
 				}
 				else {
 					CloseHandle(_handle);
 					_handle = INVALID_HANDLE_VALUE;
 				}
-				HidD_FreePreparsedData(preparsed_data);
 			}
-			free(devItf_detail_data);
 		}
 		SetupDiDestroyDeviceInfoList(dev_info);
 	};
