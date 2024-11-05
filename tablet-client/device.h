@@ -4,7 +4,6 @@
 #include <hidsdi.h>
 #pragma comment(lib, "setupapi.lib")
 #include <SetupAPI.h>
-#include <iostream>
 class device final {
 public:
 	struct config final {
@@ -86,11 +85,10 @@ public:
 	}
 	inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		OVERLAPPED overlapped{};
-		int ret = WriteFile(_handle, buffer, length, nullptr, &overlapped);
-		std::cout << ret <<":" << GetLastError() << std::endl;
-		//DWORD result;
-		//while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
-		//}
+		WriteFile(_handle, buffer, length, nullptr, &overlapped);
+		DWORD result;
+		while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
+		}
 		//while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
 		//	_mm_pause();
 		//	//_mm_mfence();

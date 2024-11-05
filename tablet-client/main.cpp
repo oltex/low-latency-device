@@ -29,7 +29,7 @@ void init(void) noexcept {
 	info.bVisible = FALSE;
 	SetConsoleCursorInfo(handle, &info);
 
-	//FreeConsole();
+	FreeConsole();
 
 	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
