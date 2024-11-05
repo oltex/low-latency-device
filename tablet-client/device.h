@@ -1,11 +1,9 @@
 #pragma once
 #include <Windows.h>
-
 #pragma comment(lib, "hid.lib")
 #include <hidsdi.h>
 #pragma comment(lib, "setupapi.lib")
 #include <SetupAPI.h>
-
 #include <iostream>
 class device final {
 public:
@@ -53,14 +51,15 @@ public:
 					capabilities.UsagePage == config.usage_page &&
 					capabilities.Usage == config.usage) {
 
-					COMMTIMEOUTS comm_time_outs;
-					GetCommTimeouts(_handle, &comm_time_outs);
-					comm_time_outs.ReadIntervalTimeout = 1;
-					comm_time_outs.ReadTotalTimeoutConstant = 1;
-					comm_time_outs.ReadTotalTimeoutMultiplier = 1;
-					SetCommTimeouts(_handle, &comm_time_outs);
+					//COMMTIMEOUTS comm_time_outs;
+					//GetCommTimeouts(_handle, &comm_time_outs);
+					//comm_time_outs.ReadIntervalTimeout = 1;
+					//comm_time_outs.ReadTotalTimeoutConstant = 1;
+					//comm_time_outs.ReadTotalTimeoutMultiplier = 1;
+					//SetCommTimeouts(_handle, &comm_time_outs);
 
 					SetFileCompletionNotificationModes(_handle, FILE_SKIP_COMPLETION_PORT_ON_SUCCESS | FILE_SKIP_SET_EVENT_ON_HANDLE);
+					HidD_SetNumInputBuffers(_handle, 2);
 				}
 				else {
 					CloseHandle(_handle);
@@ -87,10 +86,11 @@ public:
 	}
 	inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		OVERLAPPED overlapped{};
-		WriteFile(_handle, buffer, length, nullptr, &overlapped);
-		DWORD result;
-		while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
-		}
+		int ret = WriteFile(_handle, buffer, length, nullptr, &overlapped);
+		std::cout << ret <<":" << GetLastError() << std::endl;
+		//DWORD result;
+		//while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
+		//}
 		//while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
 		//	_mm_pause();
 		//	//_mm_mfence();
