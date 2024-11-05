@@ -35,9 +35,9 @@ void init(void) noexcept {
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 	SetProcessPriorityBoost(GetCurrentProcess(), false);
 	SetThreadPriorityBoost(GetCurrentThread(), false);
-	DWORD taskIdx = 0;
-	HANDLE avrthandle = AvSetMmThreadCharacteristics(L"Games", &taskIdx);
-	AvSetMmThreadPriority(avrthandle, AVRT_PRIORITY_CRITICAL);
+	DWORD task_index = 0;
+	HANDLE avrt_handle = AvSetMmThreadCharacteristics(L"Games", &task_index);
+	AvSetMmThreadPriority(avrt_handle, AVRT_PRIORITY_CRITICAL);
 }
 
 int main(int const argc, char const* const* const argv) noexcept {
