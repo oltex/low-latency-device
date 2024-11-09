@@ -75,24 +75,24 @@ public:
 	inline void read(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		OVERLAPPED overlapped{};
 		ReadFile(_handle, buffer, length, nullptr, &overlapped);
-		DWORD result;
-		while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
-		}
-		//while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
-		//	_mm_pause();
-		//	//_mm_mfence();
+		//DWORD result;
+		//while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
 		//}
+		while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
+			//_mm_pause();
+			//_mm_mfence();
+		}
 	}
 	inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		OVERLAPPED overlapped{};
 		WriteFile(_handle, buffer, length, nullptr, &overlapped);
-		DWORD result;
-		while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
-		}
-		//while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
-		//	_mm_pause();
-		//	//_mm_mfence();
+		//DWORD result;
+		//while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
 		//}
+		while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
+			//_mm_pause();
+			//_mm_mfence();
+		}
 	}
 private:
 	HANDLE /*__restrict*/ _handle = INVALID_HANDLE_VALUE;
