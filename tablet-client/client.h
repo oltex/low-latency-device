@@ -2,7 +2,6 @@
 #include "tablet.h"
 #include "vmulti.h"
 #include "setting.h"
-
 class client final {
 public:
 	inline explicit client(setting const& setting) noexcept

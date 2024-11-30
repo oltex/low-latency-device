@@ -1,6 +1,5 @@
 #pragma once
 #include "device.h"
-
 class vmulti final {
 public:
 	struct config final {
@@ -22,7 +21,6 @@ private:
 public:
 	unsigned char _buffer[65]{}; //7, 65
 };
-
 
 // struct config final {
 //  unsigned char const report_id = 0x02;

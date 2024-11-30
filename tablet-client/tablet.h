@@ -1,6 +1,5 @@
 #pragma once
 #include "device.h"
-#include <iostream>
 class tablet final {
 public:
 	struct config final {
@@ -16,7 +15,6 @@ public:
 public:
 	inline bool const read(void) noexcept {
 		_device.read(_buffer, _config.report_length);
-		std::cout << "me" << std::endl;
 		if (_buffer[0] != _config.report_id || !(_buffer[1] & _config.detect_mask))
 			return false;
 		_buffer[0] = 0;
