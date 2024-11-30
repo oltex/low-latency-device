@@ -94,6 +94,9 @@ public:
 			//_mm_mfence();
 		}
 	}
+	inline void set_feature(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
+		HidD_SetFeature(_handle, buffer, length);
+	}
 private:
 	HANDLE /*__restrict*/ _handle = INVALID_HANDLE_VALUE;
 };

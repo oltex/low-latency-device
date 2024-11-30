@@ -6,8 +6,7 @@
 class client final {
 public:
 	inline explicit client(setting const& setting) noexcept
-		: _tablet(device::config{ FILE_READ_DATA, 0x056A, 0x030E, 0xFF0D, 0x0001 }, tablet::config{ 0x02, 10, 0x20 }),
-		_setting(setting) {
+		: _setting(setting) {
 	};
 	inline ~client(void) noexcept = default;
 public:
