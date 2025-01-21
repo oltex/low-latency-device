@@ -7,12 +7,12 @@ class mouse final {
 public:
 	inline explicit mouse(void) noexcept {
 		_input.type = INPUT_MOUSE;
-		//_input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+		_input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 	}
 	inline ~mouse(void) noexcept = default;
 public:
-	inline void write(void) const noexcept {
-		SendInput(1, (LPINPUT)&_input, sizeof(INPUT));
+	inline void write(void) noexcept {
+		SendInput(1, &_input, sizeof(INPUT));
 	}
 public:
 	INPUT _input{};
