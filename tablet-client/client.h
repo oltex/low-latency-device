@@ -2,7 +2,6 @@
 #include "tablet.h"
 #include "mouse.h"
 #include "setting.h"
-#include <iostream>
 class client final {
 public:
 	inline explicit client(setting const& setting) noexcept
