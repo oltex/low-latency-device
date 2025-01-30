@@ -74,36 +74,25 @@ public:
 	};
 public:
 	inline void read(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
-		//static DWORD64 sum = 0;
-		//static DWORD64 div = 0;
-		//auto rdtsc = __rdtsc();
 		OVERLAPPED overlapped{};
-		ReadFile(_handle, buffer, length, nullptr, /*nullptr*/&overlapped);
+		ReadFile(_handle, buffer, length, nullptr, &overlapped);
+		while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
+			//_mm_pause();
+			//_mm_clflush(&overlapped.Internal);
+			//_mm_mfence();
+		}
 		//DWORD result;
 		//while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
 		//}
-		//while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
-		//	//_mm_pause();
-		//	//_mm_clflush(&overlapped.Internal);
-		//	//_mm_mfence();
+		//while (STATUS_PENDING == InterlockedCompareExchange(reinterpret_cast<LONG*>(&overlapped.Internal), STATUS_PENDING, STATUS_PENDING)) {
 		//}
-		while (STATUS_PENDING == InterlockedCompareExchange(reinterpret_cast<LONG*>(&overlapped.Internal), STATUS_PENDING, STATUS_PENDING)) {
-		}
-		//sum += __rdtsc() - rdtsc;
-		//div++;
-		//std::cout << sum / div << std::endl;
 	}
-	//inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
-	//	OVERLAPPED overlapped{};
-	//	WriteFile(_handle, buffer, length, nullptr, &overlapped);
-	//	//DWORD result;
-	//	//while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
-	//	//}
-	//	while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
-	//		//_mm_pause();
-	//		//_mm_mfence();
-	//	}
-	//}
+	inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
+		OVERLAPPED overlapped{};
+		WriteFile(_handle, buffer, length, nullptr, &overlapped);
+		while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
+		}
+	}
 	inline void set_feature(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		HidD_SetFeature(_handle, buffer, length);
 	}
