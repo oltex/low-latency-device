@@ -34,7 +34,7 @@ public:
 			devItf_detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
 			SetupDiGetDeviceInterfaceDetail(dev_info, &devItf_data, devItf_detail_data, size, &size, NULL);
 
-			_handle = CreateFile(devItf_detail_data->DevicePath, config.desired_access, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH/* | FILE_FLAG_OVERLAPPED*/, NULL);
+			_handle = CreateFile(devItf_detail_data->DevicePath, config.desired_access, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH /*| FILE_FLAG_OVERLAPPED*/, NULL);
 			free(devItf_detail_data);
 
 			if (INVALID_HANDLE_VALUE != _handle) {
@@ -72,7 +72,7 @@ public:
 		//while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
 		//	//_mm_pause();
 		//	//_mm_clflush(&overlapped.Internal);
-		//	//_mm_mfence();
+		//	_mm_mfence();
 		//}
 		//DWORD result;
 		//while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
@@ -80,6 +80,7 @@ public:
 		//while (STATUS_PENDING == InterlockedCompareExchange(reinterpret_cast<LONG*>(&overlapped.Internal), STATUS_PENDING, STATUS_PENDING)) {
 		//}
 	}
+
 	//inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 	//	OVERLAPPED overlapped{};
 	//	WriteFile(_handle, buffer, length, nullptr, &overlapped);
