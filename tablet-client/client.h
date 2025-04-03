@@ -43,7 +43,7 @@ public:
 		AvSetMmThreadPriority(avrt_handle, AVRT_PRIORITY_CRITICAL);
 	};
 	inline ~client(void) noexcept = default;
-public:
+
 	inline void run(void) noexcept {
 		for (;;) {
 			if (!_tablet.read())

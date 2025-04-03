@@ -12,7 +12,7 @@ public:
 		unsigned short const vendor_id, product_id;
 		unsigned short const usage_page, usage;
 	};
-public:
+
 	inline explicit device(config const& config) noexcept {
 		GUID guid;
 		HidD_GetHidGuid(&guid);
@@ -54,7 +54,7 @@ public:
 	inline ~device(void) noexcept {
 		CloseHandle(_handle);
 	};
-public:
+
 	inline void read(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		//OVERLAPPED overlapped{};
 		ReadFile(_handle, buffer, length, nullptr, nullptr /*&overlapped*/);
@@ -69,7 +69,6 @@ public:
 		//while (STATUS_PENDING == InterlockedCompareExchange(reinterpret_cast<LONG*>(&overlapped.Internal), STATUS_PENDING, STATUS_PENDING)) {
 		//}
 	}
-
 	inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		WriteFile(_handle, buffer, length, nullptr, nullptr);
 	}

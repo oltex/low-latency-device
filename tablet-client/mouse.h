@@ -10,11 +10,11 @@ public:
 		_input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 	}
 	inline ~mouse(void) noexcept = default;
-public:
+
 	inline void write(void) noexcept {
 		SendInput(1, &_input, sizeof(INPUT));
 	}
-public:
+
 	INPUT _input{};
 	unsigned char _button = 0;
 };
