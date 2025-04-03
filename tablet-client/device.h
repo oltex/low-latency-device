@@ -16,27 +16,23 @@ public:
 	inline explicit device(config const& config) noexcept {
 		GUID guid;
 		HidD_GetHidGuid(&guid);
+		HDEVINFO info = SetupDiGetClassDevsW(&guid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 
-		HDEVINFO dev_info = SetupDiGetClassDevs(&guid, NULL, NULL, DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);
-
-		DWORD index = 0;
-		while (INVALID_HANDLE_VALUE == _handle) {
-			SP_DEVICE_INTERFACE_DATA devItf_data;
-			devItf_data.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
-			SetupDiEnumInterfaceDevice(dev_info, NULL, &guid, index++, &devItf_data);
+		for (unsigned long index = 0;; ++index) {
+			SP_DEVICE_INTERFACE_DATA interface_data;
+			interface_data.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
+			SetupDiEnumDeviceInterfaces(info, nullptr, &guid, index, &interface_data);
 			if (ERROR_NO_MORE_ITEMS == GetLastError())
 				break;
 
-			DWORD size;
-			SetupDiGetDeviceInterfaceDetail(dev_info, &devItf_data, NULL, 0, &size, NULL);
-			PSP_DEVICE_INTERFACE_DETAIL_DATA devItf_detail_data;
-			devItf_detail_data = (PSP_DEVICE_INTERFACE_DETAIL_DATA)malloc(size);
-			devItf_detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
-			SetupDiGetDeviceInterfaceDetail(dev_info, &devItf_data, devItf_detail_data, size, &size, NULL);
+			unsigned long size;
+			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, nullptr, 0, &size, nullptr);
+			PSP_DEVICE_INTERFACE_DETAIL_DATA detail_data = reinterpret_cast<PSP_DEVICE_INTERFACE_DETAIL_DATA>(malloc(size));
+			detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
+			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, detail_data, size, &size, nullptr);
 
-			_handle = CreateFile(devItf_detail_data->DevicePath, config.desired_access, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH /*| FILE_FLAG_OVERLAPPED*/, NULL);
-			free(devItf_detail_data);
-
+			_handle = CreateFileW(detail_data->DevicePath, config.desired_access, 0, nullptr, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, nullptr);
+			free(detail_data);
 			if (INVALID_HANDLE_VALUE != _handle) {
 				HIDD_ATTRIBUTES attributes;
 				PHIDP_PREPARSED_DATA preparsed_data;
@@ -46,21 +42,16 @@ public:
 				HidP_GetCaps(preparsed_data, &capabilities);
 				HidD_FreePreparsedData(preparsed_data);
 
-				if (attributes.VendorID == config.vendor_id &&
-					attributes.ProductID == config.product_id &&
-					capabilities.UsagePage == config.usage_page &&
-					capabilities.Usage == config.usage) {
-
+				if (attributes.VendorID != config.vendor_id || attributes.ProductID != config.product_id || capabilities.UsagePage != config.usage_page || capabilities.Usage != config.usage)
+					CloseHandle(_handle);
+				else {
 					//SetFileCompletionNotificationModes(_handle, FILE_SKIP_COMPLETION_PORT_ON_SUCCESS | FILE_SKIP_SET_EVENT_ON_HANDLE);
 					HidD_SetNumInputBuffers(_handle, 2);
-				}
-				else {
-					CloseHandle(_handle);
-					_handle = INVALID_HANDLE_VALUE;
+					break;
 				}
 			}
 		}
-		SetupDiDestroyDeviceInfoList(dev_info);
+		SetupDiDestroyDeviceInfoList(info);
 	};
 	inline ~device(void) noexcept {
 		CloseHandle(_handle);
@@ -81,17 +72,14 @@ public:
 		//}
 	}
 
-	//inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
-	//	OVERLAPPED overlapped{};
-	//	WriteFile(_handle, buffer, length, nullptr, &overlapped);
-	//	while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
-	//	}
-	//}
+	inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
+		WriteFile(_handle, buffer, length, nullptr, nullptr);
+	}
 	inline void set_feature(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		HidD_SetFeature(_handle, buffer, length);
 	}
 private:
-	HANDLE /*__restrict*/ _handle = INVALID_HANDLE_VALUE;
+	HANDLE /*__restrict*/ _handle;
 };
 
 //COMMTIMEOUTS comm_time_outs;
