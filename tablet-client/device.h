@@ -22,8 +22,6 @@ public:
 			SP_DEVICE_INTERFACE_DATA interface_data;
 			interface_data.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
 			SetupDiEnumDeviceInterfaces(info, nullptr, &guid, index, &interface_data);
-			if (ERROR_NO_MORE_ITEMS == GetLastError())
-				break;
 
 			unsigned long size;
 			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, nullptr, 0, &size, nullptr);
