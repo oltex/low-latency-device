@@ -9,13 +9,6 @@
     <ClInclude Include="mouse.h" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="main">
-      <UniqueIdentifier>{dc171fd0-7096-4946-b213-f4709d4f9ecb}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
 </Project>

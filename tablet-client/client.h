@@ -12,7 +12,7 @@ public:
 		//fputs("oltex-tablet-client", stdout);
 
 		HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
-		DWORD mode;
+		unsigned long mode;
 		GetConsoleMode(handle, &mode);
 		mode &= ~(ENABLE_PROCESSED_INPUT | /*ENABLE_LINE_INPUT |*/
 			/*ENABLE_ECHO_INPUT |*/ ENABLE_WINDOW_INPUT |
@@ -20,13 +20,13 @@ public:
 			ENABLE_QUICK_EDIT_MODE | ENABLE_EXTENDED_FLAGS |
 			ENABLE_AUTO_POSITION | ENABLE_VIRTUAL_TERMINAL_INPUT);
 		SetConsoleMode(handle, mode);
-
 		handle = GetStdHandle(STD_OUTPUT_HANDLE);
 		GetConsoleMode(handle, &mode);
 		mode &= ~(/*ENABLE_PROCESSED_OUTPUT |*/  ENABLE_WRAP_AT_EOL_OUTPUT |
 			ENABLE_VIRTUAL_TERMINAL_PROCESSING /*| ENABLE_LVB_GRID_WORLDWIDE*/);
 		/*mode |= DISABLE_NEWLINE_AUTO_RETURN;*/
 		SetConsoleMode(handle, mode);
+
 		CONSOLE_CURSOR_INFO info;
 		info.dwSize = 1;
 		info.bVisible = FALSE;
@@ -42,8 +42,6 @@ public:
 		HANDLE avrt_handle = AvSetMmThreadCharacteristics(L"Games", &task_index);
 		AvSetMmThreadPriority(avrt_handle, AVRT_PRIORITY_CRITICAL);
 	};
-	inline ~client(void) noexcept = default;
-
 	inline void run(void) noexcept {
 		for (;;) {
 			if (!_tablet.read())
@@ -65,7 +63,6 @@ public:
 			_mouse.write();
 		}
 	};
-
 private:
 	tablet _tablet;
 	setting const _setting;

@@ -7,13 +7,7 @@
 //#include <iostream>
 class device final {
 public:
-	struct config final {
-		unsigned long const desired_access;
-		unsigned short const vendor_id, product_id;
-		unsigned short const usage_page, usage;
-	};
-
-	inline explicit device(config const& config) noexcept {
+	inline explicit device(unsigned long const desired_access, unsigned short const vendor_id, unsigned short const product_id, unsigned short const usage_page, unsigned short const usage) noexcept {
 		GUID guid;
 		HidD_GetHidGuid(&guid);
 		HDEVINFO info = SetupDiGetClassDevsW(&guid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
@@ -29,7 +23,7 @@ public:
 			detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
 			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, detail_data, size, &size, nullptr);
 
-			_handle = CreateFileW(detail_data->DevicePath, config.desired_access, 0, nullptr, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, nullptr);
+			_handle = CreateFileW(detail_data->DevicePath, desired_access, 0, nullptr, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, nullptr);
 			free(detail_data);
 			if (INVALID_HANDLE_VALUE != _handle) {
 				HIDD_ATTRIBUTES attributes;
@@ -40,7 +34,7 @@ public:
 				HidP_GetCaps(preparsed_data, &capabilities);
 				HidD_FreePreparsedData(preparsed_data);
 
-				if (attributes.VendorID != config.vendor_id || attributes.ProductID != config.product_id || capabilities.UsagePage != config.usage_page || capabilities.Usage != config.usage)
+				if (attributes.VendorID != vendor_id || attributes.ProductID != product_id || capabilities.UsagePage != usage_page || capabilities.Usage != usage)
 					CloseHandle(_handle);
 				else {
 					//SetFileCompletionNotificationModes(_handle, FILE_SKIP_COMPLETION_PORT_ON_SUCCESS | FILE_SKIP_SET_EVENT_ON_HANDLE);
