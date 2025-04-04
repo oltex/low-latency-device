@@ -4,7 +4,7 @@
 #include <hidsdi.h>
 #pragma comment(lib, "setupapi.lib")
 #include <SetupAPI.h>
-//#include <iostream>
+
 class device final {
 public:
 	inline explicit device(unsigned long const desired_access, unsigned short const vendor_id, unsigned short const product_id, unsigned short const usage_page, unsigned short const usage) noexcept {
@@ -34,13 +34,9 @@ public:
 				HidP_GetCaps(preparsed_data, &capabilities);
 				HidD_FreePreparsedData(preparsed_data);
 
-				if (attributes.VendorID != vendor_id || attributes.ProductID != product_id || capabilities.UsagePage != usage_page || capabilities.Usage != usage)
-					CloseHandle(_handle);
-				else {
-					//SetFileCompletionNotificationModes(_handle, FILE_SKIP_COMPLETION_PORT_ON_SUCCESS | FILE_SKIP_SET_EVENT_ON_HANDLE);
-					HidD_SetNumInputBuffers(_handle, 2);
+				if (attributes.VendorID == vendor_id && attributes.ProductID == product_id && capabilities.UsagePage == usage_page && capabilities.Usage == usage)
 					break;
-				}
+				CloseHandle(_handle);
 			}
 		}
 		SetupDiDestroyDeviceInfoList(info);
@@ -50,24 +46,16 @@ public:
 	};
 
 	inline void read(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
-		//OVERLAPPED overlapped{};
-		ReadFile(_handle, buffer, length, nullptr, nullptr /*&overlapped*/);
-		//while (STATUS_PENDING == ((volatile OVERLAPPED)overlapped).Internal) {
-		//	//_mm_pause();
-		//	//_mm_clflush(&overlapped.Internal);
-		//	_mm_mfence();
-		//}
-		//DWORD result;
-		//while (!GetOverlappedResult(_handle, &overlapped, &result, false)) {
-		//}
-		//while (STATUS_PENDING == InterlockedCompareExchange(reinterpret_cast<LONG*>(&overlapped.Internal), STATUS_PENDING, STATUS_PENDING)) {
-		//}
+		ReadFile(_handle, buffer, length, nullptr, nullptr);
 	}
 	inline void write(void const* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		WriteFile(_handle, buffer, length, nullptr, nullptr);
 	}
 	inline void set_feature(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		HidD_SetFeature(_handle, buffer, length);
+	}
+	inline void set_num_input_buffer(unsigned long number) const noexcept {
+		HidD_SetNumInputBuffers(_handle, number);
 	}
 private:
 	HANDLE /*__restrict*/ _handle;
@@ -79,3 +67,5 @@ private:
 //comm_time_outs.ReadTotalTimeoutConstant = 1;
 //comm_time_outs.ReadTotalTimeoutMultiplier = 1;
 //SetCommTimeouts(_handle, &comm_time_outs);
+
+//_mm_clflush(&overlapped.Internal);

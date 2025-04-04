@@ -5,7 +5,6 @@
     <ClInclude Include="device.h" />
     <ClInclude Include="setting.h" />
     <ClInclude Include="tablet.h" />
-    <ClInclude Include="vmulti.h" />
     <ClInclude Include="mouse.h" />
   </ItemGroup>
   <ItemGroup>

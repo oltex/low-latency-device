@@ -8,6 +8,7 @@ public:
 		_report_id(0x02), _report_length(10), _detect_mask(0x40) {
 		unsigned char buffer[2]{ 0x02, 0x02 };
 		_device.set_feature(buffer, 2);
+		_device.set_num_input_buffer(2);
 	}
 
 	inline bool const read(void) noexcept {
