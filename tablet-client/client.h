@@ -1,46 +1,51 @@
 #pragma once
 #include "tablet.h"
 #include "mouse.h"
-#include "setting.h"
 #pragma comment(lib, "avrt.lib")
 #include <avrt.h>
 
+struct area final {
+	inline explicit area(int const x, int const y, int const width, int const height) noexcept
+		: _left(x - width / 2), _right(_left + width), _top(y - height / 2), _bottom(_top + height),
+		_width(width), _height(height) {
+	}
+	unsigned short const _left, _right, _top, _bottom;
+	unsigned short const _width, _height;
+};
+
 class client final {
 public:
-	inline explicit client(setting const& setting) noexcept
-		: _setting(setting) {
+	inline explicit client(area const& area) noexcept
+		: _area(area) {
 		FreeConsole();
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 		SetProcessPriorityBoost(GetCurrentProcess(), false);
 		SetThreadPriorityBoost(GetCurrentThread(), false);
-		DWORD task_index = 0;
-		HANDLE avrt_handle = AvSetMmThreadCharacteristics(L"Games", &task_index);
-		AvSetMmThreadPriority(avrt_handle, AVRT_PRIORITY_CRITICAL);
+		DWORD index = 0;
+		HANDLE handle = AvSetMmThreadCharacteristicsW(L"Games", &index);
+		AvSetMmThreadPriority(handle, AVRT_PRIORITY_CRITICAL);
 	};
 	inline void run(void) noexcept {
 		for (;;) {
 			_tablet.read();
 
-			register unsigned char button = _tablet._buffer[1] & 0x7;
-			register unsigned short x = *reinterpret_cast<unsigned short*>(_tablet._buffer + 2);
-			register unsigned short y = *reinterpret_cast<unsigned short*>(_tablet._buffer + 4);
-
+			unsigned char button = _tablet._buffer[1] & 0x7;
 			_mouse._input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 			if (!(1 & _mouse._button) && 1 & button)
 				_mouse._input.mi.dwFlags |= MOUSEEVENTF_LEFTDOWN;
 			if (1 & _mouse._button && !(1 & button))
 				_mouse._input.mi.dwFlags |= MOUSEEVENTF_LEFTUP;
 			_mouse._button = button;
-			_mouse._input.mi.dx = (min(x, _setting._area._right) - _setting._area._left) * 65535 / _setting._area._width;
-			_mouse._input.mi.dy = (min(y, _setting._area._bottom) - _setting._area._top) * 65535 / _setting._area._height;
+			_mouse._input.mi.dx = (*reinterpret_cast<unsigned short*>(_tablet._buffer + 2) - _area._left) * 65535 / _area._width;
+			_mouse._input.mi.dy = (*reinterpret_cast<unsigned short*>(_tablet._buffer + 4) - _area._top) * 65535 / _area._height;
 
 			_mouse.write();
 		}
 	};
 private:
 	tablet _tablet;
-	setting const _setting;
+	area const _area;
 	mouse _mouse;
 };
 
