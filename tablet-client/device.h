@@ -7,7 +7,7 @@
 
 class device final {
 public:
-	inline explicit device(unsigned long const desired_access, unsigned short const vendor_id, unsigned short const product_id, unsigned short const usage_page, unsigned short const usage) noexcept {
+	inline explicit device(unsigned short const vendor_id, unsigned short const product_id, unsigned short const usage_page, unsigned short const usage) noexcept {
 		GUID guid;
 		HidD_GetHidGuid(&guid);
 		HDEVINFO info = SetupDiGetClassDevsW(&guid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
@@ -23,7 +23,7 @@ public:
 			detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
 			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, detail_data, size, &size, nullptr);
 
-			_handle = CreateFileW(detail_data->DevicePath, desired_access, 0, nullptr, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, nullptr);
+			_handle = CreateFileW(detail_data->DevicePath, FILE_READ_DATA, 0, nullptr, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, nullptr);
 			free(detail_data);
 			if (INVALID_HANDLE_VALUE != _handle) {
 				HIDD_ATTRIBUTES attributes;
@@ -41,9 +41,6 @@ public:
 		}
 		SetupDiDestroyDeviceInfoList(info);
 	};
-	inline ~device(void) noexcept {
-		CloseHandle(_handle);
-	};
 
 	inline void read(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		ReadFile(_handle, buffer, length, nullptr, nullptr);
@@ -53,9 +50,6 @@ public:
 	}
 	inline void set_feature(void* const /*__restrict*/ buffer, unsigned char const length) const noexcept {
 		HidD_SetFeature(_handle, buffer, length);
-	}
-	inline void set_num_input_buffer(unsigned long number) const noexcept {
-		HidD_SetNumInputBuffers(_handle, number);
 	}
 private:
 	HANDLE /*__restrict*/ _handle;
