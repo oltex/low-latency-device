@@ -3,13 +3,12 @@
 #include "mouse.h"
 #pragma comment(lib, "avrt.lib")
 #include <avrt.h>
-#include<iostream>
+
 struct area final {
 	inline explicit area(int const x, int const y, int const width, int const height) noexcept
-		: _left(x - width / 2), _right(_left + width), _top(y - height / 2), _bottom(_top + height),
-		_width(width), _height(height) {
+		: _left(x - width / 2), _top(y - height / 2), _width(width), _height(height) {
 	}
-	unsigned short const _left, _right, _top, _bottom;
+	unsigned short const _left, _top;
 	unsigned short const _width, _height;
 };
 
@@ -17,7 +16,7 @@ class client final {
 public:
 	inline explicit client(area const& area) noexcept
 		: _area(area) {
-		//FreeConsole();
+		FreeConsole();
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 		SetProcessPriorityBoost(GetCurrentProcess(), false);
@@ -27,14 +26,15 @@ public:
 		AvSetMmThreadPriority(handle, AVRT_PRIORITY_CRITICAL);
 	};
 	inline void run(void) noexcept {
+		unsigned char _button = 0;
 		for (;;) {
 			_tablet.read();
 
 			unsigned char button = _tablet._buffer[1] & 0x1; //0x7
 			_mouse._input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-			if (_mouse._button ^ button)
-				_mouse._input.mi.dwFlags |= (button << 1) + (_mouse._button << 2);
-			_mouse._button = button;
+			if (_button ^ button)
+				_mouse._input.mi.dwFlags |= (button << 1) + (_button << 2);
+			_button = button;
 			_mouse._input.mi.dx = (*reinterpret_cast<unsigned short*>(_tablet._buffer + 2) - _area._left) * 65535 / _area._width;
 			_mouse._input.mi.dy = (*reinterpret_cast<unsigned short*>(_tablet._buffer + 4) - _area._top) * 65535 / _area._height;
 
