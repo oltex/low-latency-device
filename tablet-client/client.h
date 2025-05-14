@@ -32,9 +32,10 @@ public:
 
 			unsigned char button = _tablet._buffer[1] & 0x1; //0x7
 			_mouse._input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-			if (_button ^ button)
+			if (_button ^ button) {
 				_mouse._input.mi.dwFlags |= (button << 1) + (_button << 2);
-			_button = button;
+				_button = button;
+			}
 			_mouse._input.mi.dx = (*reinterpret_cast<unsigned short*>(_tablet._buffer + 2) - _area._left) * 65535 / _area._width;
 			_mouse._input.mi.dy = (*reinterpret_cast<unsigned short*>(_tablet._buffer + 4) - _area._top) * 65535 / _area._height;
 

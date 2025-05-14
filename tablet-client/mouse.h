@@ -15,5 +15,4 @@ public:
 	}
 
 	INPUT _input{};
-	unsigned char _button = 0;
 };

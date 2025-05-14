@@ -61,7 +61,6 @@ public:
 	}
 
 	inline void const read(void) noexcept {
-		_buffer[0] = 0;
 		do
 			ReadFile(_handle, _buffer, _report_length, nullptr, nullptr);
 		while (_buffer[0] != _report_id || !(_buffer[1] & _detect_mask));
