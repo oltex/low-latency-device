@@ -5,15 +5,10 @@
 
 class mouse final {
 public:
-	inline explicit mouse(void) noexcept {
-		_input.type = INPUT_MOUSE;
-		_input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-	}
-
 	inline void write(void) noexcept {
-		SendInput(1, &_input, sizeof(INPUT));
+		mouse_event(_flag, _x, _y, 0, 0);
 	}
-
-	INPUT _input{};
-	unsigned char _button = 0;
+	unsigned long _flag;
+	unsigned long _x;
+	unsigned long _y;
 };
