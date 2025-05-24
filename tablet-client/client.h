@@ -16,11 +16,24 @@ class client final {
 public:
 	inline explicit client(area const& area) noexcept
 		: _area(area) {
-		FreeConsole();
+		//FreeConsole();
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+
 		SetProcessPriorityBoost(GetCurrentProcess(), false);
 		SetThreadPriorityBoost(GetCurrentThread(), false);
+
+		PROCESS_POWER_THROTTLING_STATE info;
+		info.Version = PROCESS_POWER_THROTTLING_CURRENT_VERSION;
+		info.ControlMask = PROCESS_POWER_THROTTLING_EXECUTION_SPEED;
+		info.StateMask = 0;
+		SetProcessInformation(GetCurrentProcess(), ProcessPowerThrottling, reinterpret_cast<void*>(&info), sizeof(PROCESS_POWER_THROTTLING_STATE));
+		THREAD_POWER_THROTTLING_STATE thread_info;
+		thread_info.Version = THREAD_POWER_THROTTLING_CURRENT_VERSION;
+		thread_info.ControlMask = THREAD_POWER_THROTTLING_EXECUTION_SPEED;
+		thread_info.StateMask = 0;
+		SetThreadInformation(GetCurrentThread(), ThreadPowerThrottling, reinterpret_cast<void*>(&thread_info), sizeof(THREAD_POWER_THROTTLING_STATE));
+
 		unsigned long index = 0;
 		HANDLE handle = AvSetMmThreadCharacteristicsW(L"Games", &index);
 		AvSetMmThreadPriority(handle, AVRT_PRIORITY_CRITICAL);
