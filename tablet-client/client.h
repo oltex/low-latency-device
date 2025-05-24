@@ -16,7 +16,7 @@ class client final {
 public:
 	inline explicit client(area const& area) noexcept
 		: _area(area) {
-		//FreeConsole();
+		FreeConsole();
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
