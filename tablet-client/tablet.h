@@ -66,19 +66,19 @@ public:
 		HidD_SetFeature(_handle, buffer, 2);
 		HidD_SetNumInputBuffers(_handle, 2);
 
-		_nt_read_file = reinterpret_cast<NtReadFile>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtReadFile"));
+		_read_file = reinterpret_cast<NtReadFile>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtReadFile"));
 	}
 
 	inline void const read(void) noexcept {
 		IO_STATUS_BLOCK block;
 		do
-			_nt_read_file(_handle, nullptr, nullptr, nullptr, &block, _buffer, 10, &offset, nullptr);
+			_read_file(_handle, nullptr, nullptr, nullptr, &block, _buffer, 10, &_offset, nullptr);
 			//ReadFile(_handle, _buffer, _report_length, nullptr, nullptr);
 		while (_buffer[0] != _report_id || !(_buffer[1] & _detect_mask));
 	};
 
-	NtReadFile _nt_read_file;
-	LARGE_INTEGER offset{ 0 };
+	NtReadFile _read_file;
+	LARGE_INTEGER _offset{ 0 };
 	HANDLE /*__restrict*/ _handle;
 	alignas(2) unsigned char _buffer[10]{};
 	inline static constexpr unsigned char  _report_id = 0x02;
