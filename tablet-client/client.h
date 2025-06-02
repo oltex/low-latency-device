@@ -16,21 +16,8 @@ class client final {
 public:
 	inline explicit client(area const& area) noexcept
 		: _area(area) {
-		HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
-		unsigned long mode;
-		GetConsoleMode(handle, &mode);
-		mode &= ~(ENABLE_PROCESSED_INPUT | ENABLE_LINE_INPUT |
-			ENABLE_ECHO_INPUT | ENABLE_WINDOW_INPUT |
-			ENABLE_MOUSE_INPUT | /*ENABLE_INSERT_MODE |*/
-			ENABLE_QUICK_EDIT_MODE | ENABLE_EXTENDED_FLAGS |
-			ENABLE_AUTO_POSITION | ENABLE_VIRTUAL_TERMINAL_INPUT);
-		bool b = SetConsoleMode(handle, mode);
-		handle = GetStdHandle(STD_OUTPUT_HANDLE);
-		GetConsoleMode(handle, &mode);
-		mode &= ~(/*ENABLE_PROCESSED_OUTPUT |*/  ENABLE_WRAP_AT_EOL_OUTPUT |
-			ENABLE_VIRTUAL_TERMINAL_PROCESSING /*| ENABLE_LVB_GRID_WORLDWIDE*/);
-		/*mode |= DISABLE_NEWLINE_AUTO_RETURN;*/
-		SetConsoleMode(handle, mode);
+		SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
+		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
 		fputs("oltex-tablet-client\n", stdout);
 
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
