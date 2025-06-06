@@ -18,16 +18,20 @@ public:
 		: _area(area) {
 		SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
 		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
+		CONSOLE_CURSOR_INFO cursor_info;
+		cursor_info.dwSize = 1;
+		cursor_info.bVisible = FALSE;
+		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
 		fputs("oltex-tablet-client\n", stdout);
 
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 
-		PROCESS_POWER_THROTTLING_STATE info;
-		info.Version = PROCESS_POWER_THROTTLING_CURRENT_VERSION;
-		info.ControlMask = PROCESS_POWER_THROTTLING_EXECUTION_SPEED;
-		info.StateMask = 0;
-		SetProcessInformation(GetCurrentProcess(), ProcessPowerThrottling, reinterpret_cast<void*>(&info), sizeof(PROCESS_POWER_THROTTLING_STATE));
+		PROCESS_POWER_THROTTLING_STATE process_info;
+		process_info.Version = PROCESS_POWER_THROTTLING_CURRENT_VERSION;
+		process_info.ControlMask = PROCESS_POWER_THROTTLING_EXECUTION_SPEED;
+		process_info.StateMask = 0;
+		SetProcessInformation(GetCurrentProcess(), ProcessPowerThrottling, reinterpret_cast<void*>(&process_info), sizeof(PROCESS_POWER_THROTTLING_STATE));
 		THREAD_POWER_THROTTLING_STATE thread_info;
 		thread_info.Version = THREAD_POWER_THROTTLING_CURRENT_VERSION;
 		thread_info.ControlMask = THREAD_POWER_THROTTLING_EXECUTION_SPEED;
