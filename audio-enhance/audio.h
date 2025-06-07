@@ -19,15 +19,6 @@ public:
 		device->Activate(__uuidof(IAudioClient3), CLSCTX_ALL, NULL, reinterpret_cast<void**>(&client));
 		device->Release();
 
-
-		//BOOL isOffloadCapable = FALSE;
-		//client->IsOffloadCapable(AudioCategory_Media, &isOffloadCapable);
-		//AudioClientProperties audioProps{};
-		//audioProps.cbSize = sizeof(AudioClientProperties);
-		//audioProps.eCategory = AudioCategory_Media;
-		//audioProps.Options = AUDCLNT_STREAMOPTIONS_RAW | AUDCLNT_STREAMOPTIONS_MATCH_FORMAT;
-		//client->SetClientProperties(&audioProps);
-
 		WAVEFORMATEX* format;
 		client->GetMixFormat(&format);
 
@@ -41,3 +32,14 @@ public:
 		CoUninitialize();
 	}
 };
+
+//REFERENCE_TIME rt1, rt2;
+//client->GetDevicePeriod(&rt1, &rt2);
+
+//BOOL isOffloadCapable = FALSE;
+//client->IsOffloadCapable(AudioCategory_Media, &isOffloadCapable);
+//AudioClientProperties audioProps{};
+//audioProps.cbSize = sizeof(AudioClientProperties);
+//audioProps.eCategory = AudioCategory_Media;
+//audioProps.Options = AUDCLNT_STREAMOPTIONS_RAW | AUDCLNT_STREAMOPTIONS_MATCH_FORMAT;
+//client->SetClientProperties(&audioProps);
