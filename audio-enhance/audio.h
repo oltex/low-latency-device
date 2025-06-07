@@ -21,13 +21,11 @@ public:
 
 		WAVEFORMATEX* format;
 		client->GetMixFormat(&format);
-
 		UINT32 default_period, fundamental_period, min_period, max_period;
 		client->GetSharedModeEnginePeriod(format, &default_period, &fundamental_period, &min_period, &max_period);
-
 		client->InitializeSharedAudioStream(0, min_period, format, nullptr);
-
 		CoTaskMemFree(format);
+
 		client->Release();
 		CoUninitialize();
 	}
