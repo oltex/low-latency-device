@@ -34,20 +34,12 @@ public:
 		UINT32 default_period, fundamental_period, minimum_period, maximum_period;
 		_client->GetSharedModeEnginePeriod(format, &default_period, &fundamental_period, &minimum_period, &maximum_period);
 		printf("Shared Mode Engine Period\n"\
-			"    Current Period: %d frame\n"\
-			"    Default Period: %d frame\n"\
-			"    Minimum Period: %d frame\n"\
-			"    Maximum Period: %d frame\n",
-			default_period, minimum_period, maximum_period, current_period);
+			"  Current Period: %d ¡æ 128 frame\n"\
+			"  Minimum Period: %d frame\n"\
+			"  Maximum Period: %d frame\n\n",
+			current_period, minimum_period, maximum_period);
 		_client->InitializeSharedAudioStream(0, minimum_period, format, nullptr);
 		CoTaskMemFree(format);
-
-		UINT32 current_period_after;
-		_client->GetCurrentSharedModeEnginePeriod(&format, &current_period_after);
-
-
-		CoTaskMemFree(format);
-
 	}
 	inline auto get(void) noexcept {
 		WAVEFORMATEX* format;
