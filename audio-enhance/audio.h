@@ -19,14 +19,8 @@ public:
 		device->Activate(__uuidof(IAudioClient3), CLSCTX_ALL, NULL, reinterpret_cast<void**>(&_client));
 		device->Release();
 	}
-	inline ~audio(void) noexcept {
-		//client->Release();
-		//CoUninitialize();
-	}
 
 	inline auto initialize(void) noexcept {
-		//WAVEFORMATEX* format;
-		//_client->GetMixFormat(&format);
 		WAVEFORMATEX* format;
 		UINT32 current_period;
 		_client->GetCurrentSharedModeEnginePeriod(&format, &current_period);
@@ -41,15 +35,14 @@ public:
 		_client->InitializeSharedAudioStream(0, minimum_period, format, nullptr);
 		CoTaskMemFree(format);
 	}
-	inline auto get(void) noexcept {
-		WAVEFORMATEX* format;
-		UINT32 current_period;
-		_client->GetCurrentSharedModeEnginePeriod(&format, &current_period);
-		CoTaskMemFree(format);
-	}
 private:
 	IAudioClient3* _client;
 };
+
+//inline ~audio(void) noexcept {
+//	//client->Release();
+//	//CoUninitialize();
+//}
 
 //REFERENCE_TIME rt1, rt2;
 //client->GetDevicePeriod(&rt1, &rt2);
@@ -61,3 +54,6 @@ private:
 //audioProps.eCategory = AudioCategory_Media;
 //audioProps.Options = AUDCLNT_STREAMOPTIONS_RAW | AUDCLNT_STREAMOPTIONS_MATCH_FORMAT;
 //client->SetClientProperties(&audioProps);
+
+//WAVEFORMATEX* format;
+//_client->GetMixFormat(&format);
