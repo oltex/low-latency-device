@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <mmdeviceapi.h>
 #include <Audioclient.h>
+#include <stdio.h>
 
 class audio final {
 public:
@@ -22,13 +23,36 @@ public:
 		//client->Release();
 		//CoUninitialize();
 	}
-	
-	inline auto initialize_shared_audio_stream(void) noexcept {
+
+	inline auto initialize(void) noexcept {
+		//WAVEFORMATEX* format;
+		//_client->GetMixFormat(&format);
 		WAVEFORMATEX* format;
-		_client->GetMixFormat(&format);
-		UINT32 default_period, fundamental_period, min_period, max_period;
-		_client->GetSharedModeEnginePeriod(format, &default_period, &fundamental_period, &min_period, &max_period);
-		_client->InitializeSharedAudioStream(0, min_period, format, nullptr);
+		UINT32 current_period;
+		_client->GetCurrentSharedModeEnginePeriod(&format, &current_period);
+
+		UINT32 default_period, fundamental_period, minimum_period, maximum_period;
+		_client->GetSharedModeEnginePeriod(format, &default_period, &fundamental_period, &minimum_period, &maximum_period);
+		printf("Shared Mode Engine Period\n"\
+			"    Current Period: %d frame\n"\
+			"    Default Period: %d frame\n"\
+			"    Minimum Period: %d frame\n"\
+			"    Maximum Period: %d frame\n",
+			default_period, minimum_period, maximum_period, current_period);
+		_client->InitializeSharedAudioStream(0, minimum_period, format, nullptr);
+		CoTaskMemFree(format);
+
+		UINT32 current_period_after;
+		_client->GetCurrentSharedModeEnginePeriod(&format, &current_period_after);
+
+
+		CoTaskMemFree(format);
+
+	}
+	inline auto get(void) noexcept {
+		WAVEFORMATEX* format;
+		UINT32 current_period;
+		_client->GetCurrentSharedModeEnginePeriod(&format, &current_period);
 		CoTaskMemFree(format);
 	}
 private:

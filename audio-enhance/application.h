@@ -2,7 +2,7 @@
 #include "audio.h"
 #include <stdio.h>
 
-class application final  {
+class application final {
 public:
 	inline explicit application(void) noexcept {
 		SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
@@ -11,8 +11,12 @@ public:
 		cursor_info.dwSize = 1;
 		cursor_info.bVisible = FALSE;
 		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
-		fputs("oltex-tablet-driver\n", stdout);
 	};
+	inline void run(void) noexcept {
+		_audio.initialize();
+		//_audio.get();
+		Sleep(INFINITE);
+	}
 private:
-
+	audio _audio;
 };

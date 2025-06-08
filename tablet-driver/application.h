@@ -12,9 +12,9 @@ struct area final {
 	unsigned short const _width, _height;
 };
 
-class client final {
+class application final {
 public:
-	inline explicit client(area const& area) noexcept
+	inline explicit application(area const& area) noexcept
 		: _area(area) {
 		SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
 		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
@@ -22,7 +22,7 @@ public:
 		cursor_info.dwSize = 1;
 		cursor_info.bVisible = FALSE;
 		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
-		fputs("oltex-tablet-driver\n", stdout);
+		fputs("Tablet Driver\n", stdout);
 
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
