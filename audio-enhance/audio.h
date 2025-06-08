@@ -15,20 +15,24 @@ public:
 		enumerator->GetDefaultAudioEndpoint(eRender, eConsole, &device);
 		enumerator->Release();
 
-		IAudioClient3* client;
-		device->Activate(__uuidof(IAudioClient3), CLSCTX_ALL, NULL, reinterpret_cast<void**>(&client));
+		device->Activate(__uuidof(IAudioClient3), CLSCTX_ALL, NULL, reinterpret_cast<void**>(&_client));
 		device->Release();
-
-		WAVEFORMATEX* format;
-		client->GetMixFormat(&format);
-		UINT32 default_period, fundamental_period, min_period, max_period;
-		client->GetSharedModeEnginePeriod(format, &default_period, &fundamental_period, &min_period, &max_period);
-		client->InitializeSharedAudioStream(0, min_period, format, nullptr);
-		CoTaskMemFree(format);
-
-		client->Release();
-		CoUninitialize();
 	}
+	inline ~audio(void) noexcept {
+		//client->Release();
+		//CoUninitialize();
+	}
+	
+	inline auto initialize_shared_audio_stream(void) noexcept {
+		WAVEFORMATEX* format;
+		_client->GetMixFormat(&format);
+		UINT32 default_period, fundamental_period, min_period, max_period;
+		_client->GetSharedModeEnginePeriod(format, &default_period, &fundamental_period, &min_period, &max_period);
+		_client->InitializeSharedAudioStream(0, min_period, format, nullptr);
+		CoTaskMemFree(format);
+	}
+private:
+	IAudioClient3* _client;
 };
 
 //REFERENCE_TIME rt1, rt2;

@@ -22,7 +22,7 @@ public:
 		cursor_info.dwSize = 1;
 		cursor_info.bVisible = FALSE;
 		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
-		fputs("oltex-tablet-client\n", stdout);
+		fputs("oltex-tablet-driver\n", stdout);
 
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
