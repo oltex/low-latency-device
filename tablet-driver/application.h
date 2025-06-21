@@ -40,8 +40,8 @@ public:
 		thread_info.StateMask = 0;
 		SetThreadInformation(GetCurrentThread(), ThreadPowerThrottling, reinterpret_cast<void*>(&thread_info), sizeof(THREAD_POWER_THROTTLING_STATE));
 
-		unsigned long index = 0;
-		AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
+		//unsigned long index = 0;
+		//AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
 	};
 	inline void run(void) noexcept {
 		unsigned char _button = 0;
@@ -66,8 +66,6 @@ private:
 	mouse _mouse;
 };
 
-//fputs("oltex-tablet-client", stdout);
-
 //HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
 //unsigned long mode;
 //GetConsoleMode(handle, &mode);
@@ -84,15 +82,3 @@ private:
 ///*mode |= DISABLE_NEWLINE_AUTO_RETURN;*/
 //SetConsoleMode(handle, mode);
 //FreeConsole();
-
-//CONSOLE_CURSOR_INFO info;
-//info.dwSize = 1;
-//info.bVisible = FALSE;
-//SetConsoleCursorInfo(handle, &info);
-
-//unsigned long index = 0;
-//handle = AvSetMmThreadCharacteristicsW(L"Games", &index);
-//AvSetMmThreadPriority(handle, AVRT_PRIORITY_CRITICAL);
-
-//SetProcessPriorityBoost(GetCurrentProcess(), false);
-//SetThreadPriorityBoost(GetCurrentThread(), false);
