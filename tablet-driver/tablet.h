@@ -4,6 +4,13 @@
 #include <hidsdi.h>
 #pragma comment(lib, "setupapi.lib")
 #include <SetupAPI.h>
+#include <winternl.h>
+
+using NtReadFile = NTSTATUS(WINAPI*)(
+	HANDLE FileHandle, HANDLE Event,
+	PIO_APC_ROUTINE ApcRoutine, PVOID ApcContext,
+	PIO_STATUS_BLOCK IoStatusBlock,
+	PVOID Buffer, ULONG Length, PLARGE_INTEGER ByteOffset, PULONG Key);
 
 class tablet final {
 public:
@@ -58,31 +65,23 @@ public:
 		unsigned char buffer[2]{ 0x02, 0x02 };
 		HidD_SetFeature(_handle, buffer, 2);
 		HidD_SetNumInputBuffers(_handle, 2);
+
+		_nt_read_file = reinterpret_cast<NtReadFile>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtReadFile"));
 	}
 
 	inline void const read(void) noexcept {
+		IO_STATUS_BLOCK block;
 		do
-			ReadFile(_handle, _buffer, _report_length, nullptr, nullptr);
+			_nt_read_file(_handle, nullptr, nullptr, nullptr, &block, _buffer, 10, &offset, nullptr);
 		while (_buffer[0] != _report_id || !(_buffer[1] & _detect_mask));
 	};
 
+	NtReadFile _nt_read_file;
+	LARGE_INTEGER offset{ 0 };
 	HANDLE /*__restrict*/ _handle;
 	alignas(2) unsigned char _buffer[10]{};
 	inline static constexpr unsigned char  _report_id = 0x02;
 	inline static constexpr unsigned char const _report_length = 10;
 	inline static constexpr unsigned char const _detect_mask = 0x40;
 };
-
-// ctl-470 : 0x056a, 0x00dd, 0x00D, 0x0001
-// ctl-480 : 0x056A, 0x030E, 0xFF0D, 0x0001
-// ctl-472 : 0x056a, 0x037a, 0xFF0D, 0x0001
-
-
-//COMMTIMEOUTS comm_time_outs;
-//GetCommTimeouts(_handle, &comm_time_outs);
-//comm_time_outs.ReadIntervalTimeout = 1;
-//comm_time_outs.ReadTotalTimeoutConstant = 1;
-//comm_time_outs.ReadTotalTimeoutMultiplier = 1;
-//SetCommTimeouts(_handle, &comm_time_outs);
-
-//_mm_clflush(&overlapped.Internal);
+//ReadFile(_handle, _buffer, _report_length, nullptr, nullptr);

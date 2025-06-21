@@ -40,8 +40,8 @@ public:
 		thread_info.StateMask = 0;
 		SetThreadInformation(GetCurrentThread(), ThreadPowerThrottling, reinterpret_cast<void*>(&thread_info), sizeof(THREAD_POWER_THROTTLING_STATE));
 
-		//unsigned long index = 0;
-		//AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
+		unsigned long index = 0;
+		AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
 	};
 	inline void run(void) noexcept {
 		unsigned char _button = 0;
