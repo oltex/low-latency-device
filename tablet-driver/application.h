@@ -4,6 +4,7 @@
 #pragma comment(lib, "avrt.lib")
 #include <avrt.h>
 #include <stdio.h>
+
 struct area final {
 	inline explicit area(int const x, int const y, int const width, int const height) noexcept
 		: _left(x - width / 2), _top(y - height / 2), _width(width), _height(height) {
