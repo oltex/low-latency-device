@@ -72,7 +72,6 @@ public:
 	inline void const read(void) noexcept {
 		IO_STATUS_BLOCK block;
 		do
-			//ReadFile(_handle, _buffer, _report_length, nullptr, nullptr);
 			_nt_read_file(_handle, nullptr, nullptr, nullptr, &block, _buffer, 10, &offset, nullptr);
 		while (_buffer[0] != _report_id || !(_buffer[1] & _detect_mask));
 	};
@@ -85,3 +84,4 @@ public:
 	inline static constexpr unsigned char const _report_length = 10;
 	inline static constexpr unsigned char const _detect_mask = 0x40;
 };
+// ReadFile(_handle, _buffer, _report_length, nullptr, nullptr);
