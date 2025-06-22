@@ -37,6 +37,7 @@ public:
 			detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
 			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, detail_data, size, &size, nullptr);
 
+			//FILE_ATTRIBUTE_DEVICE | /FILE_FLAG_WRITE_THROUGH
 			_handle = CreateFileW(detail_data->DevicePath, FILE_READ_DATA, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_DEVICE, nullptr);
 			free(detail_data);
 			if (INVALID_HANDLE_VALUE != _handle) {
@@ -85,6 +86,3 @@ public:
 	inline static constexpr unsigned char const _report_length = 10;
 	inline static constexpr unsigned char const _detect_mask = 0x40;
 };
-//ReadFile(_handle, _buffer, _report_length, nullptr, nullptr);
-//FILE_ATTRIBUTE_DEVICE | 
-//FILE_FLAG_WRITE_THROUGH
