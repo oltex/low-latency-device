@@ -4,7 +4,8 @@
 #pragma comment(lib, "avrt.lib")
 #include <avrt.h>
 #include <stdio.h>
-#pragma comment(lib, "winmm.lib")
+//#pragma comment(lib, "winmm.lib")
+
 struct area final {
 	inline explicit area(int const x, int const y, int const width, int const height) noexcept
 		: _left(x - width / 2), _top(y - height / 2), _width(width), _height(height) {
@@ -44,7 +45,7 @@ public:
 
 		unsigned long index = 0;
 		AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
-		timeBeginPeriod(1);
+		//timeBeginPeriod(1);
 	};
 	inline void run(void) noexcept {
 		unsigned char _button = 0;
