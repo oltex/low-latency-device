@@ -4,13 +4,13 @@
 #include <hidsdi.h>
 #pragma comment(lib, "setupapi.lib")
 #include <SetupAPI.h>
-#include <winternl.h>
-
-using NtReadFile = NTSTATUS(WINAPI*)(
-	HANDLE FileHandle, HANDLE Event,
-	PIO_APC_ROUTINE ApcRoutine, PVOID ApcContext,
-	PIO_STATUS_BLOCK IoStatusBlock,
-	PVOID Buffer, ULONG Length, PLARGE_INTEGER ByteOffset, PULONG Key);
+//#include <winternl.h>
+//
+//using NtReadFile = NTSTATUS(WINAPI*)(
+//	HANDLE FileHandle, HANDLE Event,
+//	PIO_APC_ROUTINE ApcRoutine, PVOID ApcContext,
+//	PIO_STATUS_BLOCK IoStatusBlock,
+//	PVOID Buffer, ULONG Length, PLARGE_INTEGER ByteOffset, PULONG Key);
 
 class tablet final {
 public:
@@ -37,7 +37,7 @@ public:
 			detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
 			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, detail_data, size, &size, nullptr);
 
-			_handle = CreateFileW(detail_data->DevicePath, FILE_READ_DATA, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_DEVICE | FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH, nullptr);
+			_handle = CreateFileW(detail_data->DevicePath, FILE_READ_DATA, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_DEVICE, nullptr);
 			free(detail_data);
 			if (INVALID_HANDLE_VALUE != _handle) {
 				HIDD_ATTRIBUTES attributes;
@@ -66,18 +66,19 @@ public:
 		HidD_SetFeature(_handle, buffer, 2);
 		HidD_SetNumInputBuffers(_handle, 2);
 
-		_nt_read_file = reinterpret_cast<NtReadFile>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtReadFile"));
+		//_nt_read_file = reinterpret_cast<NtReadFile>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtReadFile"));
 	}
 
 	inline void const read(void) noexcept {
-		IO_STATUS_BLOCK block;
+		//IO_STATUS_BLOCK block;
 		do
-			_nt_read_file(_handle, nullptr, nullptr, nullptr, &block, _buffer, 10, &offset, nullptr);
+			ReadFile(_handle, _buffer, _report_length, nullptr, nullptr);
+			//_nt_read_file(_handle, nullptr, nullptr, nullptr, &block, _buffer, 10, &offset, nullptr);
 		while (_buffer[0] != _report_id || !(_buffer[1] & _detect_mask));
 	};
 
-	NtReadFile _nt_read_file;
-	LARGE_INTEGER offset{ 0 };
+	//NtReadFile _nt_read_file;
+	//LARGE_INTEGER offset{ 0 };
 	HANDLE /*__restrict*/ _handle;
 	alignas(2) unsigned char _buffer[10]{};
 	inline static constexpr unsigned char  _report_id = 0x02;
@@ -85,3 +86,5 @@ public:
 	inline static constexpr unsigned char const _detect_mask = 0x40;
 };
 //ReadFile(_handle, _buffer, _report_length, nullptr, nullptr);
+//FILE_ATTRIBUTE_DEVICE | 
+//FILE_FLAG_WRITE_THROUGH
