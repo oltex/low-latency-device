@@ -134,7 +134,6 @@
       <HeapCommitSize>4096</HeapCommitSize>
       <HeapReserveSize>4096</HeapReserveSize>
       <StackCommitSize>4096</StackCommitSize>
-      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -190,7 +189,6 @@
       <DataExecutionPrevention>false</DataExecutionPrevention>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies />
-      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
