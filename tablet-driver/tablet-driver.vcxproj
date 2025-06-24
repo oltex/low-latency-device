@@ -126,13 +126,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalDependencies />
+      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>false</DataExecutionPrevention>
-      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
-      <StackReserveSize>4096</StackReserveSize>
-      <HeapCommitSize>4096</HeapCommitSize>
-      <HeapReserveSize>4096</HeapReserveSize>
-      <StackCommitSize>4096</StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -178,15 +174,11 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <StackReserveSize>4096</StackReserveSize>
-      <StackCommitSize>4096</StackCommitSize>
-      <HeapReserveSize>4096</HeapReserveSize>
-      <HeapCommitSize>4096</HeapCommitSize>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention>false</DataExecutionPrevention>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies />
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>false</DataExecutionPrevention>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
