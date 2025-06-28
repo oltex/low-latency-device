@@ -37,7 +37,7 @@ public:
 			detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W);
 			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, detail_data, size, &size, nullptr);
 
-			_handle = CreateFileW(detail_data->DevicePath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_DEVICE/* | FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH*/, nullptr);
+			_handle = CreateFileW(detail_data->DevicePath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_DEVICE | FILE_FLAG_OVERLAPPED /* | FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH*/, nullptr);
 			free(detail_data);
 			if (INVALID_HANDLE_VALUE != _handle) {
 				HIDD_ATTRIBUTES attributes;
@@ -67,18 +67,27 @@ public:
 		HidD_SetNumInputBuffers(_handle, 512);
 
 		_nt_read_file = reinterpret_cast<NtReadFile>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtReadFile"));
+		_event = CreateEventW(nullptr, false, false, nullptr);
+		
 	}
 
 	inline void const read(void) noexcept {
 		IO_STATUS_BLOCK block;
-		do
-			_nt_read_file(_handle, nullptr, nullptr, nullptr, &block, _buffer, 10, &offset, nullptr);
-		while (_buffer[0] != _report_id || !(_buffer[1] & _detect_mask));
+		do {
+			OVERLAPPED overlapped{};
+			overlapped.hEvent = _event;
+			ReadFile(_handle, _buffer, _report_length, nullptr, &overlapped);
+			WaitForSingleObject(_event, INFINITE);
+			//_nt_read_file(_handle, nullptr, nullptr, nullptr, &block, _buffer, 10, &offset, nullptr);
+			//while (STATUS_PENDING == reinterpret_cast<volatile OVERLAPPED*>(&overlapped)->Internal) {
+			//}
+		} while (_buffer[0] != _report_id || !(_buffer[1] & _detect_mask));
 	};
 
 	NtReadFile _nt_read_file;
 	LARGE_INTEGER offset{ 0 };
 	HANDLE /*__restrict*/ _handle;
+	HANDLE /*__restrict*/ _event;
 	alignas(2) unsigned char _buffer[10]{};
 	inline static constexpr unsigned char _report_id = 0x02;
 	inline static constexpr unsigned char const _report_length = 10;
