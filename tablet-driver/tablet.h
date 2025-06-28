@@ -34,7 +34,7 @@ public:
 			unsigned long size;
 			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, nullptr, 0, &size, nullptr);
 			PSP_DEVICE_INTERFACE_DETAIL_DATA_W detail_data = reinterpret_cast<PSP_DEVICE_INTERFACE_DETAIL_DATA_W>(malloc(size));
-			detail_data->cbSize = sizeof(PSP_DEVICE_INTERFACE_DETAIL_DATA_W);
+			detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W);
 			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, detail_data, size, &size, nullptr);
 
 			_handle = CreateFileW(detail_data->DevicePath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_DEVICE/* | FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH*/, nullptr);
