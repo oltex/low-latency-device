@@ -1,8 +1,8 @@
 #pragma once
 #include "tablet.h"
 #include "mouse.h"
-#pragma comment(lib, "avrt.lib")
-#include <avrt.h>
+//#pragma comment(lib, "avrt.lib")
+//#include <avrt.h>
 #include <stdio.h>
 //#pragma comment(lib, "winmm.lib")
 
@@ -53,7 +53,7 @@ public:
 			_tablet.read();
 
 			unsigned char button = _tablet._buffer[1] & 0x1; //0x7
-			_mouse._input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE | MOUSEEVENTF_VIRTUALDESK;
+			_mouse._input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 			if (_button ^ button) {
 				_mouse._input.mi.dwFlags |= (button << 1) + (_button << 2);
 				_button = button;
