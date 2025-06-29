@@ -64,7 +64,7 @@ public:
 
 		unsigned char buffer[2]{ 0x02, 0x02 };
 		HidD_SetFeature(_handle, buffer, 2);
-		HidD_SetNumInputBuffers(_handle, 512);
+		//HidD_SetNumInputBuffers(_handle, 512);
 
 		_nt_read_file = reinterpret_cast<NtReadFile>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtReadFile"));
 	}
