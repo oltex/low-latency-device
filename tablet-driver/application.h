@@ -1,8 +1,8 @@
 #pragma once
 #include "tablet.h"
 #include "mouse.h"
-//#pragma comment(lib, "avrt.lib")
-//#include <avrt.h>
+#pragma comment(lib, "avrt.lib")
+#include <avrt.h>
 #include <stdio.h>
 //#pragma comment(lib, "winmm.lib")
 
@@ -43,8 +43,8 @@ public:
 		//thread_info.StateMask = 0;
 		//SetThreadInformation(GetCurrentThread(), ThreadPowerThrottling, reinterpret_cast<void*>(&thread_info), sizeof(THREAD_POWER_THROTTLING_STATE));
 
-		//unsigned long index = 0;
-		//AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
+		unsigned long index = 0;
+		AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
 		//timeBeginPeriod(1);
 	};
 	inline void run(void) noexcept {
