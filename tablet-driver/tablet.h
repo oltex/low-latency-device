@@ -73,8 +73,8 @@ public:
 		
 			IO_STATUS_BLOCK block;
 			_handle = nullptr;
-			//NtCreateFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, nullptr, FILE_ATTRIBUTE_NORMAL, 0, FILE_OPEN, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT /*| FILE_SEQUENTIAL_ONLY| FILE_NO_INTERMEDIATE_BUFFERING*/, nullptr, 0);
-			NtOpenFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, 0, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT);
+			NtCreateFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, nullptr, FILE_ATTRIBUTE_NORMAL, 0, FILE_OPEN, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT /*| FILE_SEQUENTIAL_ONLY| FILE_NO_INTERMEDIATE_BUFFERING*/, nullptr, 0);
+			//NtOpenFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, 0, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT);
 			if (0 != _handle) {
 				HIDD_ATTRIBUTES attribute;
 				PHIDP_PREPARSED_DATA preparsed_data;
@@ -103,24 +103,18 @@ public:
 		//HidD_SetNumInputBuffers(_handle, 512);
 
 		_nt_read_file = reinterpret_cast<NtReadFile>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtReadFile"));
-		//_event = CreateEventW(nullptr, false, false, nullptr);
 	}
 
 	inline void const read(void) noexcept {
 		IO_STATUS_BLOCK block;
-		do {
-			//OVERLAPPED overlapped{};
-			//overlapped.hEvent = _event;
-			//ReadFile(_handle, _buffer, _report_length, nullptr, &overlapped);
-			//WaitForSingleObject(_event, INFINITE);
+		do
 			_nt_read_file(_handle, nullptr, nullptr, nullptr, &block, _buffer, _report_length, &offset, nullptr);
-		} while (_buffer[0] != _report_id || !(_buffer[1] & _detect_mask));
+		while (_buffer[0] != _report_id || !(_buffer[1] & _detect_mask));
 	};
 
 	NtReadFile _nt_read_file;
 	LARGE_INTEGER offset{ 0 };
 	HANDLE /*__restrict*/ _handle;
-	//HANDLE /*__restrict*/ _event;
 	alignas(2) unsigned char _buffer[10]{};
 	inline static constexpr unsigned char _report_id = 0x02;
 	inline static constexpr unsigned char _report_length = 10;
