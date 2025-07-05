@@ -7,7 +7,7 @@
 //#pragma comment(lib, "winmm.lib")
 
 struct area final {
-	inline explicit area(int const x, int const y, int const width, int const height) noexcept
+	inline explicit area(int const x = 7360, int const y = 4600, int const width = 8544, int const height = 4806) noexcept
 		: _left(x - width / 2), _top(y - height / 2), _width(width), _height(height) {
 	}
 	unsigned short const _left, _top;
@@ -16,8 +16,7 @@ struct area final {
 
 class application final {
 public:
-	inline explicit application(area const& area) noexcept
-		: _area(area) {
+	inline explicit application() noexcept {
 		SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
 		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
 		CONSOLE_CURSOR_INFO cursor_info{
