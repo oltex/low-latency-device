@@ -27,55 +27,19 @@ public:
 		HidD_GetHidGuid(&guid);
 		HDEVINFO info = SetupDiGetClassDevsW(&guid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 
-		for (unsigned long index = 0;; ++index) {
-			SP_DEVICE_INTERFACE_DATA interface_data;
-			interface_data.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
-			SetupDiEnumDeviceInterfaces(info, nullptr, &guid, index, &interface_data);
-			unsigned long size;
-			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, nullptr, 0, &size, nullptr);
-			PSP_DEVICE_INTERFACE_DETAIL_DATA_W detail_data = reinterpret_cast<PSP_DEVICE_INTERFACE_DETAIL_DATA_W>(malloc(size));
-			detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W);
-			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, detail_data, size, &size, nullptr);
-
-			_handle = CreateFileW(detail_data->DevicePath, FILE_READ_DATA, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_DEVICE | FILE_FLAG_OVERLAPPED /* | FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH*/, nullptr);
-			free(detail_data);
-			if (INVALID_HANDLE_VALUE != _handle) {
-				HIDD_ATTRIBUTES attribute;
-				PHIDP_PREPARSED_DATA preparsed_data;
-				HIDP_CAPS capability;
-				HidD_GetAttributes(_handle, &attribute);
-				HidD_GetPreparsedData(_handle, &preparsed_data);
-				HidP_GetCaps(preparsed_data, &capability);
-				HidD_FreePreparsedData(preparsed_data);
-
-				for (unsigned long index = 0; index < 3; ++index) {
-					if (attribute.VendorID == config[index]._vendor_id &&
-						attribute.ProductID == config[index]._product_id &&
-						capability.UsagePage == config[index]._usage_page &&
-						capability.Usage == config[index]._usage) {
-						goto exit;
-					}
-				}
-				CloseHandle(_handle);
-			}
-		}
 		//for (unsigned long index = 0;; ++index) {
-		//	SP_DEVINFO_DATA info_data;
-		//	info_data.cbSize = sizeof(SP_DEVINFO_DATA);
-		//	SetupDiEnumDeviceInfo(info, index, &info_data);
-		//	WCHAR path[512];
-		//	SetupDiGetDeviceRegistryPropertyW(info, &info_data, SPDRP_PHYSICAL_DEVICE_OBJECT_NAME, nullptr, reinterpret_cast<PBYTE>(path), sizeof(path), nullptr);
+		//	SP_DEVICE_INTERFACE_DATA interface_data;
+		//	interface_data.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
+		//	SetupDiEnumDeviceInterfaces(info, nullptr, &guid, index, &interface_data);
+		//	unsigned long size;
+		//	SetupDiGetDeviceInterfaceDetailW(info, &interface_data, nullptr, 0, &size, nullptr);
+		//	PSP_DEVICE_INTERFACE_DETAIL_DATA_W detail_data = reinterpret_cast<PSP_DEVICE_INTERFACE_DETAIL_DATA_W>(malloc(size));
+		//	detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W);
+		//	SetupDiGetDeviceInterfaceDetailW(info, &interface_data, detail_data, size, &size, nullptr);
 		//
-		//	UNICODE_STRING string;
-		//	RtlInitUnicodeString(&string, path);
-		//	OBJECT_ATTRIBUTES attribute;
-		//	InitializeObjectAttributes(&attribute, &string, OBJ_CASE_INSENSITIVE, nullptr, nullptr);
-		//
-		//	IO_STATUS_BLOCK block;
-		//	_handle = nullptr;
-		//	NtCreateFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, nullptr, FILE_ATTRIBUTE_NORMAL, 0, FILE_OPEN, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT /*| FILE_SEQUENTIAL_ONLY| FILE_NO_INTERMEDIATE_BUFFERING*/, nullptr, 0);
-		//	//NtOpenFile(&hDevice, GENERIC_READ | GENERIC_WRITE, &attribute, &block, 0, FILE_NON_DIRECTORY_FILE | FILE_SEQUENTIAL_ONLY | FILE_SYNCHRONOUS_IO_NONALERT);
-		//	if (0 != _handle) {
+		//	_handle = CreateFileW(detail_data->DevicePath, FILE_READ_DATA, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_DEVICE | FILE_FLAG_OVERLAPPED /* | FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH*/, nullptr);
+		//	free(detail_data);
+		//	if (INVALID_HANDLE_VALUE != _handle) {
 		//		HIDD_ATTRIBUTES attribute;
 		//		PHIDP_PREPARSED_DATA preparsed_data;
 		//		HIDP_CAPS capability;
@@ -95,6 +59,42 @@ public:
 		//		CloseHandle(_handle);
 		//	}
 		//}
+		for (unsigned long index = 0;; ++index) {
+			SP_DEVINFO_DATA info_data;
+			info_data.cbSize = sizeof(SP_DEVINFO_DATA);
+			SetupDiEnumDeviceInfo(info, index, &info_data);
+			WCHAR path[512];
+			SetupDiGetDeviceRegistryPropertyW(info, &info_data, SPDRP_PHYSICAL_DEVICE_OBJECT_NAME, nullptr, reinterpret_cast<PBYTE>(path), sizeof(path), nullptr);
+		
+			UNICODE_STRING string;
+			RtlInitUnicodeString(&string, path);
+			OBJECT_ATTRIBUTES attribute;
+			InitializeObjectAttributes(&attribute, &string, OBJ_CASE_INSENSITIVE, nullptr, nullptr);
+		
+			IO_STATUS_BLOCK block;
+			_handle = nullptr;
+			//NtCreateFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, nullptr, FILE_ATTRIBUTE_NORMAL, 0, FILE_OPEN, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT /*| FILE_SEQUENTIAL_ONLY| FILE_NO_INTERMEDIATE_BUFFERING*/, nullptr, 0);
+			NtOpenFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, 0, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT);
+			if (0 != _handle) {
+				HIDD_ATTRIBUTES attribute;
+				PHIDP_PREPARSED_DATA preparsed_data;
+				HIDP_CAPS capability;
+				HidD_GetAttributes(_handle, &attribute);
+				HidD_GetPreparsedData(_handle, &preparsed_data);
+				HidP_GetCaps(preparsed_data, &capability);
+				HidD_FreePreparsedData(preparsed_data);
+		
+				for (unsigned long index = 0; index < 3; ++index) {
+					if (attribute.VendorID == config[index]._vendor_id &&
+						attribute.ProductID == config[index]._product_id &&
+						capability.UsagePage == config[index]._usage_page &&
+						capability.Usage == config[index]._usage) {
+						goto exit;
+					}
+				}
+				CloseHandle(_handle);
+			}
+		}
 	exit:
 		SetupDiDestroyDeviceInfoList(info);
 
