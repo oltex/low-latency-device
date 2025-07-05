@@ -4,6 +4,9 @@
 #pragma comment(lib, "avrt.lib")
 #include <avrt.h>
 #include <stdio.h>
+#include <shellscalingapi.h>
+#pragma comment(lib, "Shcore.lib")
+
 //#pragma comment(lib, "winmm.lib")
 
 struct area final {
@@ -28,6 +31,8 @@ public:
 
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+		//PROCESS_DPI_AWARENESS
+		SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
 		//SetProcessPriorityBoost(GetCurrentProcess(), false);
 		//SetThreadPriorityBoost(GetCurrentThread(), false);
 

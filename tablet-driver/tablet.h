@@ -74,14 +74,7 @@ public:
 			IO_STATUS_BLOCK block;
 			_handle = nullptr;
 			NtCreateFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, nullptr, FILE_ATTRIBUTE_NORMAL, 0, FILE_OPEN, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT /*| FILE_SEQUENTIAL_ONLY| FILE_NO_INTERMEDIATE_BUFFERING*/, nullptr, 0);
-			//NTSTATUS status = NtOpenFile(
-			//	&hDevice,
-			//	GENERIC_READ | GENERIC_WRITE,
-			//	&attribute,
-			//	&block,
-			//	0,
-			//	FILE_NON_DIRECTORY_FILE | FILE_SEQUENTIAL_ONLY | FILE_SYNCHRONOUS_IO_NONALERT
-			//);
+			//NtOpenFile(&hDevice, GENERIC_READ | GENERIC_WRITE, &attribute, &block, 0, FILE_NON_DIRECTORY_FILE | FILE_SEQUENTIAL_ONLY | FILE_SYNCHRONOUS_IO_NONALERT);
 			if (0 != _handle) {
 				HIDD_ATTRIBUTES attribute;
 				PHIDP_PREPARSED_DATA preparsed_data;
