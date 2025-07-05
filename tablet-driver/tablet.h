@@ -63,22 +63,17 @@ public:
 			SP_DEVINFO_DATA info_data;
 			info_data.cbSize = sizeof(SP_DEVINFO_DATA);
 			SetupDiEnumDeviceInfo(info, index, &info_data);
-			WCHAR kernelPath[512];
-			SetupDiGetDeviceRegistryPropertyW(info, &info_data, SPDRP_PHYSICAL_DEVICE_OBJECT_NAME, nullptr, reinterpret_cast<PBYTE>(kernelPath), sizeof(kernelPath), nullptr);
+			WCHAR path[512];
+			SetupDiGetDeviceRegistryPropertyW(info, &info_data, SPDRP_PHYSICAL_DEVICE_OBJECT_NAME, nullptr, reinterpret_cast<PBYTE>(path), sizeof(path), nullptr);
 
 			UNICODE_STRING string;
-			RtlInitUnicodeString(&string, kernelPath);
+			RtlInitUnicodeString(&string, path);
 			OBJECT_ATTRIBUTES attribute;
 			InitializeObjectAttributes(&attribute, &string, OBJ_CASE_INSENSITIVE, nullptr, nullptr);
 
-			IO_STATUS_BLOCK block{};
+			IO_STATUS_BLOCK block;
 			_handle = nullptr;
-			NtCreateFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block,
-				nullptr,
-				FILE_ATTRIBUTE_SYSTEM,
-				0,
-				FILE_OPEN,
-				FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT /*| FILE_SEQUENTIAL_ONLY| FILE_NO_INTERMEDIATE_BUFFERING*/, nullptr, 0);
+			NtCreateFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, nullptr, FILE_ATTRIBUTE_NORMAL, 0, FILE_OPEN, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT /*| FILE_SEQUENTIAL_ONLY| FILE_NO_INTERMEDIATE_BUFFERING*/, nullptr, 0);
 			//NTSTATUS status = NtOpenFile(
 			//	&hDevice,
 			//	GENERIC_READ | GENERIC_WRITE,
