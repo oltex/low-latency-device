@@ -20,9 +20,9 @@ public:
 		: _area(area) {
 		SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
 		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
-		CONSOLE_CURSOR_INFO cursor_info;
-		cursor_info.dwSize = 1;
-		cursor_info.bVisible = FALSE;
+		CONSOLE_CURSOR_INFO cursor_info{
+			.dwSize = 1,
+			.bVisible = FALSE };
 		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
 		fputs("Tablet Driver\n", stdout);
 		//FreeConsole();
@@ -32,15 +32,15 @@ public:
 		//SetProcessPriorityBoost(GetCurrentProcess(), false);
 		//SetThreadPriorityBoost(GetCurrentThread(), false);
 
-		//PROCESS_POWER_THROTTLING_STATE process_info;
-		//process_info.Version = PROCESS_POWER_THROTTLING_CURRENT_VERSION;
-		//process_info.ControlMask = PROCESS_POWER_THROTTLING_EXECUTION_SPEED;
-		//process_info.StateMask = 0;
+		//PROCESS_POWER_THROTTLING_STATE process_info{
+		//	.Version = PROCESS_POWER_THROTTLING_CURRENT_VERSION,
+		//	.ControlMask = PROCESS_POWER_THROTTLING_EXECUTION_SPEED,
+		//	.StateMask = 0 };
 		//SetProcessInformation(GetCurrentProcess(), ProcessPowerThrottling, reinterpret_cast<void*>(&process_info), sizeof(PROCESS_POWER_THROTTLING_STATE));
-		//THREAD_POWER_THROTTLING_STATE thread_info;
-		//thread_info.Version = THREAD_POWER_THROTTLING_CURRENT_VERSION;
-		//thread_info.ControlMask = THREAD_POWER_THROTTLING_EXECUTION_SPEED;
-		//thread_info.StateMask = 0;
+		//THREAD_POWER_THROTTLING_STATE thread_info{
+		//	.Version = THREAD_POWER_THROTTLING_CURRENT_VERSION,
+		//	.ControlMask = THREAD_POWER_THROTTLING_EXECUTION_SPEED,
+		//	.StateMask = 0 };
 		//SetThreadInformation(GetCurrentThread(), ThreadPowerThrottling, reinterpret_cast<void*>(&thread_info), sizeof(THREAD_POWER_THROTTLING_STATE));
 
 		unsigned long index = 0;

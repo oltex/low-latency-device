@@ -12,6 +12,15 @@ using NtReadFile = NTSTATUS(WINAPI*)(
 	PIO_STATUS_BLOCK IoStatusBlock,
 	PVOID Buffer, ULONG Length, PLARGE_INTEGER ByteOffset, PULONG Key);
 
+//extern "C" NTSTATUS NTAPI NtOpenFile(
+//	PHANDLE FileHandle,
+//	ACCESS_MASK DesiredAccess,
+//	POBJECT_ATTRIBUTES ObjectAttributes,
+//	PIO_STATUS_BLOCK IoStatusBlock,
+//	ULONG ShareAccess,
+//	ULONG OpenOptions
+//);
+
 class tablet final {
 public:
 	inline explicit tablet(void) noexcept {
@@ -36,6 +45,13 @@ public:
 			PSP_DEVICE_INTERFACE_DETAIL_DATA_W detail_data = reinterpret_cast<PSP_DEVICE_INTERFACE_DETAIL_DATA_W>(malloc(size));
 			detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W);
 			SetupDiGetDeviceInterfaceDetailW(info, &interface_data, detail_data, size, &size, nullptr);
+
+			//IO_STATUS_BLOCK block;
+			//OBJECT_ATTRIBUTES attributes;
+			//attributes.Length = sizeof()
+			//InitializeObjectAttributes()
+
+			//NtOpenFile(&_handle, FILE_READ_DATA, &attributes, &block, 0, FILE_NON_DIRECTORY_FILE |)
 
 			_handle = CreateFileW(detail_data->DevicePath, FILE_READ_DATA, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_DEVICE /* | FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH*/, nullptr);
 			free(detail_data);
