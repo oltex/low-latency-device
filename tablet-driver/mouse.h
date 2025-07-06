@@ -7,7 +7,7 @@ class mouse final {
 public:
 	inline explicit mouse(void) noexcept {
 		_input.type = INPUT_MOUSE;
-		_input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+		//_input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 	}
 
 	inline void write(void) noexcept {

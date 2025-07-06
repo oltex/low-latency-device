@@ -4,9 +4,8 @@
 #pragma comment(lib, "avrt.lib")
 #include <avrt.h>
 #include <stdio.h>
-#include <shellscalingapi.h>
-#pragma comment(lib, "Shcore.lib")
-
+//#include <shellscalingapi.h>
+//#pragma comment(lib, "Shcore.lib")
 //#pragma comment(lib, "winmm.lib")
 
 struct area final {
