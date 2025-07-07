@@ -18,7 +18,7 @@ struct area final {
 
 class application final {
 public:
-	inline explicit application() noexcept {
+	inline explicit application(void) noexcept {
 		SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
 		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
 		CONSOLE_CURSOR_INFO cursor_info{
