@@ -56,9 +56,8 @@ public:
 			_tablet.read();
 
 			unsigned char button = _tablet._buffer[1] & 0x1; //0x7
-			_mouse._input.mi.dwFlags = 0;// MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 			if (_button ^ button) {
-				_mouse._input.mi.dwFlags |= (button << 1) + (_button << 2);
+				_mouse._input.mi.dwFlags = (button << 1) + (_button << 2);
 				SendInput(1, &_mouse._input, sizeof(INPUT));
 				_button = button;
 			}
