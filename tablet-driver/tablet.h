@@ -15,7 +15,8 @@ using NtReadFile = NTSTATUS(WINAPI*)(
 
 class tablet final {
 public:
-	inline explicit tablet(void) noexcept {
+	inline explicit tablet(void) noexcept
+		: _nt_read_file(reinterpret_cast<NtReadFile>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtReadFile"))) {
 		static constexpr struct {
 			unsigned short const _vendor_id, _product_id, _usage_page, _usage;
 		} config[] = {
@@ -60,22 +61,22 @@ public:
 		//	}
 		//}
 		for (unsigned long index = 0;; ++index) {
-			SP_DEVINFO_DATA info_data;
-			info_data.cbSize = sizeof(SP_DEVINFO_DATA);
-			SetupDiEnumDeviceInfo(info, index, &info_data);
+			SP_DEVINFO_DATA data;
+			data.cbSize = sizeof(SP_DEVINFO_DATA);
+			SetupDiEnumDeviceInfo(info, index, &data);
 			WCHAR path[512];
-			SetupDiGetDeviceRegistryPropertyW(info, &info_data, SPDRP_PHYSICAL_DEVICE_OBJECT_NAME, nullptr, reinterpret_cast<PBYTE>(path), sizeof(path), nullptr);
-		
+			SetupDiGetDeviceRegistryPropertyW(info, &data, SPDRP_PHYSICAL_DEVICE_OBJECT_NAME, nullptr, reinterpret_cast<PBYTE>(path), sizeof(path), nullptr);
+
 			UNICODE_STRING string;
 			RtlInitUnicodeString(&string, path);
 			OBJECT_ATTRIBUTES attribute;
 			InitializeObjectAttributes(&attribute, &string, OBJ_CASE_INSENSITIVE, nullptr, nullptr);
-		
+
 			IO_STATUS_BLOCK block;
 			_handle = nullptr;
 			NtCreateFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, nullptr, 0, 0, FILE_OPEN, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT /*| FILE_SEQUENTIAL_ONLY| FILE_NO_INTERMEDIATE_BUFFERING*/, nullptr, 0);
 			//NtOpenFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, 0, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT);
-			if (0 != _handle) {
+			if (nullptr != _handle) {
 				HIDD_ATTRIBUTES attribute;
 				PHIDP_PREPARSED_DATA preparsed_data;
 				HIDP_CAPS capability;
@@ -83,26 +84,24 @@ public:
 				HidD_GetPreparsedData(_handle, &preparsed_data);
 				HidP_GetCaps(preparsed_data, &capability);
 				HidD_FreePreparsedData(preparsed_data);
-		
+
 				for (unsigned long index = 0; index < 3; ++index) {
 					if (attribute.VendorID == config[index]._vendor_id &&
 						attribute.ProductID == config[index]._product_id &&
 						capability.UsagePage == config[index]._usage_page &&
 						capability.Usage == config[index]._usage) {
-						goto exit;
+
+						SetupDiDestroyDeviceInfoList(info);
+
+						unsigned char buffer[2]{ 0x02, 0x02 };
+						HidD_SetFeature(_handle, buffer, 2);
+						//HidD_SetNumInputBuffers(_handle, 512);
+						return;
 					}
 				}
 				CloseHandle(_handle);
 			}
 		}
-	exit:
-		SetupDiDestroyDeviceInfoList(info);
-
-		unsigned char buffer[2]{ 0x02, 0x02 };
-		HidD_SetFeature(_handle, buffer, 2);
-		//HidD_SetNumInputBuffers(_handle, 512);
-
-		_nt_read_file = reinterpret_cast<NtReadFile>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtReadFile"));
 	}
 
 	inline void const read(void) noexcept {
