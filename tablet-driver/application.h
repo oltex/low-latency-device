@@ -56,13 +56,14 @@ public:
 			_tablet.read();
 
 			unsigned char button = _tablet._buffer[1] & 0x1; //0x7
-			_mouse._input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+			_mouse._input.mi.dwFlags = 0;// MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 			if (_button ^ button) {
 				_mouse._input.mi.dwFlags |= (button << 1) + (_button << 2);
+				SendInput(1, &_mouse._input, sizeof(INPUT));
 				_button = button;
 			}
-			_mouse._input.mi.dx = (*reinterpret_cast<unsigned short*>(_tablet._buffer + 2) - _area._left) * 65535 / _area._width;
-			_mouse._input.mi.dy = (*reinterpret_cast<unsigned short*>(_tablet._buffer + 4) - _area._top) * 65535 / _area._height;
+			_mouse._input.mi.dx = (*reinterpret_cast<unsigned short*>(_tablet._buffer + 2) - _area._left) * 1920 / _area._width;
+			_mouse._input.mi.dy = (*reinterpret_cast<unsigned short*>(_tablet._buffer + 4) - _area._top) * 1080 / _area._height;
 
 			_mouse.write();
 		}
