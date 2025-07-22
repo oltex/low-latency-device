@@ -19,8 +19,9 @@ public:
 		: _nt_read_file(reinterpret_cast<NtReadFile>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtReadFile"))) {
 		static constexpr struct {
 			unsigned short const _vendor_id, _product_id, _usage_page, _usage;
+			char const * const _name;
 		} config[] = {
-			{ 0x056a, 0x00dd, 0x000d, 0x0001 }, //470
+			{ 0x056a, 0x00dd, 0x000d, 0x0001, "CTL-470"}, //470
 			{ 0x056a, 0x037a, 0xff0d, 0x0001 }, //472
 			{ 0x056a, 0x030e, 0xff0d, 0x0001 }, //480
 		};
@@ -28,38 +29,6 @@ public:
 		HidD_GetHidGuid(&guid);
 		HDEVINFO info = SetupDiGetClassDevsW(&guid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 
-		//for (unsigned long index = 0;; ++index) {
-		//	SP_DEVICE_INTERFACE_DATA interface_data;
-		//	interface_data.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
-		//	SetupDiEnumDeviceInterfaces(info, nullptr, &guid, index, &interface_data);
-		//	unsigned long size;
-		//	SetupDiGetDeviceInterfaceDetailW(info, &interface_data, nullptr, 0, &size, nullptr);
-		//	PSP_DEVICE_INTERFACE_DETAIL_DATA_W detail_data = reinterpret_cast<PSP_DEVICE_INTERFACE_DETAIL_DATA_W>(malloc(size));
-		//	detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W);
-		//	SetupDiGetDeviceInterfaceDetailW(info, &interface_data, detail_data, size, &size, nullptr);
-		//
-		//	_handle = CreateFileW(detail_data->DevicePath, FILE_READ_DATA, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_DEVICE | FILE_FLAG_OVERLAPPED /* | FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH*/, nullptr);
-		//	free(detail_data);
-		//	if (INVALID_HANDLE_VALUE != _handle) {
-		//		HIDD_ATTRIBUTES attribute;
-		//		PHIDP_PREPARSED_DATA preparsed_data;
-		//		HIDP_CAPS capability;
-		//		HidD_GetAttributes(_handle, &attribute);
-		//		HidD_GetPreparsedData(_handle, &preparsed_data);
-		//		HidP_GetCaps(preparsed_data, &capability);
-		//		HidD_FreePreparsedData(preparsed_data);
-		//
-		//		for (unsigned long index = 0; index < 3; ++index) {
-		//			if (attribute.VendorID == config[index]._vendor_id &&
-		//				attribute.ProductID == config[index]._product_id &&
-		//				capability.UsagePage == config[index]._usage_page &&
-		//				capability.Usage == config[index]._usage) {
-		//				goto exit;
-		//			}
-		//		}
-		//		CloseHandle(_handle);
-		//	}
-		//}
 		for (unsigned long index = 0;; ++index) {
 			SP_DEVINFO_DATA data;
 			data.cbSize = sizeof(SP_DEVINFO_DATA);
@@ -73,10 +42,8 @@ public:
 			InitializeObjectAttributes(&attribute, &string, OBJ_CASE_INSENSITIVE, nullptr, nullptr);
 
 			IO_STATUS_BLOCK block;
-			_handle = nullptr;
-			NtCreateFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, nullptr, 0, 0, FILE_OPEN, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT /*| FILE_SEQUENTIAL_ONLY| FILE_NO_INTERMEDIATE_BUFFERING*/, nullptr, 0);
 			//NtOpenFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, 0, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT);
-			if (nullptr != _handle) {
+			if (0 == NtCreateFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, nullptr, 0, 0, FILE_OPEN, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT /*| FILE_SEQUENTIAL_ONLY| FILE_NO_INTERMEDIATE_BUFFERING*/, nullptr, 0)) {
 				HIDD_ATTRIBUTES attribute;
 				PHIDP_PREPARSED_DATA preparsed_data;
 				HIDP_CAPS capability;
@@ -91,11 +58,11 @@ public:
 						capability.UsagePage == config[index]._usage_page &&
 						capability.Usage == config[index]._usage) {
 
-						SetupDiDestroyDeviceInfoList(info);
-
 						unsigned char buffer[2]{ 0x02, 0x02 };
 						HidD_SetFeature(_handle, buffer, 2);
 						//HidD_SetNumInputBuffers(_handle, 512);
+
+						SetupDiDestroyDeviceInfoList(info);
 						return;
 					}
 				}
@@ -126,4 +93,37 @@ public:
 //ReadFile(_handle, _buffer, _report_length, nullptr, &overlapped);
 //WaitForSingleObject(_event, INFINITE);
 //while (STATUS_PENDING == reinterpret_cast<volatile OVERLAPPED*>(&overlapped)->Internal) {
+//}
+
+//for (unsigned long index = 0;; ++index) {
+//	SP_DEVICE_INTERFACE_DATA interface_data;
+//	interface_data.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
+//	SetupDiEnumDeviceInterfaces(info, nullptr, &guid, index, &interface_data);
+//	unsigned long size;
+//	SetupDiGetDeviceInterfaceDetailW(info, &interface_data, nullptr, 0, &size, nullptr);
+//	PSP_DEVICE_INTERFACE_DETAIL_DATA_W detail_data = reinterpret_cast<PSP_DEVICE_INTERFACE_DETAIL_DATA_W>(malloc(size));
+//	detail_data->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W);
+//	SetupDiGetDeviceInterfaceDetailW(info, &interface_data, detail_data, size, &size, nullptr);
+//
+//	_handle = CreateFileW(detail_data->DevicePath, FILE_READ_DATA, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_DEVICE | FILE_FLAG_OVERLAPPED /* | FILE_FLAG_NO_BUFFERING | FILE_FLAG_WRITE_THROUGH*/, nullptr);
+//	free(detail_data);
+//	if (INVALID_HANDLE_VALUE != _handle) {
+//		HIDD_ATTRIBUTES attribute;
+//		PHIDP_PREPARSED_DATA preparsed_data;
+//		HIDP_CAPS capability;
+//		HidD_GetAttributes(_handle, &attribute);
+//		HidD_GetPreparsedData(_handle, &preparsed_data);
+//		HidP_GetCaps(preparsed_data, &capability);
+//		HidD_FreePreparsedData(preparsed_data);
+//
+//		for (unsigned long index = 0; index < 3; ++index) {
+//			if (attribute.VendorID == config[index]._vendor_id &&
+//				attribute.ProductID == config[index]._product_id &&
+//				capability.UsagePage == config[index]._usage_page &&
+//				capability.Usage == config[index]._usage) {
+//				goto exit;
+//			}
+//		}
+//		CloseHandle(_handle);
+//	}
 //}

@@ -1,8 +1,8 @@
 #pragma once
 #include "tablet.h"
 #include "mouse.h"
-#pragma comment(lib, "avrt.lib")
-#include <avrt.h>
+//#pragma comment(lib, "avrt.lib")
+//#include <avrt.h>
 #include <stdio.h>
 //#include <shellscalingapi.h>
 //#pragma comment(lib, "Shcore.lib")
@@ -26,6 +26,7 @@ public:
 			.bVisible = FALSE };
 		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
 		fputs("Tablet Driver\n", stdout);
+		fputs("by oltex\n", stdout);
 		//FreeConsole();
 
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
@@ -46,8 +47,8 @@ public:
 		//	.StateMask = 0 };
 		//SetThreadInformation(GetCurrentThread(), ThreadPowerThrottling, reinterpret_cast<void*>(&thread_info), sizeof(THREAD_POWER_THROTTLING_STATE));
 
-		unsigned long index = 0;
-		AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
+		//unsigned long index = 0;
+		//AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
 		//timeBeginPeriod(1);
 	};
 	inline void run(void) noexcept {
