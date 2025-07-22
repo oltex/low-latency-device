@@ -1,7 +1,6 @@
 #pragma once
-#include <WinUser.h>
-#include <SetupAPI.h>
 #pragma comment(lib, "user32.lib")
+#include <WinUser.h>
 
 class mouse final {
 public:
