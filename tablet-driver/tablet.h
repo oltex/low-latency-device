@@ -4,8 +4,8 @@
 #include <hidsdi.h>
 #pragma comment(lib, "setupapi.lib")
 #include <SetupAPI.h>
-#include <winternl.h>
 #pragma comment(lib, "ntdll.lib")
+#include <winternl.h>
 
 using NtReadFile = NTSTATUS(WINAPI*)(
 	HANDLE FileHandle, HANDLE Event,
@@ -19,9 +19,8 @@ public:
 		: _nt_read_file(reinterpret_cast<NtReadFile>(GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "NtReadFile"))) {
 		static constexpr struct {
 			unsigned short const _vendor_id, _product_id, _usage_page, _usage;
-			char const * const _name;
 		} config[] = {
-			{ 0x056a, 0x00dd, 0x000d, 0x0001, "CTL-470"}, //470
+			{ 0x056a, 0x00dd, 0x000d, 0x0001 }, //470
 			{ 0x056a, 0x037a, 0xff0d, 0x0001 }, //472
 			{ 0x056a, 0x030e, 0xff0d, 0x0001 }, //480
 		};
@@ -86,6 +85,7 @@ public:
 	inline static constexpr unsigned char _report_length = 10;
 	inline static constexpr unsigned char _detect_mask = 0x40;
 };
+
 //_event = CreateEventW(nullptr, false, false, nullptr);
 //HANDLE /*__restrict*/ _event;
 //OVERLAPPED overlapped{};
