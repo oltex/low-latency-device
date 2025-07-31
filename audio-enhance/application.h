@@ -7,9 +7,9 @@ public:
 	inline explicit application(void) noexcept {
 		SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
 		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
-		CONSOLE_CURSOR_INFO cursor_info;
-		cursor_info.dwSize = 1;
-		cursor_info.bVisible = FALSE;
+		CONSOLE_CURSOR_INFO cursor_info{
+			.dwSize = 1,
+			.bVisible = FALSE };
 		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
 	};
 	inline void run(void) noexcept {
