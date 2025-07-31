@@ -20,7 +20,7 @@ public:
 			.dwSize = 1,
 			.bVisible = FALSE };
 		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
-		fputs("Tablet Driver ", stdout);
+		fputs("Tablet Driver", stdout);
 
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
