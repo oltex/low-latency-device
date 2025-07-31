@@ -9,11 +9,12 @@ public:
 	}
 
 	inline void write(void) noexcept {
-		//SendInput(1, &_input, sizeof(INPUT));
 		SetCursorPos(_input.mi.dx, _input.mi.dy);
 	}
 	INPUT _input{};
 };
+
+//SendInput(1, &_input, sizeof(INPUT));
 
 //using NtSendInput = BOOLEAN(WINAPI*)(UINT cInputs, LPINPUT pInputs, int cbSize);
 //_nt_send_input = reinterpret_cast<NtSendInput>(GetProcAddress(GetModuleHandleW(L"win32u.dll"), "NtUserSendInput"));

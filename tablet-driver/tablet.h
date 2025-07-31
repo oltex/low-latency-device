@@ -41,7 +41,6 @@ public:
 			InitializeObjectAttributes(&attribute, &string, OBJ_CASE_INSENSITIVE, nullptr, nullptr);
 
 			IO_STATUS_BLOCK block;
-			//NtOpenFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, 0, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT);
 			if (0 == NtCreateFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, nullptr, 0, 0, FILE_OPEN, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT /*| FILE_SEQUENTIAL_ONLY| FILE_NO_INTERMEDIATE_BUFFERING*/, nullptr, 0)) {
 				HIDD_ATTRIBUTES attribute;
 				PHIDP_PREPARSED_DATA preparsed_data;
@@ -59,7 +58,6 @@ public:
 
 						unsigned char buffer[2]{ 0x02, 0x02 };
 						HidD_SetFeature(_handle, buffer, 2);
-						//HidD_SetNumInputBuffers(_handle, 512);
 
 						SetupDiDestroyDeviceInfoList(info);
 						return;
@@ -127,3 +125,7 @@ public:
 //		CloseHandle(_handle);
 //	}
 //}
+
+//NtOpenFile(&_handle, FILE_READ_DATA | SYNCHRONIZE, &attribute, &block, 0, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT);
+//
+//HidD_SetNumInputBuffers(_handle, 512);

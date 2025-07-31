@@ -1,12 +1,7 @@
 #pragma once
 #include "tablet.h"
 #include "mouse.h"
-//#pragma comment(lib, "avrt.lib")
-//#include <avrt.h>
 #include <stdio.h>
-//#include <shellscalingapi.h>
-//#pragma comment(lib, "Shcore.lib")
-//#pragma comment(lib, "winmm.lib")
 
 struct area final {
 	inline explicit area(int const x = 7360, int const y = 4600, int const width = 8544, int const height = 4806) noexcept
@@ -25,31 +20,10 @@ public:
 			.dwSize = 1,
 			.bVisible = FALSE };
 		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
-		fputs("Tablet Driver\n", stdout);
-		fputs("by oltex\n", stdout);
-		//FreeConsole();
+		fputs("Tablet Driver ", stdout);
 
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
-		//PROCESS_DPI_AWARENESS
-		//SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
-		//SetProcessPriorityBoost(GetCurrentProcess(), false);
-		//SetThreadPriorityBoost(GetCurrentThread(), false);
-
-		//PROCESS_POWER_THROTTLING_STATE process_info{
-		//	.Version = PROCESS_POWER_THROTTLING_CURRENT_VERSION,
-		//	.ControlMask = PROCESS_POWER_THROTTLING_EXECUTION_SPEED,
-		//	.StateMask = 0 };
-		//SetProcessInformation(GetCurrentProcess(), ProcessPowerThrottling, reinterpret_cast<void*>(&process_info), sizeof(PROCESS_POWER_THROTTLING_STATE));
-		//THREAD_POWER_THROTTLING_STATE thread_info{
-		//	.Version = THREAD_POWER_THROTTLING_CURRENT_VERSION,
-		//	.ControlMask = THREAD_POWER_THROTTLING_EXECUTION_SPEED,
-		//	.StateMask = 0 };
-		//SetThreadInformation(GetCurrentThread(), ThreadPowerThrottling, reinterpret_cast<void*>(&thread_info), sizeof(THREAD_POWER_THROTTLING_STATE));
-
-		//unsigned long index = 0;
-		//AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
-		//timeBeginPeriod(1);
 	};
 	inline void run(void) noexcept {
 		unsigned char _button = 0;
@@ -73,3 +47,31 @@ private:
 	area const _area;
 	mouse _mouse;
 };
+
+//#pragma comment(lib, "avrt.lib")
+//#include <avrt.h>
+//#include <shellscalingapi.h>
+//#pragma comment(lib, "Shcore.lib")
+//#pragma comment(lib, "winmm.lib")
+
+//FreeConsole();
+//
+//PROCESS_DPI_AWARENESS
+//SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
+//SetProcessPriorityBoost(GetCurrentProcess(), false);
+//SetThreadPriorityBoost(GetCurrentThread(), false);
+//
+//PROCESS_POWER_THROTTLING_STATE process_info{
+//	.Version = PROCESS_POWER_THROTTLING_CURRENT_VERSION,
+//	.ControlMask = PROCESS_POWER_THROTTLING_EXECUTION_SPEED,
+//	.StateMask = 0 };
+//SetProcessInformation(GetCurrentProcess(), ProcessPowerThrottling, reinterpret_cast<void*>(&process_info), sizeof(PROCESS_POWER_THROTTLING_STATE));
+//THREAD_POWER_THROTTLING_STATE thread_info{
+//	.Version = THREAD_POWER_THROTTLING_CURRENT_VERSION,
+//	.ControlMask = THREAD_POWER_THROTTLING_EXECUTION_SPEED,
+//	.StateMask = 0 };
+//SetThreadInformation(GetCurrentThread(), ThreadPowerThrottling, reinterpret_cast<void*>(&thread_info), sizeof(THREAD_POWER_THROTTLING_STATE));
+//
+//unsigned long index = 0;
+//AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
+//timeBeginPeriod(1);
