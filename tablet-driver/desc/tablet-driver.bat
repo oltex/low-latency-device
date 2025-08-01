@@ -1,1 +1,0 @@
-start tablet-driver.exe 7360 4600 8544 4806
