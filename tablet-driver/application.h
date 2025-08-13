@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 struct area final {
-	inline explicit area(int const x = 7360, int const y = 4600, int const width = 8544, int const height = 4806) noexcept
+	inline explicit area(int const x = 4560, int const y = 2850, int const width = 8544, int const height = 4806) noexcept
 		: _left(x - width / 2), _top(y - height / 2), _width(width), _height(height) {
 	}
 	unsigned short const _left, _top;
