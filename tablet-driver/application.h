@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 struct area final {
-	inline explicit area(int const x = 4560, int const y = 2850, int const width = 8544, int const height = 4806) noexcept
+	inline explicit area(int const x/* = 4560*/, int const y/* = 2850*/, int const width /*= 8544*/, int const height/* = 4806*/) noexcept
 		: _left(x - width / 2), _top(y - height / 2), _width(width), _height(height) {
 	}
 	unsigned short const _left, _top;
@@ -13,7 +13,8 @@ struct area final {
 
 class application final {
 public:
-	inline explicit application(void) noexcept {
+	inline explicit application(int x, int y, int width, int height) noexcept
+		: _area(x, y, width, height) {
 		SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
 		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
 		CONSOLE_CURSOR_INFO cursor_info{
