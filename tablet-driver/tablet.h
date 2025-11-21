@@ -28,7 +28,7 @@ public:
 		HidD_GetHidGuid(&guid);
 		HDEVINFO info = SetupDiGetClassDevsW(&guid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 
-		for (unsigned long index = 0;; ++index) {
+		for (auto index = 0lu;; ++index) {
 			SP_DEVINFO_DATA data;
 			data.cbSize = sizeof(SP_DEVINFO_DATA);
 			SetupDiEnumDeviceInfo(info, index, &data);
@@ -50,14 +50,14 @@ public:
 				HidP_GetCaps(preparsed_data, &capability);
 				HidD_FreePreparsedData(preparsed_data);
 
-				for (unsigned long index = 0; index < 3; ++index) {
+				for (auto index = 0lu; index < 3; ++index) {
 					if (attribute.VendorID == config[index]._vendor_id &&
 						attribute.ProductID == config[index]._product_id &&
 						capability.UsagePage == config[index]._usage_page &&
 						capability.Usage == config[index]._usage) {
 
-						unsigned char buffer[2]{ 0x02, 0x02 };
-						HidD_SetFeature(_handle, buffer, 2);
+						unsigned char buffer[]{ 0x02, 0x02 };
+						HidD_SetFeature(_handle, buffer, sizeof(buffer));
 
 						SetupDiDestroyDeviceInfoList(info);
 						return;
