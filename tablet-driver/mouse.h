@@ -4,6 +4,8 @@
 
 class mouse final {
 public:
+	INPUT _input{};
+
 	inline explicit mouse(void) noexcept {
 		_input.type = INPUT_MOUSE;
 	}
@@ -12,7 +14,6 @@ public:
 		//::SetCursorPos(_input.mi.dx, _input.mi.dy);
 		::SendInput(1, &_input, sizeof(INPUT));
 	}
-	INPUT _input{};
 };
 
 

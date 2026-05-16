@@ -12,6 +12,9 @@ struct area final {
 };
 
 class application final {
+	tablet _tablet;
+	area const _area;
+	mouse _mouse;
 public:
 	inline explicit application(int x, int y, int width, int height) noexcept
 		: _area(x, y, width, height) {
@@ -44,10 +47,6 @@ public:
 			_mouse.write();
 		}
 	};
-private:
-	tablet _tablet;
-	area const _area;
-	mouse _mouse;
 };
 
 //#pragma comment(lib, "avrt.lib")
