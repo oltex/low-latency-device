@@ -7,13 +7,12 @@ public:
 	unsigned short _width, _height;
 public:
 	inline area(void) noexcept {
-		fputs("Configuring Area...\n", stdout);
-		fputs(" Width: ", stdout);
 		scanf_s("%hu", &_width);
-		fputs(" Height: ", stdout);
 		scanf_s("%hu", &_height);
-		fputs("\n", stdout);
-
+		printf("Configuring Area...\n"\
+			" Width: %hu\n"\
+			" Height: %hu\n\n",
+			_width, _height);
 	}
 };
 
