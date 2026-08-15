@@ -1,0 +1,19 @@
+<Project>
+  <PropertyGroup>
+	<OutDir>$(ProjectDir)binary\</OutDir>
+	<IntDir>$(ProjectDir)build\$(Configuration)\</IntDir>
+	<AllProjectBMIsArePublic>true</AllProjectBMIsArePublic>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+	<ClCompile>
+	  <LanguageStandard>stdcpplatest</LanguageStandard>
+	  <LanguageStandard_C>stdclatest</LanguageStandard_C>
+	  <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+	  <ModuleOutputFile>$(IntDir)%(RelativeDir)</ModuleOutputFile>
+	  <ModuleDependenciesFile>$(IntDir)%(RelativeDir)</ModuleDependenciesFile>
+	  <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+	  <MultiProcessorCompilation>true</MultiProcessorCompilation>
+	  <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+	</ClCompile>
+  </ItemDefinitionGroup>
+</Project>

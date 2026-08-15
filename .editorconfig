@@ -1,0 +1,20 @@
+root = true
+
+[*]
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+indent_style = tab
+
+[*.{c++,cc,cpp,cppm,cxx,h,h++,hh,hpp,hxx,inl,ipp,ixx,tlh,tli}]
+cpp_new_line_before_open_brace_namespace = same_line
+cpp_new_line_before_open_brace_assignment = same_line
+cpp_new_line_before_open_brace_type = same_line
+cpp_new_line_before_open_brace_function = same_line
+cpp_new_line_before_open_brace_block = same_line
+cpp_new_line_before_open_brace_lambda = same_line
+cpp_space_within_initializer_list_braces = false
+cpp_space_preserve_in_initializer_list = false
+cpp_space_after_semicolon = true
+#cpp_space_before_inheritance_colon = false
+#cpp_space_before_constructor_colon = false

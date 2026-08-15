@@ -1,8 +1,19 @@
-#pragma once
-#include "tablet.h"
-#include "mouse.h"
-#include <stdio.h>
+module;
+#pragma comment(lib, "cfgmgr32.lib")
+#include <windows.h>
+#include <cfgmgr32.h>
+export module application;
+import tablet;
+import mouse;
+import <stdio.h>;
 
+HANDLE _event = nullptr;
+DWORD _stdcall callback(HCMNOTIFICATION hNotify, PVOID Context, CM_NOTIFY_ACTION Action, PCM_NOTIFY_EVENT_DATA EventData, DWORD EventDataSize) {
+	if (Action == CM_NOTIFY_ACTION_DEVICEINTERFACEARRIVAL) {
+		::SetEvent(_event);
+	}
+	return ERROR_SUCCESS;
+}
 struct area final {
 	inline explicit area(int const x, int const y, int const width, int const height) noexcept
 		: _left(x - width / 2), _top(y - height / 2), _width(width), _height(height) {
@@ -11,10 +22,12 @@ struct area final {
 	unsigned short const _width, _height;
 };
 
-class application final {
+export class application final {
 	tablet _tablet;
 	area const _area;
 	mouse _mouse;
+
+	HCMNOTIFICATION _notify;
 public:
 	inline explicit application(int x, int y, int width, int height) noexcept
 		: _area(x, y, width, height) {
@@ -22,29 +35,36 @@ public:
 		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
 		CONSOLE_CURSOR_INFO cursor_info{
 			.dwSize = 1,
-			.bVisible = FALSE };
+			.bVisible = FALSE};
 		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
-		fputs("Tablet Driver", stdout);
+		fputs("Tablet Driver\n", stdout);
 
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+
+		_event = ::CreateEventW(nullptr, FALSE, FALSE, nullptr);
+		CM_NOTIFY_FILTER filter{};
+		filter.cbSize = sizeof(filter);
+		filter.FilterType = CM_NOTIFY_FILTER_TYPE_DEVICEINTERFACE;
+		filter.u.DeviceInterface.ClassGuid = {0x4D1E55B2, 0xF16F, 0x11CF, {0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30}};
+		::CM_Register_Notification(&filter, nullptr, callback, &_notify);
 	};
+	~application(void) noexcept {
+		::CM_Unregister_Notification(_notify);
+		::CloseHandle(_event);
+	}
+
 	inline void run(void) noexcept {
-		unsigned char _button = 0;
 		for (;;) {
-			_tablet.read();
-
-			unsigned char button = _tablet._buffer[1] & 0x1; //0x7
-			_mouse._input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-			if (_button ^ button) {
-				_mouse._input.mi.dwFlags |= (button << 1) + (_button << 2);
-				//::SendInput(1, &_mouse._input, sizeof(INPUT));
-				_button = button;
+			//fputs("Connecting to Tablet Driver...", stdout);
+			while (!_tablet.connect()) {
+				::WaitForSingleObject(_event, INFINITE);
 			}
-			_mouse._input.mi.dx = (*reinterpret_cast<unsigned short*>(_tablet._buffer + 2) - _area._left) * 65535 / _area._width;
-			_mouse._input.mi.dy = (*reinterpret_cast<unsigned short*>(_tablet._buffer + 4) - _area._top) * 65535 / _area._height;
-
-			_mouse.write();
+			while (auto const report = _tablet.read()) {
+				_mouse.write(report->_mask & 0x1,
+					(report->_x - _area._left) * 65535 / _area._width,
+					(report->_y - _area._top) * 65535 / _area._height);
+			}
 		}
 	};
 };

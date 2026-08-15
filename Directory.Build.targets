@@ -1,0 +1,11 @@
+<Project>
+  <!--
+  <Target Name="CopyModuleInterfaces" AfterTargets="Build">
+	<ItemGroup>
+	  <IfcFiles Include="$(IntDir)**\*.ifc" />
+	</ItemGroup>
+	<Copy SourceFiles="@(IfcFiles)"
+		  DestinationFiles="@(IfcFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+  -->
+</Project>
