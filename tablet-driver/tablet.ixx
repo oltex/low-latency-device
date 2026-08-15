@@ -8,6 +8,7 @@ module;
 #include <winternl.h>
 export module tablet;
 import std;
+import <stdio.h>;
 
 using NtReadFile = NTSTATUS(WINAPI*)(
 	HANDLE FileHandle, HANDLE Event,
@@ -37,9 +38,9 @@ public:
 		static constexpr struct {
 			unsigned short const _vendor_id, _product_id, _usage_page, _usage;
 		} _config[] = {
-			{ 0x056a, 0x00dd, 0x000d, 0x0001 }, //470
-			{ 0x056a, 0x037a, 0xff0d, 0x0001 }, //472
-			{ 0x056a, 0x030e, 0xff0d, 0x0001 }, //480
+			{0x056a, 0x00dd, 0x000d, 0x0001}, //470
+			{0x056a, 0x037a, 0xff0d, 0x0001}, //472
+			{0x056a, 0x030e, 0xff0d, 0x0001}, //480
 		};
 		GUID guid;
 		HidD_GetHidGuid(&guid);
@@ -73,7 +74,14 @@ public:
 				if (attribute2.VendorID != config._vendor_id || attribute2.ProductID != config._product_id || capability.UsagePage != config._usage_page || capability.Usage != config._usage)
 					continue;
 
-				unsigned char buffer[]{ 0x02, 0x02 };
+				printf("Found Compatible Tablet.\n"\
+					" VendorID: 0x%04x\n"\
+					" ProductID: 0x%04x\n"\
+					" UsagePage: 0x%04x\n"\
+					" Usage: 0x%04x\n\n"
+					, attribute2.VendorID, attribute2.ProductID
+					, capability.UsagePage, capability.Usage);
+				unsigned char buffer[]{0x02, 0x02};
 				HidD_SetFeature(_handle, buffer, sizeof(buffer));
 				SetupDiDestroyDeviceInfoList(info);
 				return true;
@@ -88,7 +96,7 @@ public:
 		report _report;
 		do {
 			IO_STATUS_BLOCK block;
-			if (0 > _nt_read_file(_handle, nullptr, nullptr, nullptr, &block, &_report, _report_length, nullptr, nullptr))
+			if (0 > _nt_read_file(_handle, nullptr, nullptr, nullptr, &block, &_report, _report_length, nullptr, nullptr)) 
 				return std::nullopt;
 		} while (_report._button != _report_id || !(_report._mask & _detect_mask));
 		return _report;

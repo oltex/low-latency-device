@@ -1,69 +1,48 @@
 module;
-#pragma comment(lib, "cfgmgr32.lib")
-#include <windows.h>
-#include <cfgmgr32.h>
+#include <Windows.h>
 export module application;
+import audio;
 import tablet;
 import mouse;
+import notify;
+import area;
 import <stdio.h>;
 
-HANDLE _event = nullptr;
-DWORD _stdcall callback(HCMNOTIFICATION hNotify, PVOID Context, CM_NOTIFY_ACTION Action, PCM_NOTIFY_EVENT_DATA EventData, DWORD EventDataSize) {
-	if (Action == CM_NOTIFY_ACTION_DEVICEINTERFACEARRIVAL) {
-		::SetEvent(_event);
-	}
-	return ERROR_SUCCESS;
-}
-struct area final {
-	inline explicit area(int const x, int const y, int const width, int const height) noexcept
-		: _left(x - width / 2), _top(y - height / 2), _width(width), _height(height) {
-	}
-	unsigned short const _left, _top;
-	unsigned short const _width, _height;
-};
-
 export class application final {
+	audio const _audio;
+	notify const _notify;
 	tablet _tablet;
+	mouse  _mouse;
 	area const _area;
-	mouse _mouse;
-
-	HCMNOTIFICATION _notify;
 public:
-	inline explicit application(int x, int y, int width, int height) noexcept
-		: _area(x, y, width, height) {
-		SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
-		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
-		CONSOLE_CURSOR_INFO cursor_info{
-			.dwSize = 1,
-			.bVisible = FALSE};
-		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
-		fputs("Tablet Driver\n", stdout);
+	inline application(void) noexcept {
+		//SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
+		//SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
+		//CONSOLE_CURSOR_INFO cursor_info{
+		//	.dwSize = 1,
+		//	.bVisible = FALSE};
+		//SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
 
 		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
-
-		_event = ::CreateEventW(nullptr, FALSE, FALSE, nullptr);
-		CM_NOTIFY_FILTER filter{};
-		filter.cbSize = sizeof(filter);
-		filter.FilterType = CM_NOTIFY_FILTER_TYPE_DEVICEINTERFACE;
-		filter.u.DeviceInterface.ClassGuid = {0x4D1E55B2, 0xF16F, 0x11CF, {0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30}};
-		::CM_Register_Notification(&filter, nullptr, callback, &_notify);
 	};
-	~application(void) noexcept {
-		::CM_Unregister_Notification(_notify);
-		::CloseHandle(_event);
-	}
 
 	inline void run(void) noexcept {
+		fputs("Initializing Audio...\n", stdout);
+		_audio.initialize();
 		for (;;) {
-			//fputs("Connecting to Tablet Driver...", stdout);
+			fputs("Connecting to Tablet...\n", stdout);
 			while (!_tablet.connect()) {
-				::WaitForSingleObject(_event, INFINITE);
+				_notify.wait();
 			}
+			fputs("Running Tablet Driver...\n", stdout);
 			while (auto const report = _tablet.read()) {
+				//_mouse.write(report->_mask & 0x1,
+				//	report->_x * 65535 / _area._width,
+				//	report->_y * 65535 / _area._height);
 				_mouse.write(report->_mask & 0x1,
-					(report->_x - _area._left) * 65535 / _area._width,
-					(report->_y - _area._top) * 65535 / _area._height);
+					static_cast<float>(report->_x) / _area._width * 65535.f,
+					static_cast<float>(report->_y) / _area._height * 65535.f);
 			}
 		}
 	};
@@ -96,3 +75,7 @@ public:
 //unsigned long index = 0;
 //AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
 //timeBeginPeriod(1);
+
+
+				//	(report->_x/* - _area._left*/) * 65535 / _area._width,
+				//	(report->_y/* - _area._top*/) * 65535 / _area._height);

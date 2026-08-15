@@ -177,8 +177,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="application.ixx" />
+    <ClCompile Include="area.ixx" />
+    <ClCompile Include="audio.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mouse.ixx" />
+    <ClCompile Include="notify.ixx" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tablet.ixx">
