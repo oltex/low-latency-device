@@ -10,21 +10,29 @@ export class mouse final {
 public:
 	inline mouse(void) noexcept {
 		_input.type = INPUT_MOUSE;
+		_input.mi.dwFlags = 0;
 	}
 
 	inline void write(unsigned char const button, int const x, int const y) noexcept {
-		_input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+		//_input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+		//if (_button ^ button) {
+		//	_input.mi.dwFlags |= (button << 1) + (_button << 2);
+		//	_button = button;
+		//}
+		//_input.mi.dx = x;
+		//_input.mi.dy = y;
+		//::SendInput(1, &_input, sizeof(INPUT));
+
+		_input.mi.dwFlags = 0;
 		if (_button ^ button) {
 			_input.mi.dwFlags |= (button << 1) + (_button << 2);
 			_button = button;
+			::SendInput(1, &_input, sizeof(INPUT));
 		}
-		_input.mi.dx = x;
-		_input.mi.dy = y;
-		::SendInput(1, &_input, sizeof(INPUT));
+		::SetCursorPos(x, y);
 	}
 };
 
-//::SetCursorPos(_input.mi.dx, _input.mi.dy);
 
 //using NtSendInput = BOOLEAN(WINAPI*)(UINT cInputs, LPINPUT pInputs, int cbSize);
 //_nt_send_input = reinterpret_cast<NtSendInput>(GetProcAddress(GetModuleHandleW(L"win32u.dll"), "NtUserSendInput"));
