@@ -96,8 +96,10 @@ public:
 		report _report;
 		do {
 			IO_STATUS_BLOCK block;
-			if (0 > _nt_read_file(_handle, nullptr, nullptr, nullptr, &block, &_report, _report_length, nullptr, nullptr)) 
+			if (0 > _nt_read_file(_handle, nullptr, nullptr, nullptr, &block, &_report, _report_length, nullptr, nullptr)) {
+				::CloseHandle(_handle);
 				return std::nullopt;
+			}
 		} while (_report._button != _report_id || !(_report._mask & _detect_mask));
 		return _report;
 	};
