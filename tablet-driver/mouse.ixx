@@ -10,7 +10,6 @@ export class mouse final {
 public:
 	inline mouse(void) noexcept {
 		_input.type = INPUT_MOUSE;
-		//_input.mi.dwFlags = 0;
 	}
 
 	inline void write(unsigned char const button, int const x, int const y) noexcept {

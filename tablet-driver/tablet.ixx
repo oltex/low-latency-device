@@ -78,11 +78,16 @@ public:
 					" VendorID: 0x%04x\n"\
 					" ProductID: 0x%04x\n"\
 					" UsagePage: 0x%04x\n"\
-					" Usage: 0x%04x\n\n"
+					" Usage: 0x%04x\n"
 					, attribute2.VendorID, attribute2.ProductID
 					, capability.UsagePage, capability.Usage);
 				unsigned char buffer[]{0x02, 0x02};
-				HidD_SetFeature(_handle, buffer, sizeof(buffer));
+
+				printf("Configuring HID Settings.\n");
+				if (HidD_SetFeature(_handle, buffer, sizeof(buffer)))
+					printf(" Feature: (0x2, 0x2)\n");
+				if (HidD_SetNumInputBuffers(_handle, 2))
+					printf(" Num Input Buffers: 2\n\n");
 				SetupDiDestroyDeviceInfoList(info);
 				return true;
 			}
