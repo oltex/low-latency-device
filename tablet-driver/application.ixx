@@ -42,8 +42,8 @@ public:
 				//	report->_x * 65535 / _area._width,
 				//	report->_y * 65535 / _area._height);
 				_mouse.write(report->_mask & 0x1,
-					static_cast<float>(report->_x) / _area._width * 65535.f,
-					static_cast<float>(report->_y) / _area._height * 65535.f);
+					static_cast<float>(report->_x) / _area._width * 1920.f,
+					static_cast<float>(report->_y) / _area._height * 1080.f);
 			}
 		}
 	};

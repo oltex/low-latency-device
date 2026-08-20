@@ -86,8 +86,8 @@ public:
 				printf("Configuring HID Settings.\n");
 				if (HidD_SetFeature(_handle, buffer, sizeof(buffer)))
 					printf(" Feature: (0x2, 0x2)\n");
-				if (HidD_SetNumInputBuffers(_handle, 2))
-					printf(" Num Input Buffers: 2\n\n");
+				//if (HidD_SetNumInputBuffers(_handle, 2))
+				//	printf(" Num Input Buffers: 2\n\n");
 				SetupDiDestroyDeviceInfoList(info);
 				return true;
 			}
