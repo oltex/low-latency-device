@@ -20,7 +20,7 @@ public:
 		CM_NOTIFY_FILTER filter{};
 		filter.cbSize = sizeof(filter);
 		filter.FilterType = CM_NOTIFY_FILTER_TYPE_DEVICEINTERFACE;
-		filter.u.DeviceInterface.ClassGuid = {0x4D1E55B2, 0xF16F, 0x11CF, {0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30}};
+		filter.u.DeviceInterface.ClassGuid = {0xa5dcbf10, 0x6530, 0x11d2, {0x90, 0x1f, 0x00, 0xc0, 0x4f, 0xb9, 0x51, 0xed}};
 		::CM_Register_Notification(&filter, nullptr, callback, &_notify);
 	}
 	inline ~notify(void) noexcept {
@@ -30,5 +30,6 @@ public:
 
 	inline void wait(void) const noexcept {
 		::WaitForSingleObject(_event, INFINITE);
+		::Sleep(100);
 	}
 };
