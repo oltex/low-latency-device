@@ -13,22 +13,22 @@ public:
 	}
 
 	inline void write(unsigned char const button, int const x, int const y) noexcept {
-		//_input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-		//if (_button ^ button) {
-		//	_input.mi.dwFlags |= (button << 1) + (_button << 2);
-		//	_button = button;
-		//}
-		//_input.mi.dx = x;
-		//_input.mi.dy = y;
-		//::SendInput(1, &_input, sizeof(INPUT));
-
-		_input.mi.dwFlags = 0;
+		_input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 		if (_button ^ button) {
 			_input.mi.dwFlags |= (button << 1) + (_button << 2);
 			_button = button;
-			::SendInput(1, &_input, sizeof(INPUT));
 		}
-		::SetCursorPos(x, y);
+		_input.mi.dx = x;
+		_input.mi.dy = y;
+		::SendInput(1, &_input, sizeof(INPUT));
+
+		//_input.mi.dwFlags = 0;
+		//if (_button ^ button) {
+		//	_input.mi.dwFlags |= (button << 1) + (_button << 2);
+		//	_button = button;
+		//	::SendInput(1, &_input, sizeof(INPUT));
+		//}
+		//::SetCursorPos(x, y);
 	}
 };
 
