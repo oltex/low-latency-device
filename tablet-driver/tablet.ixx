@@ -158,8 +158,8 @@ public:
 		report _report;
 		do {
 			ULONG transferred;
-			if (!WinUsb_ReadPipe(_winusb, _pipe_id, reinterpret_cast<PUCHAR>(&_report), _report_length, &transferred, nullptr)) {
-				WinUsb_Free(_winusb);
+			if (!::WinUsb_ReadPipe(_winusb, _pipe_id, reinterpret_cast<PUCHAR>(&_report), _report_length, &transferred, nullptr)) {
+				::WinUsb_Free(_winusb);
 				::CloseHandle(_handle);
 				_winusb = nullptr;
 				_handle = INVALID_HANDLE_VALUE;
