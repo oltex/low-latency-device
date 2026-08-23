@@ -17,26 +17,24 @@ export class application final {
 public:
 	inline application(int const width, int const height) noexcept
 		: _area(width, height) {
-		SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
-		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
+		::SetConsoleMode(::GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
+		::SetConsoleMode(::GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
 		CONSOLE_CURSOR_INFO cursor_info{
 			.dwSize = 1,
 			.bVisible = FALSE};
-		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
+		::SetConsoleCursorInfo(::GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
 
-		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
-		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+		::SetPriorityClass(::GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+		::SetThreadPriority(::GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 	};
 
 	inline void run(void) noexcept {
-		fputs("Initializing Audio...\n", stdout);
 		_audio.initialize();
 		for (;;) {
-			fputs("Connecting to Tablet...\n", stdout);
 			while (!_tablet.connect()) {
 				_notify.wait();
 			}
-			fputs("Running Tablet Driver...\n\n", stdout);
+			fputs("RUNNING: reading pen reports\n", stdout);
 			while (auto const report = _tablet.read()) {
 				//_mouse.write(report->_mask & 0x1,
 				//	report->_x * 65535 / _area._width,
@@ -48,35 +46,3 @@ public:
 		}
 	};
 };
-
-//#pragma comment(lib, "avrt.lib")
-//#include <avrt.h>
-//#include <shellscalingapi.h>
-//#pragma comment(lib, "Shcore.lib")
-//#pragma comment(lib, "winmm.lib")
-
-//FreeConsole();
-//
-//PROCESS_DPI_AWARENESS
-//SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
-//SetProcessPriorityBoost(GetCurrentProcess(), false);
-//SetThreadPriorityBoost(GetCurrentThread(), false);
-//
-//PROCESS_POWER_THROTTLING_STATE process_info{
-//	.Version = PROCESS_POWER_THROTTLING_CURRENT_VERSION,
-//	.ControlMask = PROCESS_POWER_THROTTLING_EXECUTION_SPEED,
-//	.StateMask = 0 };
-//SetProcessInformation(GetCurrentProcess(), ProcessPowerThrottling, reinterpret_cast<void*>(&process_info), sizeof(PROCESS_POWER_THROTTLING_STATE));
-//THREAD_POWER_THROTTLING_STATE thread_info{
-//	.Version = THREAD_POWER_THROTTLING_CURRENT_VERSION,
-//	.ControlMask = THREAD_POWER_THROTTLING_EXECUTION_SPEED,
-//	.StateMask = 0 };
-//SetThreadInformation(GetCurrentThread(), ThreadPowerThrottling, reinterpret_cast<void*>(&thread_info), sizeof(THREAD_POWER_THROTTLING_STATE));
-//
-//unsigned long index = 0;
-//AvSetMmThreadPriority(AvSetMmThreadCharacteristicsW(L"Games", &index), AVRT_PRIORITY_CRITICAL);
-//timeBeginPeriod(1);
-
-
-				//	(report->_x/* - _area._left*/) * 65535 / _area._width,
-				//	(report->_y/* - _area._top*/) * 65535 / _area._height);
