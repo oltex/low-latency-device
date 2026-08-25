@@ -2,13 +2,13 @@ module;
 #include <Windows.h>
 #pragma comment(lib, "user32.lib")
 #include <WinUser.h>
-export module mouse;
+export module input;
 
-export class mouse final {
+export class input final {
 	INPUT _input{};
 	unsigned char _button = 0;
 public:
-	inline mouse(void) noexcept {
+	inline input(void) noexcept {
 		_input.type = INPUT_MOUSE;
 	}
 

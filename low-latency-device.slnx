@@ -4,5 +4,6 @@
     <Platform Name="x86" />
   </Configurations>
   <Project Path="audio-enhance/audio-enhance.vcxproj" Id="823073ea-1f08-4011-8d51-44995182acde" />
+  <Project Path="mouse-driver/mouse-driver.vcxproj" Id="05287483-b28f-4141-8939-d9e028e2a3de" />
   <Project Path="tablet-driver/tablet-driver.vcxproj" Id="609644d8-bde5-4909-ad49-3b3ee7547173" />
 </Solution>

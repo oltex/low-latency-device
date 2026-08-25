@@ -6,9 +6,6 @@
     <ClCompile Include="audio.ixx">
       <Filter>device</Filter>
     </ClCompile>
-    <ClCompile Include="mouse.ixx">
-      <Filter>device</Filter>
-    </ClCompile>
     <ClCompile Include="tablet.ixx">
       <Filter>device</Filter>
     </ClCompile>
@@ -17,6 +14,9 @@
     </ClCompile>
     <ClCompile Include="area.ixx">
       <Filter>config</Filter>
+    </ClCompile>
+    <ClCompile Include="input.ixx">
+      <Filter>device</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
