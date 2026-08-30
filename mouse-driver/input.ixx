@@ -16,11 +16,11 @@ public:
 	inline void write(unsigned char const button, short const x, short const y, signed char const wheel) noexcept {
 		_input.mi.dwFlags = MOUSEEVENTF_MOVE;
 		_input.mi.mouseData = 0;
-		if ((button ^ _button) & 0x1)
+		if (0x1 & (button ^ _button))
 			_input.mi.dwFlags |= (button & 0x1) ? MOUSEEVENTF_LEFTDOWN : MOUSEEVENTF_LEFTUP;
-		if ((button ^ _button) & 0x2)
+		if (0x2 & (button ^ _button))
 			_input.mi.dwFlags |= (button & 0x2) ? MOUSEEVENTF_RIGHTDOWN : MOUSEEVENTF_RIGHTUP;
-		if ((button ^ _button) & 0x4)
+		if (0x4 & (button ^ _button))
 			_input.mi.dwFlags |= (button & 0x4) ? MOUSEEVENTF_MIDDLEDOWN : MOUSEEVENTF_MIDDLEUP;
 		_button = button;
 		if (wheel) {
