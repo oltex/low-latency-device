@@ -74,18 +74,12 @@ public:
 				if (attribute2.VendorID != config._vendor_id || attribute2.ProductID != config._product_id || capability.UsagePage != config._usage_page || capability.Usage != config._usage)
 					continue;
 
-				printf("Found Compatible Tablet.\n"\
-					" VendorID: 0x%04x\n"\
-					" ProductID: 0x%04x\n"\
-					" UsagePage: 0x%04x\n"\
-					" Usage: 0x%04x\n"
-					, attribute2.VendorID, attribute2.ProductID
-					, capability.UsagePage, capability.Usage);
-				unsigned char buffer[]{0x02, 0x02};
+				printf("USB: compatible tablet found:       VID %04X PID %04X\n", attribute2.VendorID, attribute2.ProductID);
+				printf("HID: interface bound:               UP %04X USAGE %04X\n", capability.UsagePage, capability.Usage);
 
-				printf("Configuring HID Settings.\n");
+				unsigned char buffer[]{0x02, 0x02};
 				if (HidD_SetFeature(_handle, buffer, sizeof(buffer)))
-					printf(" Feature: (0x2, 0x2)\n");
+					printf("HID: feature set:                   0x%02X 0x%02X\n", buffer[0], buffer[1]);
 				//if (HidD_SetNumInputBuffers(_handle, 2))
 				//	printf(" Num Input Buffers: 2\n\n");
 				SetupDiDestroyDeviceInfoList(info);
@@ -102,6 +96,7 @@ public:
 		do {
 			IO_STATUS_BLOCK block;
 			if (0 > _nt_read_file(_handle, nullptr, nullptr, nullptr, &block, &_report, _report_length, nullptr, nullptr)) {
+				printf("DEVICE: connection lost:            waiting for device...\n");
 				::CloseHandle(_handle);
 				return std::nullopt;
 			}

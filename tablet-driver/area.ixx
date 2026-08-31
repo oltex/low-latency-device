@@ -8,10 +8,7 @@ public:
 public:
 	inline area(int const width, int const height) noexcept
 		: _width(width), _height(height) {
-		printf("Configuring Area...\n"\
-			" Width: %hu\n"\
-			" Height: %hu\n\n",
-			_width, _height);
+		printf("AREA: display area configured:      %hux%hu\n", _width, _height);
 	}
 };
 

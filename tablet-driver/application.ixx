@@ -29,14 +29,12 @@ public:
 	};
 
 	inline void run(void) noexcept {
-		fputs("Initializing Audio...\n", stdout);
 		_audio.initialize();
 		for (;;) {
-			fputs("Connecting to Tablet...\n", stdout);
 			while (!_tablet.connect()) {
 				_notify.wait();
 			}
-			fputs("Running Tablet Driver...\n\n", stdout);
+			fputs("RUNNING: reading pen reports\n", stdout);
 			while (auto const report = _tablet.read()) {
 				//_mouse.write(report->_mask & 0x1,
 				//	report->_x * 65535 / _area._width,
