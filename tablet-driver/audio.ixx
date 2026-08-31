@@ -35,8 +35,7 @@ public:
 		unsigned int default_period, fundamental_period, minimum_period, maximum_period;
 		_client->GetSharedModeEnginePeriod(format, &default_period, &fundamental_period, &minimum_period, &maximum_period);
 		_client->InitializeSharedAudioStream(0, minimum_period, format, nullptr);
-		printf("AUDIO: shared-mode engine period:   %u frames / %.1fms\n",
-			minimum_period, minimum_period * 1000.0 / format->nSamplesPerSec);
+		::printf("AUDIO: shared-mode engine period:   %u frames / %.1fms\n", minimum_period, minimum_period * 1000.0 / format->nSamplesPerSec);
 		::CoTaskMemFree(format);
 	}
 };

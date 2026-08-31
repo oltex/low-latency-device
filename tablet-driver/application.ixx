@@ -17,15 +17,15 @@ export class application final {
 public:
 	inline application(int const width, int const height) noexcept
 		: _area(width, height) {
-		SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
-		SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
+		::SetConsoleMode(::GetStdHandle(STD_INPUT_HANDLE), ENABLE_INSERT_MODE);
+		::SetConsoleMode(::GetStdHandle(STD_OUTPUT_HANDLE), ENABLE_PROCESSED_OUTPUT);
 		CONSOLE_CURSOR_INFO cursor_info{
 			.dwSize = 1,
 			.bVisible = FALSE};
-		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
+		::SetConsoleCursorInfo(::GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
 
-		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
-		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+		::SetPriorityClass(::GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+		::SetThreadPriority(::GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 	};
 
 	inline void run(void) noexcept {
@@ -34,7 +34,7 @@ public:
 			while (!_tablet.connect()) {
 				_notify.wait();
 			}
-			fputs("RUNNING: reading pen reports\n", stdout);
+			::fputs("RUNNING: reading pen reports\n", stdout);
 			while (auto const report = _tablet.read()) {
 				//_mouse.write(report->_mask & 0x1,
 				//	report->_x * 65535 / _area._width,
