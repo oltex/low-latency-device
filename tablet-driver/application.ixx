@@ -34,7 +34,7 @@ public:
 			while (!_tablet.connect()) {
 				_notify.wait();
 			}
-			::fputs("RUNNING: reading pen reports\n", stdout);
+			::fputs("[RUNNING] reading pen reports\n", stdout);
 			while (auto const report = _tablet.read()) {
 				_input.write(report->_mask & 0x1,
 					static_cast<float>(report->_x) / _area._width,
