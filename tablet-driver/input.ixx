@@ -2,24 +2,24 @@ module;
 #include <Windows.h>
 #pragma comment(lib, "user32.lib")
 #include <WinUser.h>
-export module mouse;
+export module input;
 
-export class mouse final {
+export class input final {
 	INPUT _input{};
 	unsigned char _button = 0;
 public:
-	inline mouse(void) noexcept {
+	inline input(void) noexcept {
 		_input.type = INPUT_MOUSE;
 	}
 
-	inline void write(unsigned char const button, int const x, int const y) noexcept {
+	inline void write(unsigned char const button, float const x, float const y) noexcept {
 		_input.mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
 		if (_button ^ button) {
 			_input.mi.dwFlags |= (button << 1) + (_button << 2);
 			_button = button;
 		}
-		_input.mi.dx = x;
-		_input.mi.dy = y;
+		_input.mi.dx = static_cast<int>(x * 65535.f);
+		_input.mi.dy = static_cast<int>(y * 65535.f);
 		::SendInput(1, &_input, sizeof(INPUT));
 
 		//_input.mi.dwFlags = 0;

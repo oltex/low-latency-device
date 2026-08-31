@@ -3,7 +3,7 @@ module;
 export module application;
 import audio;
 import tablet;
-import mouse;
+import input;
 import notify;
 import area;
 import <stdio.h>;
@@ -12,7 +12,7 @@ export class application final {
 	audio const _audio;
 	notify const _notify;
 	tablet _tablet;
-	mouse  _mouse;
+	input  _input;
 	area const _area;
 public:
 	inline application(int const width, int const height) noexcept
@@ -36,12 +36,9 @@ public:
 			}
 			::fputs("RUNNING: reading pen reports\n", stdout);
 			while (auto const report = _tablet.read()) {
-				//_mouse.write(report->_mask & 0x1,
-				//	report->_x * 65535 / _area._width,
-				//	report->_y * 65535 / _area._height);
-				_mouse.write(report->_mask & 0x1,
-					static_cast<float>(report->_x) / _area._width * 65535.f,
-					static_cast<float>(report->_y) / _area._height * 65535.f);
+				_input.write(report->_mask & 0x1,
+					static_cast<float>(report->_x) / _area._width,
+					static_cast<float>(report->_y) / _area._height);
 			}
 		}
 	};
