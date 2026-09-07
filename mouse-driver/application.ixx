@@ -21,7 +21,7 @@ public:
 			while (!_mouse.connect()) {
 				_notify.wait();
 			}
-			fputs("RUNNING: reading mouse reports\n", stdout);
+			fputs("[RUNNING] reading mouse reports\n", stdout);
 			while (auto const report = _mouse.read()) {
 				_input.write(report->_button, report->_x, report->_y, report->_wheel);
 			}

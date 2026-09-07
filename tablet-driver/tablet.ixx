@@ -62,7 +62,7 @@ public:
 			for (auto const& config : _config) {
 				if (!wcsstr(property, config._hardware_id))
 					continue;
-				printf("USB: compatible tablet found:       VID %04X PID %04X\n", config._vendor_id, config._product_id);
+				printf("[USB]     compatible tablet found:    VID %04X PID %04X\n", config._vendor_id, config._product_id);
 
 				//guid
 				auto const key = SetupDiOpenDevRegKey(info, &data, DICS_FLAG_GLOBAL, 0, DIREG_DEV, KEY_READ);
@@ -116,7 +116,7 @@ public:
 					::CloseHandle(handle);
 					continue;
 				}
-				printf("WINUSB: interface bound:            MI_%02u {%08lX-...}\n", interface_descriptor.bInterfaceNumber, guid.Data1);
+				printf("[WINUSB]  interface bound:            MI_%02u {%08lX-...}\n", interface_descriptor.bInterfaceNumber, guid.Data1);
 
 				USHORT max_packet_size = 0;
 				for (UCHAR pipe_index = 0; pipe_index < interface_descriptor.bNumEndpoints; ++pipe_index) {
@@ -133,7 +133,7 @@ public:
 				::CloseHandle(handle);
 				continue;
 			found:
-				printf("WINUSB: pipe located:               0x%02X interrupt-in %huB\n", _pipe_id, max_packet_size);
+				printf("[WINUSB]  pipe located:               0x%02X interrupt-in %huB\n", _pipe_id, max_packet_size);
 
 				unsigned char report_data[]{0x02, 0x02};
 				WINUSB_SETUP_PACKET const packet{
@@ -144,7 +144,7 @@ public:
 					.Length = sizeof(report_data)};
 				ULONG feature_transferred;
 				if (WinUsb_ControlTransfer(winusb, packet, report_data, sizeof(report_data), &feature_transferred, nullptr))
-					printf("WINUSB: feature set:                0x%02X 0x%02X\n", report_data[0], report_data[1]);
+					printf("[WINUSB]  feature set:                0x%02X 0x%02X\n", report_data[0], report_data[1]);
 
 				_handle = handle;
 				_winusb = winusb;
@@ -161,7 +161,7 @@ public:
 		do {
 			ULONG transferred;
 			if (!::WinUsb_ReadPipe(_winusb, _pipe_id, reinterpret_cast<PUCHAR>(&_report), _report_length, &transferred, nullptr)) {
-				printf("DEVICE: connection lost:            waiting for device...\n");
+				printf("[DEVICE]  connection lost:            waiting for device...\n");
 				::WinUsb_Free(_winusb);
 				::CloseHandle(_handle);
 				_winusb = nullptr;

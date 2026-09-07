@@ -23,7 +23,7 @@ public:
 		filter.FilterType = CM_NOTIFY_FILTER_TYPE_DEVICEINTERFACE;
 		filter.u.DeviceInterface.ClassGuid = {0xa5dcbf10, 0x6530, 0x11d2, {0x90, 0x1f, 0x00, 0xc0, 0x4f, 0xb9, 0x51, 0xed}};
 		::CM_Register_Notification(&filter, nullptr, callback, &_notify);
-		printf("NOTIFY: watching for device events: arrival / removal\n");
+		printf("[NOTIFY]  watching for device events: arrival / removal\n");
 	}
 	inline ~notify(void) noexcept {
 		::CM_Unregister_Notification(_notify);

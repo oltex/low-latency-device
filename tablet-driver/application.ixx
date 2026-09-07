@@ -34,14 +34,14 @@ public:
 			while (!_tablet.connect()) {
 				_notify.wait();
 			}
-			fputs("RUNNING: reading pen reports\n", stdout);
+			fputs("[RUNNING] reading pen reports\n", stdout);
 			while (auto const report = _tablet.read()) {
 				//_input.write(report->_mask & 0x1,
 				//	report->_x * 65535 / _area._width,
 				//	report->_y * 65535 / _area._height);
 				_input.write(report->_mask & 0x1,
-					static_cast<float>(report->_x) / _area._width * 65535.f,
-					static_cast<float>(report->_y) / _area._height * 65535.f);
+					static_cast<float>(report->_x) / _area._width,
+					static_cast<float>(report->_y) / _area._height);
 			}
 		}
 	};
