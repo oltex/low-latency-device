@@ -14,8 +14,8 @@ import <stdio.h>;
 import <wchar.h>;
 
 export class tablet final {
-	struct report {
-		unsigned char _button;
+	struct buffer {
+		unsigned char _id;
 		unsigned char _mask;
 		unsigned short _x, _y;
 		unsigned short _pressure;
@@ -24,14 +24,19 @@ export class tablet final {
 	HANDLE _handle;
 	WINUSB_INTERFACE_HANDLE _winusb;
 	unsigned char _pipe_id;
-
+	unsigned short const _width, _height;
 public:
-	inline tablet(void) noexcept
-		: _handle(INVALID_HANDLE_VALUE), _winusb(nullptr), _pipe_id(0) {
+	struct report {
+		unsigned char _button;
+		float _x, _y;
+	};
+	inline tablet(unsigned short const width, unsigned short const height) noexcept
+		: _handle(INVALID_HANDLE_VALUE), _winusb(nullptr), _pipe_id(0), _width(width), _height(height) {
+		::printf("[AREA]    display area configured:    %hux%hu\n", _width, _height);
 	}
 	inline ~tablet(void) noexcept {
 		if (_winusb)
-			WinUsb_Free(_winusb);
+			::WinUsb_Free(_winusb);
 		if (INVALID_HANDLE_VALUE != _handle)
 			::CloseHandle(_handle);
 	}
@@ -46,82 +51,82 @@ public:
 			{0x056a, 0x030e, L"VID_056A&PID_030E"}, //480
 		};
 
-		auto const info = SetupDiGetClassDevsW(nullptr, L"USB", nullptr, DIGCF_PRESENT | DIGCF_ALLCLASSES);
+		auto const info = ::SetupDiGetClassDevsW(nullptr, L"USB", nullptr, DIGCF_PRESENT | DIGCF_ALLCLASSES);
 		if (INVALID_HANDLE_VALUE == info)
 			return false;
 		for (auto index = 0ul;; ++index) {
 			SP_DEVINFO_DATA data;
 			data.cbSize = sizeof(SP_DEVINFO_DATA);
-			if (!SetupDiEnumDeviceInfo(info, index, &data))
+			if (!::SetupDiEnumDeviceInfo(info, index, &data))
 				break;
 
 			WCHAR property[512]{};
-			if (!SetupDiGetDeviceRegistryPropertyW(info, &data, SPDRP_HARDWAREID, nullptr, reinterpret_cast<PBYTE>(property), sizeof(property), nullptr))
+			if (!::SetupDiGetDeviceRegistryPropertyW(info, &data, SPDRP_HARDWAREID, nullptr, reinterpret_cast<PBYTE>(property), sizeof(property), nullptr))
 				continue;
 
 			for (auto const& config : _config) {
-				if (!wcsstr(property, config._hardware_id))
+				if (!::wcsstr(property, config._hardware_id))
 					continue;
-				printf("[USB]     compatible tablet found:    VID %04X PID %04X\n", config._vendor_id, config._product_id);
+				::printf("[USB]     compatible tablet found:    VID %04X PID %04X\n", config._vendor_id, config._product_id);
 
 				//guid
-				auto const key = SetupDiOpenDevRegKey(info, &data, DICS_FLAG_GLOBAL, 0, DIREG_DEV, KEY_READ);
+				auto const key = ::SetupDiOpenDevRegKey(info, &data, DICS_FLAG_GLOBAL, 0, DIREG_DEV, KEY_READ);
 				if (INVALID_HANDLE_VALUE == key)
 					continue;
 				WCHAR string[64]{};
 				DWORD size = sizeof(string);
-				auto const result = RegQueryValueExW(key, L"DeviceInterfaceGUIDs", nullptr, nullptr, reinterpret_cast<LPBYTE>(string), &size);
-				RegCloseKey(key);
+				auto const result = ::RegQueryValueExW(key, L"DeviceInterfaceGUIDs", nullptr, nullptr, reinterpret_cast<LPBYTE>(string), &size);
+				::RegCloseKey(key);
 				if (ERROR_SUCCESS != result)
 					continue;
-				string[wcslen(string) - 1] = L'\0';
+				string[::wcslen(string) - 1] = L'\0';
 				GUID guid;
-				if (RPC_S_OK != UuidFromStringW(reinterpret_cast<RPC_WSTR>(string + 1), &guid))
+				if (RPC_S_OK != ::UuidFromStringW(reinterpret_cast<RPC_WSTR>(string + 1), &guid))
 					continue;
 
-				auto const interface_info = SetupDiGetClassDevsW(&guid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
+				auto const interface_info = ::SetupDiGetClassDevsW(&guid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 				if (INVALID_HANDLE_VALUE == interface_info)
 					continue;
 
 				//file
 				SP_DEVICE_INTERFACE_DATA interface_data;
 				interface_data.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
-				if (!SetupDiEnumDeviceInterfaces(interface_info, nullptr, &guid, 0, &interface_data)) {
-					SetupDiDestroyDeviceInfoList(interface_info);
+				if (!::SetupDiEnumDeviceInterfaces(interface_info, nullptr, &guid, 0, &interface_data)) {
+					::SetupDiDestroyDeviceInfoList(interface_info);
 					continue;
 				}
 				DWORD required;
-				SetupDiGetDeviceInterfaceDetailW(interface_info, &interface_data, nullptr, 0, &required, nullptr);
+				::SetupDiGetDeviceInterfaceDetailW(interface_info, &interface_data, nullptr, 0, &required, nullptr);
 				auto const buffer = std::make_unique<unsigned char[]>(required);
 				auto const detail = reinterpret_cast<PSP_DEVICE_INTERFACE_DETAIL_DATA_W>(buffer.get());
 				detail->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W);
-				if (!SetupDiGetDeviceInterfaceDetailW(interface_info, &interface_data, detail, required, nullptr, nullptr)) {
-					SetupDiDestroyDeviceInfoList(interface_info);
+				if (!::SetupDiGetDeviceInterfaceDetailW(interface_info, &interface_data, detail, required, nullptr, nullptr)) {
+					::SetupDiDestroyDeviceInfoList(interface_info);
 					continue;
 				}
 				auto const handle = ::CreateFileW(detail->DevicePath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, nullptr);
-				SetupDiDestroyDeviceInfoList(interface_info);
+				::SetupDiDestroyDeviceInfoList(interface_info);
 				if (INVALID_HANDLE_VALUE == handle)
 					continue;
 				WINUSB_INTERFACE_HANDLE winusb;
-				if (!WinUsb_Initialize(handle, &winusb)) {
+				if (!::WinUsb_Initialize(handle, &winusb)) {
 					::CloseHandle(handle);
 					continue;
 				}
 
 				//pipe
 				USB_INTERFACE_DESCRIPTOR interface_descriptor;
-				if (!WinUsb_QueryInterfaceSettings(winusb, 0, &interface_descriptor)) {
-					WinUsb_Free(winusb);
+				if (!::WinUsb_QueryInterfaceSettings(winusb, 0, &interface_descriptor)) {
+					::WinUsb_Free(winusb);
 					::CloseHandle(handle);
 					continue;
 				}
-				printf("[WINUSB]  interface bound:            MI_%02u {%08lX-...}\n", interface_descriptor.bInterfaceNumber, guid.Data1);
+				::printf("[WINUSB]  interface bound:            MI_%02u {%08lX-...}\n", interface_descriptor.bInterfaceNumber, guid.Data1);
 
 				USHORT max_packet_size = 0;
 				for (UCHAR pipe_index = 0; pipe_index < interface_descriptor.bNumEndpoints; ++pipe_index) {
 					WINUSB_PIPE_INFORMATION pipe_information;
-					if (!WinUsb_QueryPipe(winusb, 0, pipe_index, &pipe_information))
+					if (!::WinUsb_QueryPipe(winusb, 0, pipe_index, &pipe_information))
 						continue;
 					if (pipe_information.PipeType == UsbdPipeTypeInterrupt && USB_ENDPOINT_DIRECTION_IN(pipe_information.PipeId)) {
 						_pipe_id = pipe_information.PipeId;
@@ -133,7 +138,7 @@ public:
 				::CloseHandle(handle);
 				continue;
 			found:
-				printf("[WINUSB]  pipe located:               0x%02X interrupt-in %huB\n", _pipe_id, max_packet_size);
+				::printf("[WINUSB]  pipe located:               0x%02X interrupt-in %huB\n", _pipe_id, max_packet_size);
 
 				unsigned char report_data[]{0x02, 0x02};
 				WINUSB_SETUP_PACKET const packet{
@@ -143,32 +148,35 @@ public:
 					.Index = interface_descriptor.bInterfaceNumber,
 					.Length = sizeof(report_data)};
 				ULONG feature_transferred;
-				if (WinUsb_ControlTransfer(winusb, packet, report_data, sizeof(report_data), &feature_transferred, nullptr))
-					printf("[WINUSB]  feature set:                0x%02X 0x%02X\n", report_data[0], report_data[1]);
+				if (::WinUsb_ControlTransfer(winusb, packet, report_data, sizeof(report_data), &feature_transferred, nullptr))
+					::printf("[WINUSB]  feature set:                0x%02X 0x%02X\n", report_data[0], report_data[1]);
 
 				_handle = handle;
 				_winusb = winusb;
-				SetupDiDestroyDeviceInfoList(info);
+				::SetupDiDestroyDeviceInfoList(info);
 				return true;
 			}
 		}
-		SetupDiDestroyDeviceInfoList(info);
+		::SetupDiDestroyDeviceInfoList(info);
 		return false;
 	}
 	inline auto read(void) noexcept -> std::optional<report> {
-		static constexpr unsigned char _report_id = 0x02, _report_length = 10, _detect_mask = 0x40;
-		report _report;
+		static constexpr unsigned char _buffer_id = 0x02, _buffer_length = 10, _detect_mask = 0x40;
+		buffer _buffer;
 		do {
 			ULONG transferred;
-			if (!::WinUsb_ReadPipe(_winusb, _pipe_id, reinterpret_cast<PUCHAR>(&_report), _report_length, &transferred, nullptr)) {
-				printf("[DEVICE]  connection lost:            waiting for device...\n");
+			if (!::WinUsb_ReadPipe(_winusb, _pipe_id, reinterpret_cast<PUCHAR>(&_buffer), _buffer_length, &transferred, nullptr)) {
+				::fputs("[DEVICE]  connection lost:            waiting for device...\n", stdout);
 				::WinUsb_Free(_winusb);
 				::CloseHandle(_handle);
 				_winusb = nullptr;
 				_handle = INVALID_HANDLE_VALUE;
 				return std::nullopt;
 			}
-		} while (_report._button != _report_id || !(_report._mask & _detect_mask));
-		return _report;
+		} while (_buffer._id != _buffer_id || !(_buffer._mask & _detect_mask));
+		return report{
+			._button = static_cast<unsigned char>(_buffer._mask & 0x1),
+			._x = static_cast<float>(_buffer._x) / _width,
+			._y = static_cast<float>(_buffer._y) / _height};
 	};
 };

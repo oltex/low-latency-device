@@ -21,13 +21,7 @@ public:
 
 		device->Activate(__uuidof(IAudioClient3), CLSCTX_ALL, NULL, reinterpret_cast<void**>(&_client));
 		device->Release();
-	}
-	inline ~audio(void) noexcept {
-		_client->Release();
-		::CoUninitialize();
-	}
 
-	inline auto initialize(void) const noexcept {
 		WAVEFORMATEX* format;
 		unsigned int current_period;
 		_client->GetCurrentSharedModeEnginePeriod(&format, &current_period);
@@ -35,8 +29,12 @@ public:
 		unsigned int default_period, fundamental_period, minimum_period, maximum_period;
 		_client->GetSharedModeEnginePeriod(format, &default_period, &fundamental_period, &minimum_period, &maximum_period);
 		_client->InitializeSharedAudioStream(0, minimum_period, format, nullptr);
-		printf("[AUDIO]   shared-mode engine period:  %u frames / %.1fms\n",
+		::printf("[AUDIO]   shared-mode engine period:  %u frames / %.1fms\n",
 			minimum_period, minimum_period * 1000.0 / format->nSamplesPerSec);
 		::CoTaskMemFree(format);
+	}
+	inline ~audio(void) noexcept {
+		_client->Release();
+		::CoUninitialize();
 	}
 };

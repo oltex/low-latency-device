@@ -12,9 +12,6 @@
     <ClCompile Include="notify.ixx">
       <Filter>device</Filter>
     </ClCompile>
-    <ClCompile Include="area.ixx">
-      <Filter>config</Filter>
-    </ClCompile>
     <ClCompile Include="input.ixx">
       <Filter>device</Filter>
     </ClCompile>
@@ -22,9 +19,6 @@
   <ItemGroup>
     <Filter Include="device">
       <UniqueIdentifier>{7c9c71dc-6f64-422f-ace1-7f896b9b35b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="config">
-      <UniqueIdentifier>{26d54391-a0a8-4c24-afe1-3cb2d9a35e2c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

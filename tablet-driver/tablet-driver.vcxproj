@@ -175,7 +175,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="application.ixx" />
-    <ClCompile Include="area.ixx" />
     <ClCompile Include="audio.ixx" />
     <ClCompile Include="input.ixx" />
     <ClCompile Include="main.cpp" />
