@@ -8,10 +8,10 @@ import notify;
 import <stdio.h>;
 
 export class application final {
-	audio const _audio;
-	notify const _notify;
 	tablet _tablet;
 	input _input;
+	audio const _audio;
+	notify const _notify;
 public:
 	inline application(int const width, int const height) noexcept
 		: _tablet(width, height) {

@@ -22,6 +22,7 @@ public:
 		device->Activate(__uuidof(IAudioClient3), CLSCTX_ALL, NULL, reinterpret_cast<void**>(&_client));
 		device->Release();
 
+		//initialize
 		WAVEFORMATEX* format;
 		unsigned int current_period;
 		_client->GetCurrentSharedModeEnginePeriod(&format, &current_period);
