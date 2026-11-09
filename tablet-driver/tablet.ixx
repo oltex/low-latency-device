@@ -134,7 +134,7 @@ public:
 						goto found;
 					}
 				}
-				WinUsb_Free(winusb);
+				::WinUsb_Free(winusb);
 				::CloseHandle(handle);
 				continue;
 			found:
@@ -162,9 +162,10 @@ public:
 	}
 	inline auto read(void) noexcept -> std::optional<report> {
 		static constexpr unsigned char _buffer_id = 0x02, _buffer_length = 10, _detect_mask = 0x40;
+		static_assert(sizeof(buffer) == _buffer_length);
 		buffer _buffer;
-		do {
-			ULONG transferred;
+		ULONG transferred;
+		for (;;) {
 			if (!::WinUsb_ReadPipe(_winusb, _pipe_id, reinterpret_cast<PUCHAR>(&_buffer), _buffer_length, &transferred, nullptr)) {
 				::fputs("[DEVICE]  connection lost:            waiting for device...\n", stdout);
 				::WinUsb_Free(_winusb);
@@ -173,10 +174,16 @@ public:
 				_handle = INVALID_HANDLE_VALUE;
 				return std::nullopt;
 			}
-		} while (_buffer._id != _buffer_id || !(_buffer._mask & _detect_mask));
-		return report{
-			._button = static_cast<unsigned char>(_buffer._mask & 0x1),
-			._x = static_cast<float>(_buffer._x) / _width,
-			._y = static_cast<float>(_buffer._y) / _height};
+			if (_buffer_length != transferred || _buffer_id != _buffer._id || !(_buffer._mask & _detect_mask))
+				continue;
+			report const _report{
+				._button = static_cast<unsigned char>(_buffer._mask & 0x1),
+				._x = static_cast<float>(_buffer._x) / _width,
+				._y = static_cast<float>(_buffer._y) / _height};
+#ifdef _DEBUG
+			::printf("[DEBUG]   report parsed:              %02X %8.4f %8.4f\n", _report._button, _report._x, _report._y);
+#endif
+			return _report;
+		}
 	};
 };
